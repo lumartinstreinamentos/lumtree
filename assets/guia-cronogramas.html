@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guia de Cronogramas · Lumtree</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --black: #000000; --white: #ffffff;
+  --yellow: #F5C200; --blue: #2E4FA3;
+  --green: #1FA876; --red: #D42B2B;
+  --gray1: #f7f7f7; --gray2: #efefef;
+  --gray3: #dedede; --gray4: #999;
+  --ink: #1a1a1a; --ink-soft: #555;
+}
+body { font-family: 'DM Sans', sans-serif; background: #fff; color: var(--ink); }
+
+/* HEADER */
+.page-header {
+  background: var(--black); padding: 28px 48px 32px;
+}
+.header-top {
+  display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px;
+}
+.brand { display: flex; align-items: center; gap: 10px; }
+.brand img { height: 34px; width: auto; object-fit: contain; }
+.brand span { font-family: 'Fraunces', serif; font-size: 17px; font-weight: 700; color: #fff; }
+.modulo-tag {
+  font-size: 11px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--yellow); border: 1px solid rgba(245,194,0,0.3); padding: 4px 14px; border-radius: 100px;
+}
+.header-content { max-width: 640px; }
+.header-content h1 {
+  font-family: 'Fraunces', serif; font-size: 42px; font-weight: 900;
+  color: #fff; line-height: 1.1; margin-bottom: 12px;
+}
+.header-content h1 em { color: var(--yellow); font-style: italic; }
+.header-content p {
+  font-size: 15px; color: rgba(255,255,255,0.65); line-height: 1.7;
+}
+
+/* TOOLBAR */
+.toolbar {
+  background: var(--gray1); border-bottom: 1px solid var(--gray3);
+  padding: 14px 48px; display: flex; align-items: center; justify-content: space-between;
+}
+.toolbar-info {
+  font-size: 13px; color: var(--gray4);
+}
+.toolbar-info strong { color: var(--ink); }
+.btn-pdf {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--blue); color: #fff; border: none;
+  padding: 10px 20px; border-radius: 8px; font-size: 13px;
+  font-weight: 600; cursor: pointer; font-family: 'DM Sans', sans-serif;
+  transition: opacity 0.2s;
+}
+.btn-pdf:hover { opacity: 0.85; }
+
+/* BODY */
+.page-body { max-width: 1060px; margin: 0 auto; padding: 48px 48px 64px; }
+
+/* INTRO CARD */
+.intro-card {
+  background: var(--gray1); border: 1px solid var(--gray3);
+  border-radius: 12px; padding: 24px 28px; margin-bottom: 40px;
+  display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px;
+}
+.intro-item { display: flex; align-items: flex-start; gap: 12px; }
+.intro-icon {
+  width: 36px; height: 36px; border-radius: 8px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+}
+.intro-text strong { display: block; font-size: 13px; font-weight: 700; margin-bottom: 3px; }
+.intro-text span { font-size: 12px; color: var(--ink-soft); line-height: 1.5; }
+
+/* SECTION TITLE */
+.section-label {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--gray4); margin-bottom: 16px;
+  padding-bottom: 10px; border-bottom: 1px solid var(--gray3);
+}
+
+/* CRONOGRAMA CARDS */
+.cronogramas-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 40px;
+}
+.crono-card {
+  border: 1px solid var(--gray3); border-radius: 12px; overflow: hidden;
+}
+.crono-header {
+  padding: 16px 20px; display: flex; align-items: center; justify-content: space-between;
+}
+.crono-title-group { display: flex; align-items: center; gap: 12px; }
+.crono-num {
+  width: 28px; height: 28px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 800; flex-shrink: 0;
+}
+.crono-title { font-family: 'Fraunces', serif; font-size: 17px; font-weight: 700; }
+.nivel-badge {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; padding: 4px 10px; border-radius: 100px;
+}
+.nivel-basico { background: rgba(31,168,118,0.12); color: var(--green); }
+.nivel-medio { background: rgba(245,194,0,0.15); color: #a07800; }
+.nivel-avancado { background: rgba(212,43,43,0.1); color: var(--red); }
+
+/* Visual Example */
+.crono-visual {
+  padding: 16px 20px; background: var(--gray1); border-top: 1px solid var(--gray3); border-bottom: 1px solid var(--gray3);
+}
+.visual-label {
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.1em; color: var(--gray4); margin-bottom: 10px;
+}
+
+/* Lista de Marcos */
+.marcos-list { display: flex; flex-direction: column; gap: 6px; }
+.marco-item {
+  display: flex; align-items: center; gap: 10px;
+  background: #fff; border: 1px solid var(--gray3);
+  border-radius: 6px; padding: 7px 12px;
+}
+.marco-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.marco-name { font-size: 12px; font-weight: 500; flex: 1; }
+.marco-date { font-size: 11px; color: var(--gray4); }
+.marco-status {
+  font-size: 10px; font-weight: 700; padding: 2px 8px;
+  border-radius: 100px;
+}
+.st-ok { background: #dcfce7; color: #15803d; }
+.st-warn { background: #fef9c3; color: #92400e; }
+.st-pend { background: var(--gray2); color: var(--gray4); }
+
+/* Fases */
+.fases-list { display: flex; flex-direction: column; gap: 8px; }
+.fase-item { display: flex; gap: 10px; align-items: center; }
+.fase-label { font-size: 11px; font-weight: 600; width: 90px; flex-shrink: 0; color: var(--ink); }
+.fase-bar-bg { flex: 1; background: var(--gray2); border-radius: 100px; height: 18px; position: relative; overflow: hidden; }
+.fase-bar { height: 100%; border-radius: 100px; display: flex; align-items: center; padding-left: 8px; }
+.fase-bar span { font-size: 10px; font-weight: 700; color: #fff; white-space: nowrap; }
+.fase-pct { font-size: 11px; color: var(--gray4); width: 32px; text-align: right; }
+
+/* Gantt */
+.gantt-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+.gantt-table th {
+  background: var(--gray2); padding: 5px 8px; text-align: center;
+  font-size: 10px; font-weight: 700; color: var(--gray4); border: 1px solid var(--gray3);
+}
+.gantt-table td { padding: 4px 6px; border: 1px solid var(--gray3); font-size: 11px; }
+.gantt-bar {
+  height: 14px; border-radius: 3px; display: block;
+}
+.gantt-task-name { font-weight: 500; color: var(--ink); font-size: 11px; }
+
+/* Linha do Tempo */
+.timeline-h { position: relative; padding: 8px 0 4px; }
+.timeline-track {
+  position: relative; height: 4px; background: var(--gray2);
+  border-radius: 2px; margin: 16px 0 8px;
+}
+.timeline-progress {
+  position: absolute; left: 0; top: 0; height: 100%;
+  background: var(--blue); border-radius: 2px;
+}
+.timeline-points { display: flex; justify-content: space-between; position: relative; }
+.tl-point { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.tl-dot {
+  width: 12px; height: 12px; border-radius: 50%; border: 2px solid #fff;
+  margin-top: -14px; position: relative; z-index: 1;
+}
+.tl-label { font-size: 10px; font-weight: 600; color: var(--ink); text-align: center; max-width: 60px; }
+.tl-date { font-size: 9px; color: var(--gray4); }
+
+/* Kanban */
+.kanban-cols { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 6px; }
+.kanban-col { background: var(--gray2); border-radius: 6px; padding: 8px; }
+.kanban-col-title {
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.08em; color: var(--gray4); margin-bottom: 6px; text-align: center;
+}
+.kanban-card {
+  background: #fff; border-radius: 4px; padding: 6px 8px;
+  font-size: 10px; font-weight: 500; margin-bottom: 4px;
+  border-left: 3px solid transparent; line-height: 1.4;
+}
+
+/* Ondas */
+.ondas-vis { display: flex; flex-direction: column; gap: 6px; }
+.onda-row { display: flex; align-items: center; gap: 8px; }
+.onda-label { font-size: 11px; font-weight: 600; width: 70px; flex-shrink: 0; }
+.onda-blocks { display: flex; gap: 4px; flex: 1; }
+.onda-block {
+  height: 24px; border-radius: 4px; display: flex; align-items: center;
+  justify-content: center; font-size: 9px; font-weight: 700; color: #fff;
+  padding: 0 6px; white-space: nowrap;
+}
+.onda-vazio {
+  height: 24px; border-radius: 4px; border: 1px dashed var(--gray3);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 9px; color: var(--gray4);
+}
+
+/* CARD BODY */
+.crono-body { padding: 16px 20px; }
+.crono-desc { font-size: 13px; color: var(--ink-soft); line-height: 1.7; margin-bottom: 14px; }
+
+.info-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
+.info-block { padding: 10px 12px; border-radius: 8px; }
+.info-block.use { background: rgba(31,168,118,0.08); border: 1px solid rgba(31,168,118,0.2); }
+.info-block.notuse { background: rgba(212,43,43,0.06); border: 1px solid rgba(212,43,43,0.15); }
+.info-block-title {
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.1em; margin-bottom: 6px;
+}
+.info-block.use .info-block-title { color: var(--green); }
+.info-block.notuse .info-block-title { color: var(--red); }
+.info-block ul { padding-left: 14px; }
+.info-block li { font-size: 12px; color: var(--ink-soft); line-height: 1.6; }
+
+.ferramentas { display: flex; flex-wrap: wrap; gap: 6px; }
+.ferr-label {
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.1em; color: var(--gray4); margin-bottom: 6px;
+}
+.ferr-tag {
+  font-size: 11px; font-weight: 600; padding: 4px 12px;
+  border-radius: 100px; background: var(--gray1); border: 1px solid var(--gray3);
+  color: var(--ink-soft);
+}
+.ferr-tag.free {
+  background: rgba(46,79,163,0.07); border-color: rgba(46,79,163,0.2); color: var(--blue);
+}
+
+/* COMPARATIVO */
+.comp-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-bottom: 40px; }
+.comp-table th {
+  background: var(--black); color: #fff; padding: 11px 14px;
+  text-align: left; font-size: 11px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.08em;
+}
+.comp-table th:first-child { border-radius: 0; }
+.comp-table td { padding: 10px 14px; border-bottom: 1px solid var(--gray2); vertical-align: middle; }
+.comp-table tr:last-child td { border-bottom: none; }
+.comp-table tr:hover td { background: var(--gray1); }
+.comp-table .tipo-nome { font-weight: 700; color: var(--ink); }
+.dot-check { color: var(--green); font-size: 14px; }
+.dot-x { color: var(--gray3); font-size: 14px; }
+
+/* DICA FINAL */
+.dica-final {
+  background: var(--black); border-radius: 12px; padding: 28px 32px;
+  display: grid; grid-template-columns: auto 1fr; gap: 20px; align-items: start;
+}
+.dica-icon {
+  width: 44px; height: 44px; background: var(--yellow); border-radius: 10px;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.dica-final h3 {
+  font-family: 'Fraunces', serif; font-size: 18px; color: #fff;
+  margin-bottom: 8px;
+}
+.dica-final p { font-size: 13px; color: rgba(255,255,255,0.65); line-height: 1.7; }
+.dica-final strong { color: var(--yellow); }
+
+/* PRINT */
+@media print {
+  .toolbar { display: none !important; }
+  .page-body { padding: 24px; }
+  .crono-card { break-inside: avoid; page-break-inside: avoid; }
+  .cronogramas-grid { grid-template-columns: 1fr 1fr; }
+  .print-footer {
+    display: flex !important; margin-top: 24px; padding-top: 12px;
+    border-top: 1px solid var(--gray3); font-size: 9px; color: var(--gray4);
+    justify-content: space-between;
+  }
+}
+.print-footer { display: none; }
+
+@media (max-width: 900px) {
+  .page-header { padding: 24px; }
+  .page-body { padding: 24px; }
+  .cronogramas-grid { grid-template-columns: 1fr; }
+  .intro-card { grid-template-columns: 1fr; }
+  .toolbar { padding: 12px 24px; flex-direction: column; gap: 10px; align-items: flex-start; }
+  .kanban-cols { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="page-header">
+  <div class="header-top">
+    <div class="brand">
+      <img src="data:image/jpeg;base64,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" alt="Lumtree">
+      <span>Lumtree</span>
+    </div>
+    <div class="modulo-tag">Módulo 2 · Material de Apoio</div>
+  </div>
+  <div class="header-content">
+    <h1>Guia de<br><em>Cronogramas</em></h1>
+    <p>Os 5 tipos mais usados em gestão de projetos — com exemplos visuais, quando usar cada um e quais ferramentas gratuitas funcionam melhor.</p>
+  </div>
+</div>
+
+<!-- TOOLBAR -->
+<div class="toolbar">
+  <div class="toolbar-info">
+    <strong>5 tipos de cronograma</strong> · do mais simples ao mais robusto · Base da Gestão de Projetos
+  </div>
+  <button class="btn-pdf" onclick="window.print()">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+    Baixar em PDF
+  </button>
+</div>
+
+<div class="page-body">
+
+  <!-- INTRO -->
+  <div class="intro-card">
+    <div class="intro-item">
+      <div class="intro-icon" style="background:rgba(245,194,0,0.15);">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#a07800" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      </div>
+      <div class="intro-text">
+        <strong>Não existe o cronograma certo</strong>
+        <span>Existe o cronograma certo para cada projeto. O tipo ideal depende do tamanho, complexidade e público do relatório.</span>
+      </div>
+    </div>
+    <div class="intro-item">
+      <div class="intro-icon" style="background:rgba(46,79,163,0.1);">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2E4FA3" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      </div>
+      <div class="intro-text">
+        <strong>O cronograma é uma promessa</strong>
+        <span>Mais do que uma ferramenta, é o compromisso da equipe com prazos. Simples e comunicado é melhor que perfeito e ignorado.</span>
+      </div>
+    </div>
+    <div class="intro-item">
+      <div class="intro-icon" style="background:rgba(31,168,118,0.1);">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1FA876" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      </div>
+      <div class="intro-text">
+        <strong>Comece pelo mais simples</strong>
+        <span>Iniciantes ganham mais com uma lista de marcos bem gerenciada do que com um Gantt complexo que ninguém atualiza.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label">Os 5 tipos de cronograma</div>
+
+  <div class="cronogramas-grid">
+
+    <!-- 1. LISTA DE MARCOS -->
+    <div class="crono-card">
+      <div class="crono-header" style="background:#f7f7f7; border-bottom:1px solid var(--gray3);">
+        <div class="crono-title-group">
+          <div class="crono-num" style="background:var(--green); color:#fff;">1</div>
+          <div class="crono-title" style="color:var(--ink);">Lista de Marcos</div>
+        </div>
+        <span class="nivel-badge nivel-basico">Básico</span>
+      </div>
+      <div class="crono-visual">
+        <div class="visual-label">Exemplo visual</div>
+        <div class="marcos-list">
+          <div class="marco-item">
+            <div class="marco-dot" style="background:var(--green);"></div>
+            <span class="marco-name">Kickoff do projeto</span>
+            <span class="marco-date">02/06</span>
+            <span class="marco-status st-ok">✓ Concluído</span>
+          </div>
+          <div class="marco-item">
+            <div class="marco-dot" style="background:var(--green);"></div>
+            <span class="marco-name">Entrega do diagnóstico</span>
+            <span class="marco-date">16/06</span>
+            <span class="marco-status st-ok">✓ Concluído</span>
+          </div>
+          <div class="marco-item">
+            <div class="marco-dot" style="background:#f59e0b;"></div>
+            <span class="marco-name">Aprovação do protótipo</span>
+            <span class="marco-date">30/06</span>
+            <span class="marco-status st-warn">⚠ Atenção</span>
+          </div>
+          <div class="marco-item">
+            <div class="marco-dot" style="background:var(--gray3);"></div>
+            <span class="marco-name">Entrega final</span>
+            <span class="marco-date">25/07</span>
+            <span class="marco-status st-pend">Pendente</span>
+          </div>
+        </div>
+      </div>
+      <div class="crono-body">
+        <p class="crono-desc">Lista das entregas mais importantes do projeto com suas datas. Sem tarefa por tarefa — apenas os momentos que realmente definem o avanço.</p>
+        <div class="info-cols">
+          <div class="info-block use">
+            <div class="info-block-title">✓ Use quando</div>
+            <ul>
+              <li>Projeto simples ou de curta duração</li>
+              <li>Comunicar progresso ao cliente</li>
+              <li>Primeiros projetos como PM</li>
+              <li>Relatório executivo rápido</li>
+            </ul>
+          </div>
+          <div class="info-block notuse">
+            <div class="info-block-title">✗ Evite quando</div>
+            <ul>
+              <li>Projeto com muitas dependências</li>
+              <li>Equipe grande e paralela</li>
+              <li>Necessidade de alocar recursos</li>
+            </ul>
+          </div>
+        </div>
+        <div class="ferr-label">Ferramentas gratuitas</div>
+        <div class="ferramentas">
+          <span class="ferr-tag free">Notion</span>
+          <span class="ferr-tag free">Trello</span>
+          <span class="ferr-tag free">Google Sheets</span>
+          <span class="ferr-tag free">Até papel funciona</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. CRONOGRAMA POR FASES -->
+    <div class="crono-card">
+      <div class="crono-header" style="background:#f7f7f7; border-bottom:1px solid var(--gray3);">
+        <div class="crono-title-group">
+          <div class="crono-num" style="background:var(--blue); color:#fff;">2</div>
+          <div class="crono-title" style="color:var(--ink);">Cronograma por Fases</div>
+        </div>
+        <span class="nivel-badge nivel-basico">Básico</span>
+      </div>
+      <div class="crono-visual">
+        <div class="visual-label">Exemplo visual</div>
+        <div class="fases-list">
+          <div class="fase-item">
+            <span class="fase-label">Planejamento</span>
+            <div class="fase-bar-bg">
+              <div class="fase-bar" style="width:100%; background:var(--green);">
+                <span>Concluída</span>
+              </div>
+            </div>
+            <span class="fase-pct">100%</span>
+          </div>
+          <div class="fase-item">
+            <span class="fase-label">Diagnóstico</span>
+            <div class="fase-bar-bg">
+              <div class="fase-bar" style="width:100%; background:var(--green);">
+                <span>Concluída</span>
+              </div>
+            </div>
+            <span class="fase-pct">100%</span>
+          </div>
+          <div class="fase-item">
+            <span class="fase-label">Desenvolvimento</span>
+            <div class="fase-bar-bg">
+              <div class="fase-bar" style="width:60%; background:var(--blue);">
+                <span>Em andamento</span>
+              </div>
+            </div>
+            <span class="fase-pct">60%</span>
+          </div>
+          <div class="fase-item">
+            <span class="fase-label">Implantação</span>
+            <div class="fase-bar-bg">
+              <div class="fase-bar" style="width:5%; background:var(--gray3);">
+                <span></span>
+              </div>
+            </div>
+            <span class="fase-pct">0%</span>
+          </div>
+          <div class="fase-item">
+            <span class="fase-label">Encerramento</span>
+            <div class="fase-bar-bg">
+              <div class="fase-bar" style="width:5%; background:var(--gray3);">
+                <span></span>
+              </div>
+            </div>
+            <span class="fase-pct">0%</span>
+          </div>
+        </div>
+      </div>
+      <div class="crono-body">
+        <p class="crono-desc">Divide o projeto em grandes etapas sequenciais com percentual de avanço. Dá uma leitura rápida e visual de onde o projeto está no ciclo de vida.</p>
+        <div class="info-cols">
+          <div class="info-block use">
+            <div class="info-block-title">✓ Use quando</div>
+            <ul>
+              <li>Projeto com etapas bem definidas</li>
+              <li>Apresentação para diretoria</li>
+              <li>Projetos de consultoria ou implantação</li>
+              <li>Comunicação com stakeholders leigos</li>
+            </ul>
+          </div>
+          <div class="info-block notuse">
+            <div class="info-block-title">✗ Evite quando</div>
+            <ul>
+              <li>Fases acontecem em paralelo</li>
+              <li>Projeto ágil com sprints curtos</li>
+              <li>Necessidade de detalhar tarefas</li>
+            </ul>
+          </div>
+        </div>
+        <div class="ferr-label">Ferramentas gratuitas</div>
+        <div class="ferramentas">
+          <span class="ferr-tag free">Google Slides</span>
+          <span class="ferr-tag free">Canva</span>
+          <span class="ferr-tag free">PowerPoint</span>
+          <span class="ferr-tag free">Miro</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. GRÁFICO DE GANTT -->
+    <div class="crono-card">
+      <div class="crono-header" style="background:#f7f7f7; border-bottom:1px solid var(--gray3);">
+        <div class="crono-title-group">
+          <div class="crono-num" style="background:var(--yellow); color:var(--black);">3</div>
+          <div class="crono-title" style="color:var(--ink);">Gráfico de Gantt</div>
+        </div>
+        <span class="nivel-badge nivel-medio">Intermediário</span>
+      </div>
+      <div class="crono-visual">
+        <div class="visual-label">Exemplo visual</div>
+        <table class="gantt-table">
+          <thead>
+            <tr>
+              <th style="text-align:left; width:110px;">Tarefa</th>
+              <th>S1</th><th>S2</th><th>S3</th><th>S4</th><th>S5</th><th>S6</th><th>S7</th><th>S8</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="gantt-task-name">Levantamento</td>
+              <td><div class="gantt-bar" style="background:var(--green);"></div></td>
+              <td><div class="gantt-bar" style="background:var(--green);"></div></td>
+              <td></td><td></td><td></td><td></td><td></td><td></td>
+            </tr>
+            <tr>
+              <td class="gantt-task-name">Prototipação</td>
+              <td></td>
+              <td><div class="gantt-bar" style="background:var(--green);"></div></td>
+              <td><div class="gantt-bar" style="background:var(--green);"></div></td>
+              <td><div class="gantt-bar" style="background:var(--blue);"></div></td>
+              <td></td><td></td><td></td><td></td>
+            </tr>
+            <tr>
+              <td class="gantt-task-name">Testes</td>
+              <td></td><td></td><td></td>
+              <td><div class="gantt-bar" style="background:var(--blue);"></div></td>
+              <td><div class="gantt-bar" style="background:var(--blue);"></div></td>
+              <td></td><td></td><td></td>
+            </tr>
+            <tr>
+              <td class="gantt-task-name">Implantação</td>
+              <td></td><td></td><td></td><td></td><td></td>
+              <td><div class="gantt-bar" style="background:var(--gray3);"></div></td>
+              <td><div class="gantt-bar" style="background:var(--gray3);"></div></td>
+              <td><div class="gantt-bar" style="background:var(--gray3);"></div></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="crono-body">
+        <p class="crono-desc">O mais conhecido em gestão de projetos. Mostra tarefas em barras horizontais ao longo do tempo, permitindo visualizar sobreposições, dependências e o caminho crítico.</p>
+        <div class="info-cols">
+          <div class="info-block use">
+            <div class="info-block-title">✓ Use quando</div>
+            <ul>
+              <li>Projeto com múltiplas tarefas paralelas</li>
+              <li>Equipe com mais de 3 pessoas</li>
+              <li>Dependências entre entregas</li>
+              <li>Cliente exige visibilidade detalhada</li>
+            </ul>
+          </div>
+          <div class="info-block notuse">
+            <div class="info-block-title">✗ Evite quando</div>
+            <ul>
+              <li>Projeto muito curto (menos de 3 semanas)</li>
+              <li>Escopo muda frequentemente</li>
+              <li>Equipe não vai atualizá-lo</li>
+            </ul>
+          </div>
+        </div>
+        <div class="ferr-label">Ferramentas gratuitas</div>
+        <div class="ferramentas">
+          <span class="ferr-tag free">ProjectLibre</span>
+          <span class="ferr-tag free">GanttProject</span>
+          <span class="ferr-tag free">ClickUp (free)</span>
+          <span class="ferr-tag free">Excel / Sheets</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. LINHA DO TEMPO -->
+    <div class="crono-card">
+      <div class="crono-header" style="background:#f7f7f7; border-bottom:1px solid var(--gray3);">
+        <div class="crono-title-group">
+          <div class="crono-num" style="background:var(--ink); color:#fff;">4</div>
+          <div class="crono-title" style="color:var(--ink);">Linha do Tempo</div>
+        </div>
+        <span class="nivel-badge nivel-basico">Básico</span>
+      </div>
+      <div class="crono-visual">
+        <div class="visual-label">Exemplo visual</div>
+        <div class="timeline-h">
+          <div class="timeline-track">
+            <div class="timeline-progress" style="width:55%;"></div>
+          </div>
+          <div class="timeline-points">
+            <div class="tl-point">
+              <div class="tl-dot" style="background:var(--green);"></div>
+              <span class="tl-label">Início</span>
+              <span class="tl-date">Mai/25</span>
+            </div>
+            <div class="tl-point">
+              <div class="tl-dot" style="background:var(--green);"></div>
+              <span class="tl-label">Diagnóstico</span>
+              <span class="tl-date">Jun/25</span>
+            </div>
+            <div class="tl-point">
+              <div class="tl-dot" style="background:var(--blue); box-shadow:0 0 0 3px rgba(46,79,163,0.2);"></div>
+              <span class="tl-label" style="color:var(--blue);">Agora</span>
+              <span class="tl-date">Jun/25</span>
+            </div>
+            <div class="tl-point">
+              <div class="tl-dot" style="background:var(--gray3);"></div>
+              <span class="tl-label">Entrega</span>
+              <span class="tl-date">Ago/25</span>
+            </div>
+            <div class="tl-point">
+              <div class="tl-dot" style="background:var(--gray3);"></div>
+              <span class="tl-label">Encerramento</span>
+              <span class="tl-date">Set/25</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="crono-body">
+        <p class="crono-desc">Representação visual e horizontal do projeto no tempo. Ideal para comunicação com lideranças e clientes — mostra o panorama sem sobrecarregar com detalhes.</p>
+        <div class="info-cols">
+          <div class="info-block use">
+            <div class="info-block-title">✓ Use quando</div>
+            <ul>
+              <li>Reunião de kickoff com cliente</li>
+              <li>Apresentação executiva ou de board</li>
+              <li>Status report visual e rápido</li>
+              <li>Comunicar o "big picture" do projeto</li>
+            </ul>
+          </div>
+          <div class="info-block notuse">
+            <div class="info-block-title">✗ Evite quando</div>
+            <ul>
+              <li>Precisa mostrar tarefas detalhadas</li>
+              <li>Equipe técnica que precisa de dependências</li>
+              <li>Gestão operacional do dia a dia</li>
+            </ul>
+          </div>
+        </div>
+        <div class="ferr-label">Ferramentas gratuitas</div>
+        <div class="ferramentas">
+          <span class="ferr-tag free">Canva</span>
+          <span class="ferr-tag free">Miro</span>
+          <span class="ferr-tag free">Google Slides</span>
+          <span class="ferr-tag free">Office Timeline (free)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. KANBAN DE DATAS -->
+    <div class="crono-card">
+      <div class="crono-header" style="background:#f7f7f7; border-bottom:1px solid var(--gray3);">
+        <div class="crono-title-group">
+          <div class="crono-num" style="background:var(--green); color:#fff;">5</div>
+          <div class="crono-title" style="color:var(--ink);">Kanban com Datas</div>
+        </div>
+        <span class="nivel-badge nivel-medio">Intermediário</span>
+      </div>
+      <div class="crono-visual">
+        <div class="visual-label">Exemplo visual</div>
+        <div class="kanban-cols">
+          <div class="kanban-col">
+            <div class="kanban-col-title">Backlog</div>
+            <div class="kanban-card" style="border-left-color:var(--gray4);">Treinamento equipe<br><span style="color:var(--gray4);font-size:9px;">Jul/25</span></div>
+            <div class="kanban-card" style="border-left-color:var(--gray4);">Documentação<br><span style="color:var(--gray4);font-size:9px;">Ago/25</span></div>
+          </div>
+          <div class="kanban-col">
+            <div class="kanban-col-title">Em andamento</div>
+            <div class="kanban-card" style="border-left-color:var(--blue);">Protótipo UI<br><span style="color:var(--blue);font-size:9px;">até 28/06</span></div>
+            <div class="kanban-card" style="border-left-color:var(--blue);">Testes unitários<br><span style="color:var(--blue);font-size:9px;">até 30/06</span></div>
+          </div>
+          <div class="kanban-col">
+            <div class="kanban-col-title">Revisão</div>
+            <div class="kanban-card" style="border-left-color:var(--yellow);">Layout mobile<br><span style="color:#a07800;font-size:9px;">⚠ Atrasado</span></div>
+          </div>
+          <div class="kanban-col">
+            <div class="kanban-col-title">Concluído</div>
+            <div class="kanban-card" style="border-left-color:var(--green);">Levantamento<br><span style="color:var(--green);font-size:9px;">✓ 10/06</span></div>
+            <div class="kanban-card" style="border-left-color:var(--green);">Diagnóstico<br><span style="color:var(--green);font-size:9px;">✓ 20/06</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="crono-body">
+        <p class="crono-desc">Combina a visualização do Kanban com datas de entrega. Cada card tem uma data limite, o que traz visibilidade de prazo sem a rigidez de um Gantt.</p>
+        <div class="info-cols">
+          <div class="info-block use">
+            <div class="info-block-title">✓ Use quando</div>
+            <ul>
+              <li>Time ágil com sprints ou ciclos curtos</li>
+              <li>Projetos de marketing ou conteúdo</li>
+              <li>Equipe pequena e autônoma</li>
+              <li>Entregas contínuas e independentes</li>
+            </ul>
+          </div>
+          <div class="info-block notuse">
+            <div class="info-block-title">✗ Evite quando</div>
+            <ul>
+              <li>Projeto sequencial e linear</li>
+              <li>Muitas dependências entre tarefas</li>
+              <li>Cliente exige visão de longo prazo</li>
+            </ul>
+          </div>
+        </div>
+        <div class="ferr-label">Ferramentas gratuitas</div>
+        <div class="ferramentas">
+          <span class="ferr-tag free">Trello</span>
+          <span class="ferr-tag free">Notion</span>
+          <span class="ferr-tag free">ClickUp (free)</span>
+          <span class="ferr-tag free">GitHub Projects</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- BÔNUS: ONDAS PROGRESSIVAS -->
+    <div class="crono-card">
+      <div class="crono-header" style="background:var(--black); border-bottom:1px solid #333;">
+        <div class="crono-title-group">
+          <div class="crono-num" style="background:var(--yellow); color:var(--black);">+</div>
+          <div class="crono-title" style="color:#fff;">Planejamento em Ondas</div>
+        </div>
+        <span class="nivel-badge nivel-avancado">Avançado</span>
+      </div>
+      <div class="crono-visual" style="background:#111; border-color:#333;">
+        <div class="visual-label" style="color:#555;">Exemplo visual</div>
+        <div class="ondas-vis">
+          <div class="onda-row">
+            <span class="onda-label" style="color:#aaa;">Onda 1</span>
+            <div class="onda-blocks">
+              <div class="onda-block" style="background:var(--green); flex:2;">Detalhado ✓</div>
+              <div class="onda-block" style="background:var(--green); flex:1.5;">Detalhado ✓</div>
+            </div>
+          </div>
+          <div class="onda-row">
+            <span class="onda-label" style="color:#aaa;">Onda 2</span>
+            <div class="onda-blocks">
+              <div class="onda-block" style="background:transparent; flex:3.5;"></div>
+              <div class="onda-block" style="background:var(--blue); flex:2;">Em definição</div>
+              <div class="onda-block" style="background:var(--blue); flex:1.5;">Em definição</div>
+            </div>
+          </div>
+          <div class="onda-row">
+            <span class="onda-label" style="color:#aaa;">Onda 3</span>
+            <div class="onda-blocks">
+              <div class="onda-block" style="background:transparent; flex:7;"></div>
+              <div class="onda-vazio" style="flex:3;">A definir</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="crono-body">
+        <p class="crono-desc">Planeja com detalhe apenas o que está próximo e mantém o futuro em alto nível. À medida que o projeto avança, novas "ondas" são planejadas com mais precisão.</p>
+        <div class="info-cols">
+          <div class="info-block use">
+            <div class="info-block-title">✓ Use quando</div>
+            <ul>
+              <li>Projetos longos com muita incerteza</li>
+              <li>Escopo evolui com aprendizados</li>
+              <li>Projetos de inovação ou P&amp;D</li>
+              <li>Sprints longos ou releases</li>
+            </ul>
+          </div>
+          <div class="info-block notuse">
+            <div class="info-block-title">✗ Evite quando</div>
+            <ul>
+              <li>Cliente exige cronograma fechado</li>
+              <li>Contrato com escopo fixo</li>
+              <li>Projeto curto e bem conhecido</li>
+            </ul>
+          </div>
+        </div>
+        <div class="ferr-label">Ferramentas gratuitas</div>
+        <div class="ferramentas">
+          <span class="ferr-tag free">Jira (free)</span>
+          <span class="ferr-tag free">Linear</span>
+          <span class="ferr-tag free">ClickUp (free)</span>
+          <span class="ferr-tag free">Notion</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- TABELA COMPARATIVA -->
+  <div class="section-label">Comparativo rápido</div>
+  <table class="comp-table">
+    <thead>
+      <tr>
+        <th>Tipo</th>
+        <th>Nível</th>
+        <th>Ideal para iniciante</th>
+        <th>Mostra dependências</th>
+        <th>Bom para cliente</th>
+        <th>Fácil de manter</th>
+        <th>Funciona em projetos ágeis</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="tipo-nome">Lista de Marcos</td>
+        <td>Básico</td>
+        <td class="dot-check">✓</td>
+        <td class="dot-x">—</td>
+        <td class="dot-check">✓</td>
+        <td class="dot-check">✓</td>
+        <td class="dot-check">✓</td>
+      </tr>
+      <tr>
+        <td class="tipo-nome">Por Fases</td>
+        <td>Básico</td>
+        <td class="dot-check">✓</td>
+        <td class="dot-x">—</td>
+        <td class="dot-check">✓</td>
+        <td class="dot-check">✓</td>
+        <td class="dot-x">—</td>
+      </tr>
+      <tr>
+        <td class="tipo-nome">Gantt</td>
+        <td>Intermediário</td>
+        <td class="dot-x">—</td>
+        <td class="dot-check">✓</td>
+        <td class="dot-check">✓</td>
+        <td class="dot-x">—</td>
+        <td class="dot-x">—</td>
+      </tr>
+      <tr>
+        <td class="tipo-nome">Linha do Tempo</td>
+        <td>Básico</td>
+        <td class="dot-check">✓</td>
+        <td class="dot-x">—</td>
+        <td class="dot-check">✓</td>
+        <td class="dot-check">✓</td>
+        <td class="dot-check">✓</td>
+      </tr>
+      <tr>
+        <td class="tipo-nome">Kanban com Datas</td>
+        <td>Intermediário</td>
+        <td class="dot-check">✓</td>
+        <td class="dot-x">—</td>
+        <td class="dot-x">—</td>
+        <td class="dot-check">✓</td>
+        <td class="dot-check">✓</td>
+      </tr>
+      <tr>
+        <td class="tipo-nome">Planejamento em Ondas</td>
+        <td>Avançado</td>
+        <td class="dot-x">—</td>
+        <td class="dot-x">—</td>
+        <td class="dot-x">—</td>
+        <td class="dot-check">✓</td>
+        <td class="dot-check">✓</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- DICA FINAL -->
+  <div class="dica-final">
+    <div class="dica-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+    </div>
+    <div>
+      <h3>A regra de ouro do cronograma</h3>
+      <p>O melhor cronograma não é o mais sofisticado — é o que <strong>a equipe realmente usa e atualiza</strong>. Um Gantt abandonado vale menos que uma lista de marcos bem cuidada. Comece simples. Evolua conforme a maturidade do projeto e da equipe.</p>
+    </div>
+  </div>
+
+  <div class="print-footer">
+    <div>Lumtree Educação Corporativa</div>
+    <div>Base da Gestão de Projetos · Módulo 2 · Guia de Cronogramas · lumtree.com.br</div>
+  </div>
+
+</div>
+</body>
+</html>
