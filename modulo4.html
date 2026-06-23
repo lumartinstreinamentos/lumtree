@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Módulo 4 — Comunicar, mapear e antecipar bem · LumTree</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --black:#0a0a0a;--blue:#2E4FA3;--yellow:#F5C200;--green:#1FA876;
+  --red:#E05252;--orange:#E07B2A;
+  --border:rgba(255,255,255,0.10);--border2:rgba(255,255,255,0.06);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Montserrat',sans-serif;background:#0a0a0a;color:#fff;line-height:1.6;}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:14px 52px;background:rgba(10,10,10,0.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);}
+.nav-logo{display:flex;align-items:center;}
+.nav-pill{display:flex;align-items:center;gap:6px;font-size:12px;color:rgba(255,255,255,0.5);border:1px solid var(--border);padding:4px 14px;border-radius:100px;font-family:'Montserrat',sans-serif;}
+.nav-links{display:flex;gap:24px;}
+.nav-links a{font-size:13px;color:rgba(255,255,255,0.5);text-decoration:none;transition:color 0.2s;font-family:'Montserrat',sans-serif;}
+.nav-links a:hover{color:#fff;}
+.nav-links a.active{color:var(--yellow);font-weight:600;}
+
+/* HERO */
+.hero{padding:72px 52px 56px;border-bottom:1px solid var(--border);background:linear-gradient(135deg,#0a0a0a 0%,#0d1228 100%);}
+.mod-badge{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--yellow);margin-bottom:20px;font-family:'Montserrat',sans-serif;}
+.mod-badge::before{content:'';width:28px;height:2px;background:var(--yellow);}
+.hero h1{font-family:'Fraunces',serif;font-size:clamp(34px,5vw,54px);font-weight:900;line-height:1.08;margin-bottom:18px;}
+.hero h1 em{font-style:italic;color:var(--yellow);}
+.hero-sub{font-size:16px;line-height:1.8;color:rgba(255,255,255,0.62);max-width:600px;margin-bottom:36px;}
+.hero-meta{display:flex;gap:28px;align-items:center;flex-wrap:wrap;}
+.meta-item{display:flex;align-items:center;gap:8px;font-size:13px;color:rgba(255,255,255,0.5);font-family:'Montserrat',sans-serif;}
+/* meta-dots replaced by SVG icons */
+
+/* SECTION LABEL */
+.section-label{font-size:10px;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:rgba(255,255,255,0.3);display:flex;align-items:center;gap:12px;margin-bottom:32px;font-family:'Montserrat',sans-serif;}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+
+/* SELEÇÃO DE CASE */
+.case-select{padding:56px 52px;border-bottom:1px solid var(--border);}
+.cases-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+.case-btn{border:1.5px solid var(--border);border-radius:14px;padding:22px 18px;cursor:pointer;transition:all 0.2s;background:#111;position:relative;overflow:hidden;text-align:left;width:100%;}
+.case-btn::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+.case-btn.c1::before{background:var(--orange);}
+.case-btn.c2::before{background:var(--blue);}
+.case-btn.c3::before{background:var(--green);}
+.case-btn.c4::before{background:var(--yellow);}
+.case-btn:hover{border-color:rgba(255,255,255,0.25);transform:translateY(-3px);}
+.case-btn.selected{border-color:rgba(255,255,255,0.4);background:#181818;}
+.case-btn.selected::after{content:'✓';position:absolute;top:12px;right:14px;font-size:14px;color:var(--green);font-weight:700;}
+.case-tag{font-size:10px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;margin-bottom:10px;font-family:'Montserrat',sans-serif;}
+.c1 .case-tag{color:var(--orange);}
+.c2 .case-tag{color:#6e8fd4;}
+.c3 .case-tag{color:var(--green);}
+.c4 .case-tag{color:var(--yellow);}
+.case-btn-sector{font-size:10px;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px;font-family:'Montserrat',sans-serif;}
+.case-btn-title{font-family:'Fraunces',serif;font-size:15px;font-weight:700;line-height:1.3;color:#fff;margin-bottom:8px;}
+.case-btn-company{font-size:11px;color:rgba(255,255,255,0.4);font-family:'Montserrat',sans-serif;}
+.btn-confirmar{display:none;margin-top:28px;background:var(--yellow);color:#000;border:none;border-radius:10px;padding:14px 32px;font-family:'Montserrat',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all 0.2s;}
+.btn-confirmar:hover{background:#d4a800;}
+.btn-confirmar.visible{display:inline-flex;align-items:center;gap:10px;}
+
+/* PILARES */
+.pilares-section{display:none;padding:56px 52px;border-bottom:1px solid var(--border);}
+.pilares-section.visible{display:block;}
+
+/* PROGRESS PILARES */
+.pilares-progress{display:flex;gap:0;margin-bottom:48px;border-radius:12px;overflow:hidden;border:1px solid var(--border);}
+.pilar-tab{flex:1;padding:16px 12px;text-align:center;cursor:pointer;transition:all 0.2s;background:#0d0d0d;border-right:1px solid var(--border);position:relative;}
+.pilar-tab:last-child{border-right:none;}
+.pilar-tab.active{background:#1e1e1e;}
+.pilar-tab.done{background:rgba(31,168,118,0.08);}
+.pilar-tab:hover:not(.active){background:#141414;}
+.pilar-tab-icon{margin-bottom:4px;opacity:0.3;transition:opacity 0.2s;}
+.pilar-tab.active .pilar-tab-icon{opacity:1;color:var(--yellow);}
+.pilar-tab.done .pilar-tab-icon{opacity:1;color:var(--green);}
+.pilar-tab.active .pilar-tab-icon svg{stroke:var(--yellow);}
+.pilar-tab.done .pilar-tab-icon svg{stroke:var(--green);}
+.pilar-tab-num{font-family:'Fraunces',serif;font-size:22px;font-weight:900;opacity:0.25;line-height:1;}
+.pilar-tab.active .pilar-tab-num,.pilar-tab.done .pilar-tab-num{opacity:1;}
+.pilar-tab.active .pilar-tab-num{color:var(--yellow);}
+.pilar-tab.done .pilar-tab-num{color:var(--green);}
+.pilar-tab-name{font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.22);margin-top:4px;font-family:'Montserrat',sans-serif;}
+.pilar-tab.active .pilar-tab-name{color:#fff;}
+.pilar-tab.done .pilar-tab-name{color:var(--green);}
+.pilar-tab:not(.active):not(.done){opacity:0.55;}
+.pilar-tab:not(.active):not(.done) .pilar-tab-num{color:rgba(255,255,255,0.3);}
+.pilar-tab-bar{position:absolute;bottom:0;left:0;right:0;height:3px;background:transparent;transition:background 0.3s;}
+.pilar-tab.active .pilar-tab-bar{background:var(--yellow);}
+.pilar-tab.done .pilar-tab-bar{background:var(--green);}
+
+/* PILAR CONTENT */
+.pilar-content{display:none;animation:fadeIn 0.35s ease;}
+.pilar-content.active{display:block;}
+
+/* CONTEXT BOX */
+.context-box{background:#111;border:1px solid var(--border);border-left:3px solid var(--yellow);border-radius:0 12px 12px 0;padding:20px 24px;margin-bottom:28px;}
+.context-label{font-size:10px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--yellow);margin-bottom:8px;font-family:'Montserrat',sans-serif;}
+.context-text{font-size:14px;line-height:1.75;color:rgba(255,255,255,0.8);}
+
+/* CONCEITO */
+.conceito-box{background:rgba(46,79,163,0.08);border:1px solid rgba(46,79,163,0.2);border-radius:12px;padding:24px 28px;margin-bottom:24px;}
+.conceito-title{font-family:'Montserrat',sans-serif;font-size:22px;font-weight:800;color:#fff;margin-bottom:8px;letter-spacing:-0.02em;}
+.conceito-sub{font-size:13px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#6e8fd4;margin-bottom:12px;font-family:'Montserrat',sans-serif;}
+.conceito-text{font-size:14.5px;line-height:1.8;color:rgba(255,255,255,0.8);}
+.conceito-text strong{color:#fff;}
+
+/* FERRAMENTA */
+.ferramenta-box{background:rgba(245,194,0,0.05);border:1px solid rgba(245,194,0,0.2);border-radius:12px;padding:20px 24px;margin-bottom:28px;}
+.ferr-label{font-size:10px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--yellow);margin-bottom:10px;font-family:'Montserrat',sans-serif;}
+.ferr-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.ferr-item{background:rgba(0,0,0,0.3);border:1px solid var(--border2);border-radius:8px;padding:12px 14px;}
+.ferr-item-label{font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:4px;font-family:'Montserrat',sans-serif;}
+.ferr-item-val{font-size:13px;color:rgba(255,255,255,0.85);line-height:1.5;}
+
+/* EXERCÍCIO */
+.ex-box{background:#0f0f0f;border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:28px;}
+.ex-header-bar{background:var(--blue);padding:18px 24px;display:flex;align-items:center;justify-content:space-between;}
+.ex-header-bar h3{font-family:'Montserrat',sans-serif;font-size:15px;font-weight:700;color:#fff;letter-spacing:-0.01em;}
+.ex-header-bar span{font-size:11px;color:rgba(255,255,255,0.6);background:rgba(255,255,255,0.12);padding:3px 10px;border-radius:100px;font-family:'Montserrat',sans-serif;}
+.ex-body{padding:24px 28px;}
+.ex-q{font-size:14px;font-weight:600;color:#fff;margin-bottom:6px;font-family:'Montserrat',sans-serif;}
+.ex-hint{font-size:12px;color:rgba(255,255,255,0.4);margin-bottom:12px;font-style:italic;}
+.ex-input{width:100%;background:#111;border:1.5px solid var(--border);border-radius:8px;padding:12px 16px;font-family:'Montserrat',sans-serif;font-size:13.5px;color:#fff;resize:vertical;min-height:80px;transition:border-color 0.2s;outline:none;}
+.ex-input:focus{border-color:rgba(255,255,255,0.25);background:#161616;}
+.ex-input::placeholder{color:rgba(255,255,255,0.28);}
+.ex-row{display:grid;grid-template-columns:2fr 1fr 1fr;gap:10px;margin-bottom:10px;align-items:start;}
+.ex-row-3{display:grid;grid-template-columns:2fr 1fr 1fr 2fr;gap:10px;margin-bottom:10px;align-items:start;}
+.ex-col-label{font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:6px;font-family:'Montserrat',sans-serif;}
+select.ex-input{
+  min-height:unset;resize:none;cursor:pointer;
+  background:#1a1a1a !important;
+  color:#fff !important;
+  -webkit-appearance:none;
+  appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.5)' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E") !important;
+  background-repeat:no-repeat !important;
+  background-position:right 12px center !important;
+  padding-right:32px !important;
+}
+select.ex-input option{
+  background:#1a1a1a;
+  color:#fff;
+}
+
+/* BOTÕES */
+.btn-primary{background:var(--blue);border:none;border-radius:10px;padding:13px 28px;font-family:'Montserrat',sans-serif;font-size:14px;font-weight:600;color:#fff;cursor:pointer;transition:all 0.2s;display:inline-flex;align-items:center;gap:8px;}
+.btn-primary:hover{background:#1e3580;}
+.btn-primary:disabled{opacity:0.3;cursor:default;}
+.btn-secondary{background:transparent;border:1.5px solid var(--border);border-radius:10px;padding:12px 24px;font-family:'Montserrat',sans-serif;font-size:14px;color:rgba(255,255,255,0.6);cursor:pointer;transition:all 0.2s;}
+.btn-secondary:hover{border-color:rgba(255,255,255,0.3);color:#fff;}
+.btn-yellow{background:var(--yellow);border:none;border-radius:10px;padding:13px 28px;font-family:'Montserrat',sans-serif;font-size:14px;font-weight:700;color:#000;cursor:pointer;transition:all 0.2s;display:inline-flex;align-items:center;gap:8px;}
+.btn-yellow:hover{background:#d4a800;}
+.btn-nav{display:flex;align-items:center;justify-content:space-between;margin-top:24px;padding-top:20px;border-top:1px solid var(--border);}
+
+/* RESULTADO */
+.resultado-section{display:none;padding:56px 52px;border-bottom:1px solid var(--border);}
+.resultado-section.visible{display:block;}
+.perfil-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin:32px 0;}
+.perfil-card{border:1.5px solid var(--border);border-radius:14px;padding:24px 22px;background:#111;transition:all 0.3s;}
+.perfil-card.destaque{border-color:var(--yellow);background:rgba(245,194,0,0.05);}
+.perfil-icon{margin-bottom:12px;display:flex;align-items:center;}
+.perfil-nome{font-family:'Montserrat',sans-serif;font-size:18px;font-weight:800;color:#fff;margin-bottom:6px;letter-spacing:-0.01em;}
+.perfil-card.destaque .perfil-nome{color:var(--yellow);}
+.perfil-desc{font-size:13.5px;line-height:1.7;color:rgba(255,255,255,0.7);}
+.perfil-dica{margin-top:14px;padding:12px 16px;background:rgba(255,255,255,0.04);border-radius:8px;font-size:12.5px;color:rgba(255,255,255,0.5);line-height:1.6;}
+.perfil-dica strong{color:rgba(255,255,255,0.8);}
+.sintese-box{background:rgba(31,168,118,0.08);border:1px solid rgba(31,168,118,0.25);border-left:3px solid var(--green);border-radius:0 12px 12px 0;padding:24px 28px;margin:28px 0;}
+.sintese-title{font-family:'Montserrat',sans-serif;font-size:18px;font-weight:800;color:var(--green);margin-bottom:10px;letter-spacing:-0.01em;}
+.sintese-text{font-size:14.5px;line-height:1.8;color:rgba(255,255,255,0.85);}
+.tres-perguntas{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:28px 0;}
+.pergunta-card{background:#111;border:1px solid var(--border);border-radius:12px;padding:20px;text-align:center;}
+.pergunta-icon{margin-bottom:12px;display:flex;align-items:center;justify-content:center;}
+.pergunta-label{font-size:13px;font-weight:700;color:#fff;margin-bottom:6px;font-family:'Montserrat',sans-serif;}
+.pergunta-sub{font-size:12px;color:rgba(255,255,255,0.45);font-style:italic;}
+.q-opt{
+  background:#111;border:1.5px solid var(--border);border-radius:10px;
+  padding:14px 18px;font-family:'Montserrat',sans-serif;font-size:13.5px;
+  line-height:1.5;color:rgba(255,255,255,0.75);cursor:pointer;text-align:left;
+  transition:all 0.2s;width:100%;
+}
+.q-opt:hover{border-color:rgba(255,255,255,0.3);color:#fff;background:#161616;}
+.q-opt.selected{border-color:var(--yellow);background:rgba(245,194,0,0.08);color:#fff;}
+.btn-reiniciar{background:transparent;border:1.5px solid var(--border);border-radius:10px;padding:12px 24px;font-family:'Montserrat',sans-serif;font-size:13px;color:rgba(255,255,255,0.5);cursor:pointer;transition:all 0.2s;margin-top:8px;}
+.btn-reiniciar:hover{border-color:rgba(255,255,255,0.3);color:#fff;}
+
+/* CLOSING */
+.closing{padding:72px 52px;}
+
+/* FOOTER */
+.footer{background:#000;padding:28px 52px;display:flex;align-items:center;justify-content:space-between;}
+.footer-copy{font-size:12px;color:rgba(255,255,255,0.25);font-family:'Montserrat',sans-serif;}
+.footer-nav{display:flex;gap:24px;}
+.footer-nav a{font-size:12px;color:rgba(255,255,255,0.25);text-decoration:none;font-family:'Montserrat',sans-serif;}
+.footer-nav a:hover{color:rgba(255,255,255,0.5);}
+
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+@media(max-width:900px){
+  .nav,.hero,.case-select,.pilares-section,.resultado-section,.closing,.footer{padding-left:24px;padding-right:24px;}
+  .cases-grid{grid-template-columns:1fr 1fr;}
+  .ferr-grid{grid-template-columns:1fr;}
+  .perfil-grid,.tres-perguntas{grid-template-columns:1fr;}
+  .ex-row{grid-template-columns:1fr;}
+  .ex-row-3{grid-template-columns:1fr 1fr;}
+  .nav-links{display:none;}
+}
+</style>
+</head>
+<body>
+
+<!-- SVG LOGO INLINE -->
+<script>
+const LOGO_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1522.18 1913.52" style="height:44px;width:auto;display:block;"><defs><style>.lt0{fill:#19b78c}.lt1{fill:#fff}.lt3{fill:#ffca06}.lt4{fill:#ed1b23}.lt5{fill:#3364b1}</style></defs><path class="lt0" d="M1295.79,1294.28c76.42-35.96,74.92-61.44,74.92-61.44-40.46,11.99-89.91-13.49-89.91-13.49-37.73,48.91-54.6,106.9-56.7,114.5,1.51-2.45,11.4-11.2,71.69-39.57Z"/><path class="lt0" d="M1148.94,1397.68c-23.98-62.94-118.38-101.9-118.38-101.9-102.19,28.37-137.86-59.94-137.86-59.94-44.51-128.69,76.42-170.82,76.42-170.82-40.75-71.16,4.5-121.37,4.5-121.37,60.2-60.47,121.38-20.98,121.38-20.98,74.92-136.36,181.31-25.47,181.31-25.47,134.86-41.96,140.85,94.4,140.85,94.4,47.95,28.47,58.44,76.42,58.44,76.42,22.45,10.3,37,23.69,46.23,38.01-21.87-178.76-174.1-317.24-358.77-317.24-199.69,0-361.57,161.88-361.57,361.57s153.62,353.09,346.15,361.18l1.29-113.86Z"/><path class="lt0" d="M1171.41,1246.33c13.49,20.98,19.48,64.43,19.48,64.43l34.46-86.91c-16.48,17.98-53.94,22.48-53.94,22.48Z"/><path class="lt0" d="M1411.17,1246.33c-8.99,19.48-16.48,28.47-16.48,28.47-22.48,34.46-95.9,58.44-134.86,82.42-38.96,23.98-37.46,43.46-37.46,43.46l1.25,106.11c148.98-25.13,266.94-141.31,294.72-289.38-41.83,53.21-107.16,28.93-107.16,28.93Z"/><path class="lt0" d="M1106.98,1231.35c-19.48,38.96-35.96,43.46-35.96,43.46,41.96,22.48,79.42,59.94,79.42,59.94,1.5-55.44-22.48-97.4-22.48-97.4-16.48,0-20.98-5.99-20.98-5.99Z"/><circle class="lt4" cx="412.7" cy="361.39" r="361.39"/><rect class="lt5" x="801.5" y="11.27" width="717.69" height="691.54"/><polygon class="lt3" points="405.82 807.35 816.24 1511.92 0 1511.92 405.82 807.35"/><path class="lt1" d="M33.57,1612.25h69.93v236.08s-.33,13.39,12.74,13.71c13.07.33,19.28,0,19.28,0l2.29,45.06s-38.56,10.78-67.96,1.96c0,0-32.68-9.14-36.27-51.92v-244.9Z"/><path class="lt1" d="M148.26,1694.54h75.48v124.08s.98,39.84,33.98,38.86c0,0,18.63,2.94,34.96-16v-146.94h75.15v213.22h-71.23v-27.43s-22.55,32.11-63.06,32.11c0,0-73.2,9.03-85.29-81.74v-136.16Z"/><path class="lt1" d="M405.42,1694.54h69.6v27.43s15.68-32,63.06-31.02c0,0,40.19-2.94,62.41,34.94,0,0,27.77-38.31,68.95-34.99,0,0,57.18-6.48,78.09,57.52,0,0,4.25,10.45,5.23,42.12v117.88h-71.89l-.65-130.61s-8.15-33.8-35.27-32.82c0,0-15.05-1.47-29.08,13.5l-.02,149.93h-72.21l-.98-123.43s2.29-43.43-32.68-40.49c0,0-19.61-1.63-32.35,17.31v146.61h-72.21v-213.88Z"/><path class="lt1" d="M796.87,1639.03h69.6v55.84h61.1v52.24h-61.1l.33,90.78s1.63,21.55,24.83,20.24c0,0,19.93.33,32.02-4.57l3.92,48.98s-23.2,9.8-57.84,9.47c0,0-71.89,4.24-72.87-74.78v-89.8l-32.68-.06v-52.84h32.35l.33-55.51Z"/><path class="lt1" d="M942.44,1694.78h71.8v33.55s10.78-30.86,43.87-33.55c0,0,8.33-2.45,29.65,0v59.75s-53.91-3.8-72.66,21v132.88h-72.66v-213.63Z"/><path class="lt1" d="M1295.96,1822.25h-136.39c2.18,30.36,21.3,45.53,57.38,45.53,23,0,43.21-5.44,60.64-16.33v46.55c-19.33,10.35-44.44,15.52-75.34,15.52-33.76,0-59.96-9.36-78.6-28.07-18.65-18.72-27.97-44.82-27.97-78.3s10.07-62.2,30.22-82.49c20.14-20.28,44.92-30.42,74.32-30.42s54.07,9.05,70.74,27.15c16.67,18.11,25.01,42.67,25.01,73.71v27.16ZM1236.14,1782.64c0-29.94-12.11-44.92-36.34-44.92-10.35,0-19.3,4.29-26.85,12.86-7.56,8.58-12.15,19.26-13.78,32.06h76.97Z"/><path class="lt1" d="M1522.18,1822.25h-136.39c2.18,30.36,21.3,45.53,57.38,45.53,23,0,43.21-5.44,60.64-16.33v46.55c-19.33,10.35-44.44,15.52-75.34,15.52-33.76,0-59.96-9.36-78.6-28.07-18.65-18.72-27.97-44.82-27.97-78.3s10.07-62.2,30.22-82.49c20.14-20.28,44.92-30.42,74.32-30.42s54.07,9.05,70.74,27.15c16.67,18.11,25.01,42.67,25.01,73.71v27.16ZM1462.36,1782.64c0-29.94-12.11-44.92-36.34-44.92-10.35,0-19.3,4.29-26.85,12.86-7.56,8.58-12.15,19.26-13.78,32.06h76.97Z"/></svg>`;
+</script>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-logo" id="nav-logo-el"></div>
+  <div class="nav-links">
+    <a href="index.html">Início</a>
+    <a href="modulo3.html">Módulo 3</a>
+    <a href="modulo4.html" class="active">Módulo 4</a>
+  </div>
+  <div class="nav-pill">
+    <span style="width:6px;height:6px;border-radius:50%;background:var(--yellow)"></span>
+    Módulo 4 de 5
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="mod-badge">Módulo 4</div>
+  <h1>Comunicar, mapear e antecipar bem: <em>pilares da gestão de projetos</em></h1>
+  <p class="hero-sub">Você viu nos cases o que dá errado. Agora vai estruturar o que deveria ter sido feito — usando o case que mais te marcou como laboratório prático.</p>
+  <div class="hero-meta">
+    <div class="meta-item">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#F5C200" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      3 blocos práticos
+    </div>
+    <div class="meta-item">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2E4FA3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+      Baseado no seu case do Módulo 3
+    </div>
+    <div class="meta-item">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1FA876" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      ~20 minutos
+    </div>
+  </div>
+</section>
+
+<!-- SELEÇÃO DE CASE -->
+<section class="case-select" id="case-select">
+  <div class="section-label">Passo 1 — Escolha o seu case</div>
+  <p style="font-size:15px;color:rgba(255,255,255,0.6);margin-bottom:28px;max-width:600px;">Selecione o case do Módulo 3 com o qual você mais se identificou. Ele vai ser o contexto dos três blocos a seguir.</p>
+
+  <div class="cases-grid">
+    <button class="case-btn c1" onclick="selectCase(1)">
+      <div class="case-tag">Case 01</div>
+      <div class="case-btn-sector">Atacarejo</div>
+      <div class="case-btn-title">"O galpão que não estava no contrato"</div>
+      <div class="case-btn-company">MaxAtacado S.A.</div>
+    </button>
+    <button class="case-btn c2" onclick="selectCase(2)">
+      <div class="case-tag">Case 02</div>
+      <div class="case-btn-sector">Indústria</div>
+      <div class="case-btn-title">"A linha que o gerente não quer parar"</div>
+      <div class="case-btn-company">Granol Alimentos Ltda.</div>
+    </button>
+    <button class="case-btn c3" onclick="selectCase(3)">
+      <div class="case-tag">Case 03</div>
+      <div class="case-btn-sector">Construção Civil</div>
+      <div class="case-btn-title">"O pavimento que ninguém aprovou"</div>
+      <div class="case-btn-company">Construtora Vértice</div>
+    </button>
+    <button class="case-btn c4" onclick="selectCase(4)">
+      <div class="case-tag">Case 04</div>
+      <div class="case-btn-sector">Mercado Financeiro</div>
+      <div class="case-btn-title">"O projeto que o jurídico não viu"</div>
+      <div class="case-btn-company">Banco Meridian</div>
+    </button>
+  </div>
+
+  <button class="btn-confirmar" id="btn-confirmar" onclick="confirmarCase()">
+    Começar com este case
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+  </button>
+</section>
+
+<!-- PILARES -->
+<section class="pilares-section" id="pilares-section">
+  <div class="section-label" id="pilar-section-label">Aplicando os 3 pilares</div>
+
+  <!-- TABS -->
+  <div class="pilares-progress">
+    <div class="pilar-tab active" id="tab1" onclick="goTab(1)">
+      <div class="pilar-tab-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      </div>
+      <div class="pilar-tab-num">01</div>
+      <div class="pilar-tab-name">Comunicação</div>
+      <div class="pilar-tab-bar"></div>
+    </div>
+    <div class="pilar-tab" id="tab2" onclick="goTab(2)">
+      <div class="pilar-tab-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      </div>
+      <div class="pilar-tab-num">02</div>
+      <div class="pilar-tab-name">Mapeamento</div>
+      <div class="pilar-tab-bar"></div>
+    </div>
+    <div class="pilar-tab" id="tab3" onclick="goTab(3)">
+      <div class="pilar-tab-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      </div>
+      <div class="pilar-tab-num">03</div>
+      <div class="pilar-tab-name">Antecipação</div>
+      <div class="pilar-tab-bar"></div>
+    </div>
+  </div>
+
+  <!-- BLOCO 1: COMUNICAÇÃO -->
+  <div class="pilar-content active" id="pilar1">
+    <div class="context-box">
+      <div class="context-label">Contexto do case escolhido</div>
+      <div class="context-text" id="ctx1"></div>
+    </div>
+    <div class="conceito-box">
+      <div class="conceito-sub">Pilar 1</div>
+      <div class="conceito-title">Comunicação</div>
+      <div class="conceito-text">
+        A maioria dos projetos não falha por falta de competência técnica — falha porque a <strong>informação certa não chegou à pessoa certa no momento certo</strong>.
+        Um plano de comunicação simples define: quem precisa saber o quê, com qual frequência e por qual canal. Isso elimina reuniões desnecessárias, evita mal-entendidos e mantém todos alinhados sem depender da memória de ninguém.
+      </div>
+    </div>
+    <div class="ferramenta-box">
+      <div class="ferr-label">Ferramenta: Matriz de Comunicação — como funciona</div>
+      <div class="ferr-grid">
+        <div class="ferr-item"><div class="ferr-item-label">Quem</div><div class="ferr-item-val">A parte interessada que precisa receber a informação</div></div>
+        <div class="ferr-item"><div class="ferr-item-label">O quê</div><div class="ferr-item-val">Qual informação, atualização ou relatório ela recebe</div></div>
+        <div class="ferr-item"><div class="ferr-item-label">Quando</div><div class="ferr-item-val">Frequência: semanal, quinzenal, por evento</div></div>
+        <div class="ferr-item"><div class="ferr-item-label">Canal</div><div class="ferr-item-val">E-mail, reunião, dashboard, mensagem, relatório</div></div>
+        <div class="ferr-item"><div class="ferr-item-label">Responsável</div><div class="ferr-item-val">Quem envia ou conduz a comunicação</div></div>
+        <div class="ferr-item"><div class="ferr-item-label">Por quê importa</div><div class="ferr-item-val">Sem isso, cada um comunica do seu jeito — ou não comunica</div></div>
+      </div>
+    </div>
+
+    <div class="ex-box">
+      <div class="ex-header-bar">
+        <h3>Agora é com você — monte o plano de comunicação do case</h3>
+        <span>3 linhas · ~5 minutos</span>
+      </div>
+      <div class="ex-body">
+        <p style="font-size:13.5px;color:rgba(255,255,255,0.6);margin-bottom:20px;">Pense nas pessoas do case que escolheu. Quem deveria receber informações sobre o projeto? Preencha ao menos 3 linhas.</p>
+        <div style="display:grid;grid-template-columns:2fr 2fr 1fr 1fr 1fr;gap:8px;margin-bottom:8px;">
+          <div class="ex-col-label">Quem</div>
+          <div class="ex-col-label">O quê</div>
+          <div class="ex-col-label">Quando</div>
+          <div class="ex-col-label">Canal</div>
+          <div class="ex-col-label">Responsável</div>
+        </div>
+        <div id="com-rows">
+          <div style="display:grid;grid-template-columns:2fr 2fr 1fr 1fr 1fr;gap:8px;margin-bottom:8px;">
+            <input class="ex-input" style="min-height:42px;resize:none;" placeholder="Ex: Diretor Comercial" oninput="checkCom()"/>
+            <input class="ex-input" style="min-height:42px;resize:none;" placeholder="Ex: Status semanal do projeto"/>
+            <select class="ex-input" style="min-height:42px;" oninput="checkCom()"><option value="">Quando</option><option>Semanal</option><option>Quinzenal</option><option>Mensal</option><option>Por evento</option><option>Diário</option></select>
+            <select class="ex-input" style="min-height:42px;" oninput="checkCom()"><option value="">Canal</option><option>E-mail</option><option>Reunião</option><option>WhatsApp</option><option>Dashboard</option><option>Relatório</option></select>
+            <input class="ex-input" style="min-height:42px;resize:none;" placeholder="Ex: Eu"/>
+          </div>
+          <div style="display:grid;grid-template-columns:2fr 2fr 1fr 1fr 1fr;gap:8px;margin-bottom:8px;">
+            <input class="ex-input" style="min-height:42px;resize:none;" placeholder="Ex: Gerente de Operações" oninput="checkCom()"/>
+            <input class="ex-input" style="min-height:42px;resize:none;" placeholder="Ex: Alerta de riscos e desvios"/>
+            <select class="ex-input" style="min-height:42px;" oninput="checkCom()"><option value="">Quando</option><option>Semanal</option><option>Quinzenal</option><option>Mensal</option><option>Por evento</option><option>Diário</option></select>
+            <select class="ex-input" style="min-height:42px;" oninput="checkCom()"><option value="">Canal</option><option>E-mail</option><option>Reunião</option><option>WhatsApp</option><option>Dashboard</option><option>Relatório</option></select>
+            <input class="ex-input" style="min-height:42px;resize:none;" placeholder="Ex: Eu"/>
+          </div>
+          <div style="display:grid;grid-template-columns:2fr 2fr 1fr 1fr 1fr;gap:8px;margin-bottom:8px;">
+            <input class="ex-input" style="min-height:42px;resize:none;" placeholder="Ex: Equipe de execução" oninput="checkCom()"/>
+            <input class="ex-input" style="min-height:42px;resize:none;" placeholder="Ex: Tarefas da semana e prioridades"/>
+            <select class="ex-input" style="min-height:42px;" oninput="checkCom()"><option value="">Quando</option><option>Semanal</option><option>Quinzenal</option><option>Mensal</option><option>Por evento</option><option>Diário</option></select>
+            <select class="ex-input" style="min-height:42px;" oninput="checkCom()"><option value="">Canal</option><option>E-mail</option><option>Reunião</option><option>WhatsApp</option><option>Dashboard</option><option>Relatório</option></select>
+            <input class="ex-input" style="min-height:42px;resize:none;" placeholder="Ex: Coordenador"/>
+          </div>
+        </div>
+        <div id="q-com" style="display:none;margin-top:20px;padding:18px 0;border-top:1px solid rgba(255,255,255,0.08);">
+          <p style="font-size:13px;font-weight:600;color:rgba(255,255,255,0.8);margin-bottom:14px;font-family:'Montserrat',sans-serif;">Como você normalmente comunica o andamento de um projeto no trabalho?</p>
+          <div style="display:flex;flex-direction:column;gap:8px;" id="opts-com">
+            <button class="q-opt" data-val="A" onclick="selectQ('com','A')">Tenho um plano definido com frequência e canais para cada pessoa envolvida</button>
+            <button class="q-opt" data-val="B" onclick="selectQ('com','B')">Comunico quando surge algo importante ou quando me perguntam</button>
+            <button class="q-opt" data-val="C" onclick="selectQ('com','C')">Me preocupo muito com quem precisa saber, mas nem sempre formalizo</button>
+          </div>
+        </div>
+        <div class="btn-nav">
+          <span style="font-size:13px;color:rgba(255,255,255,0.35);">Pilar 1 de 3</span>
+          <button class="btn-primary" id="btn-com" onclick="goTab(2)" disabled>
+            Próximo: Mapeamento
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BLOCO 2: MAPEAMENTO -->
+  <div class="pilar-content" id="pilar2">
+    <div class="context-box">
+      <div class="context-label">Contexto do case escolhido</div>
+      <div class="context-text" id="ctx2"></div>
+    </div>
+    <div class="conceito-box">
+      <div class="conceito-sub">Pilar 2</div>
+      <div class="conceito-title">Mapeamento</div>
+      <div class="conceito-text">
+        Stakeholder surpresa — uma parte interessada que aparece no projeto sem ter sido mapeada — é uma das causas mais comuns de bloqueio. <strong>Mapear é antecipar quem tem poder de afetar ou ser afetado pelo projeto</strong>, e definir como engajar cada pessoa antes que ela se torne um problema.
+        A Matriz Poder × Influência posiciona cada parte interessada em um quadrante e define a estratégia de engajamento adequada.
+      </div>
+    </div>
+    <div class="ferramenta-box">
+      <div class="ferr-label">Ferramenta: Matriz Poder × Influência — os 4 quadrantes</div>
+      <div class="ferr-grid">
+        <div class="ferr-item"><div class="ferr-item-label" style="color:var(--red);">Alto poder + Alta influência</div><div class="ferr-item-val"><strong style="color:#fff;">Gerenciar de perto</strong> — envolva desde o início, mantenha alinhado em toda decisão relevante</div></div>
+        <div class="ferr-item"><div class="ferr-item-label" style="color:var(--orange);">Alto poder + Baixa influência</div><div class="ferr-item-val"><strong style="color:#fff;">Manter satisfeito</strong> — atualizações periódicas, evite surpresas, consulte em decisões maiores</div></div>
+        <div class="ferr-item"><div class="ferr-item-label" style="color:#6e8fd4;">Baixo poder + Alta influência</div><div class="ferr-item-val"><strong style="color:#fff;">Manter informado</strong> — não decidem, mas formam opinião. Ignorá-los é arriscado</div></div>
+        <div class="ferr-item"><div class="ferr-item-label" style="color:rgba(255,255,255,0.4);">Baixo poder + Baixa influência</div><div class="ferr-item-val"><strong style="color:#fff;">Monitorar</strong> — menor atenção, mas reavaliar periodicamente pois a postura pode mudar</div></div>
+        <div class="ferr-item"><div class="ferr-item-label">Postura</div><div class="ferr-item-val">Favorável, Neutro ou Resistente — define a urgência do engajamento</div></div>
+        <div class="ferr-item"><div class="ferr-item-label">Regra de ouro</div><div class="ferr-item-val">Um stakeholder resistente com alto poder, não mapeado no início, pode travar o projeto inteiro</div></div>
+      </div>
+    </div>
+
+    <div class="ex-box">
+      <div class="ex-header-bar">
+        <h3>Mapeie as partes interessadas do case</h3>
+        <span>3 pessoas · ~5 minutos</span>
+      </div>
+      <div class="ex-body">
+        <p style="font-size:13.5px;color:rgba(255,255,255,0.6);margin-bottom:20px;">Identifique ao menos 3 partes interessadas do case — incluindo aquelas que causaram problemas. Posicione cada uma.</p>
+        <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr 2fr;gap:8px;margin-bottom:8px;">
+          <div class="ex-col-label">Nome / papel</div>
+          <div class="ex-col-label">Poder</div>
+          <div class="ex-col-label">Influência</div>
+          <div class="ex-col-label">Postura</div>
+          <div class="ex-col-label">Estratégia de engajamento</div>
+        </div>
+        <div id="map-rows">
+          <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr 2fr;gap:8px;margin-bottom:8px;">
+            <input class="ex-input" style="min-height:42px;resize:none;" placeholder="Ex: Diretor Comercial" oninput="checkMap()"/>
+            <select class="ex-input" style="min-height:42px;" oninput="checkMap()"><option value="">Poder</option><option>Alto</option><option>Médio</option><option>Baixo</option></select>
+            <select class="ex-input" style="min-height:42px;" oninput="checkMap()"><option value="">Influência</option><option>Alta</option><option>Média</option><option>Baixa</option></select>
+            <select class="ex-input" style="min-height:42px;" oninput="checkMap()"><option value="">Postura</option><option>Favorável</option><option>Neutro</option><option>Resistente</option></select>
+            <input class="ex-input" style="min-height:42px;resize:none;" placeholder="Ex: Incluir em todas as decisões de escopo"/>
+          </div>
+          <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr 2fr;gap:8px;margin-bottom:8px;">
+            <input class="ex-input" style="min-height:42px;resize:none;" placeholder="Ex: Gerente de Operações" oninput="checkMap()"/>
+            <select class="ex-input" style="min-height:42px;" oninput="checkMap()"><option value="">Poder</option><option>Alto</option><option>Médio</option><option>Baixo</option></select>
+            <select class="ex-input" style="min-height:42px;" oninput="checkMap()"><option value="">Influência</option><option>Alta</option><option>Média</option><option>Baixa</option></select>
+            <select class="ex-input" style="min-height:42px;" oninput="checkMap()"><option value="">Postura</option><option>Favorável</option><option>Neutro</option><option>Resistente</option></select>
+            <input class="ex-input" style="min-height:42px;resize:none;" placeholder="Ex: Reunião de alinhamento antes do kickoff"/>
+          </div>
+          <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr 2fr;gap:8px;margin-bottom:8px;">
+            <input class="ex-input" style="min-height:42px;resize:none;" placeholder="Ex: Equipe jurídica" oninput="checkMap()"/>
+            <select class="ex-input" style="min-height:42px;" oninput="checkMap()"><option value="">Poder</option><option>Alto</option><option>Médio</option><option>Baixo</option></select>
+            <select class="ex-input" style="min-height:42px;" oninput="checkMap()"><option value="">Influência</option><option>Alta</option><option>Média</option><option>Baixa</option></select>
+            <select class="ex-input" style="min-height:42px;" oninput="checkMap()"><option value="">Postura</option><option>Favorável</option><option>Neutro</option><option>Resistente</option></select>
+            <input class="ex-input" style="min-height:42px;resize:none;" placeholder="Ex: Incluir desde a fase de planejamento"/>
+          </div>
+        </div>
+        <div id="q-map" style="display:none;margin-top:20px;padding:18px 0;border-top:1px solid rgba(255,255,255,0.08);">
+          <p style="font-size:13px;font-weight:600;color:rgba(255,255,255,0.8);margin-bottom:14px;font-family:'Montserrat',sans-serif;">Quando você inicia um projeto, como costuma identificar as partes interessadas?</p>
+          <div style="display:flex;flex-direction:column;gap:8px;" id="opts-map">
+            <button class="q-opt" data-val="A" onclick="selectQ('map','A')">Faço um mapeamento formal antes do kickoff, com poder, influência e estratégia de engajamento</button>
+            <button class="q-opt" data-val="B" onclick="selectQ('map','B')">Vou descobrindo quem são as pessoas importantes conforme o projeto avança</button>
+            <button class="q-opt" data-val="C" onclick="selectQ('map','C')">Sei quem são as pessoas-chave, mas não costumo documentar formalmente</button>
+          </div>
+        </div>
+        <div class="btn-nav">
+          <button class="btn-secondary" onclick="goTab(1)">← Comunicação</button>
+          <button class="btn-primary" id="btn-map" onclick="goTab(3)" disabled>
+            Próximo: Antecipação
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BLOCO 3: ANTECIPAÇÃO -->
+  <div class="pilar-content" id="pilar3">
+    <div class="context-box">
+      <div class="context-label">Contexto do case escolhido</div>
+      <div class="context-text" id="ctx3"></div>
+    </div>
+    <div class="conceito-box">
+      <div class="conceito-sub">Pilar 3</div>
+      <div class="conceito-title">Antecipação</div>
+      <div class="conceito-text">
+        Em todos os cases do Módulo 3, os riscos eram previsíveis — e não foram registrados. <strong>Antecipar é o ato de identificar o que pode dar errado antes que dê</strong>, avaliar a probabilidade e o impacto, e definir uma ação preventiva enquanto ainda há tempo de agir.
+        Isso não é pessimismo — é profissionalismo. Gestores que antecipam chegam às crises com plano. Os outros chegam com surpresa.
+      </div>
+    </div>
+    <div class="ferramenta-box">
+      <div class="ferr-label">Ferramenta: Registro de Riscos — como usar</div>
+      <div class="ferr-grid">
+        <div class="ferr-item"><div class="ferr-item-label">Risco</div><div class="ferr-item-val">O que pode acontecer de errado? Descreva em uma frase</div></div>
+        <div class="ferr-item"><div class="ferr-item-label">Probabilidade</div><div class="ferr-item-val">Alta, Média ou Baixa — qual a chance de acontecer?</div></div>
+        <div class="ferr-item"><div class="ferr-item-label">Impacto</div><div class="ferr-item-val">Alto, Médio ou Baixo — se acontecer, quão grave é?</div></div>
+        <div class="ferr-item"><div class="ferr-item-label">Prioridade</div><div class="ferr-item-val">Alta + Alto = crítico. Gerencie esses primeiro, sempre</div></div>
+        <div class="ferr-item"><div class="ferr-item-label">Ação preventiva</div><div class="ferr-item-val">O que fazer ANTES para reduzir a probabilidade ou o impacto</div></div>
+        <div class="ferr-item"><div class="ferr-item-label">Responsável</div><div class="ferr-item-val">Quem monitora e aciona a ação se o risco se materializar</div></div>
+      </div>
+    </div>
+
+    <div class="ex-box">
+      <div class="ex-header-bar">
+        <h3>Antecipe os riscos do case</h3>
+        <span>2 riscos · ~5 minutos</span>
+      </div>
+      <div class="ex-body">
+        <p style="font-size:13.5px;color:rgba(255,255,255,0.6);margin-bottom:20px;">Identifique 2 riscos que estavam presentes no case — inclusive aqueles que não foram antecipados e viraram crise. O que deveria ter sido feito antes?</p>
+        <div style="display:grid;grid-template-columns:3fr 1fr 1fr 3fr;gap:8px;margin-bottom:8px;">
+          <div class="ex-col-label">Descrição do risco</div>
+          <div class="ex-col-label">Probabilidade</div>
+          <div class="ex-col-label">Impacto</div>
+          <div class="ex-col-label">Ação preventiva</div>
+        </div>
+        <div id="risk-rows">
+          <div style="display:grid;grid-template-columns:3fr 1fr 1fr 3fr;gap:8px;margin-bottom:10px;">
+            <textarea class="ex-input" style="min-height:68px;" placeholder="Ex: O fornecedor pode alterar o escopo de entrega sem aviso formal..." oninput="checkRisk()"></textarea>
+            <select class="ex-input" style="min-height:68px;" oninput="checkRisk()"><option value="">Prob.</option><option>Alta</option><option>Média</option><option>Baixa</option></select>
+            <select class="ex-input" style="min-height:68px;" oninput="checkRisk()"><option value="">Impacto</option><option>Alto</option><option>Médio</option><option>Baixo</option></select>
+            <textarea class="ex-input" style="min-height:68px;" placeholder="Ex: Incluir cláusula de alteração de escopo no contrato e validar antes da assinatura..." oninput="checkRisk()"></textarea>
+          </div>
+          <div style="display:grid;grid-template-columns:3fr 1fr 1fr 3fr;gap:8px;margin-bottom:10px;">
+            <textarea class="ex-input" style="min-height:68px;" placeholder="Ex: Parte interessada com alto poder pode não ter sido mapeada..." oninput="checkRisk()"></textarea>
+            <select class="ex-input" style="min-height:68px;" oninput="checkRisk()"><option value="">Prob.</option><option>Alta</option><option>Média</option><option>Baixa</option></select>
+            <select class="ex-input" style="min-height:68px;" oninput="checkRisk()"><option value="">Impacto</option><option>Alto</option><option>Médio</option><option>Baixo</option></select>
+            <textarea class="ex-input" style="min-height:68px;" placeholder="Ex: Realizar mapeamento de stakeholders com todas as áreas antes do kickoff..." oninput="checkRisk()"></textarea>
+          </div>
+        </div>
+        <div id="q-risk" style="display:none;margin-top:20px;padding:18px 0;border-top:1px solid rgba(255,255,255,0.08);">
+          <p style="font-size:13px;font-weight:600;color:rgba(255,255,255,0.8);margin-bottom:14px;font-family:'Montserrat',sans-serif;">Como você costuma lidar com riscos em projetos que conduz?</p>
+          <div style="display:flex;flex-direction:column;gap:8px;" id="opts-risk">
+            <button class="q-opt" data-val="A" onclick="selectQ('risk','A')">Registro os riscos no início e monitoro ao longo do projeto com ações preventivas definidas</button>
+            <button class="q-opt" data-val="B" onclick="selectQ('risk','B')">Resolvo os problemas quando aparecem — prefiro agir do que prever</button>
+            <button class="q-opt" data-val="C" onclick="selectQ('risk','C')">Penso nos riscos mas nem sempre documento ou defino ações preventivas formais</button>
+          </div>
+        </div>
+        <div class="btn-nav">
+          <button class="btn-secondary" onclick="goTab(2)">← Mapeamento</button>
+          <button class="btn-yellow" id="btn-risk" onclick="mostrarResultado()" disabled>
+            Ver meu estilo de gestão
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESULTADO -->
+<section class="resultado-section" id="resultado-section">
+  <div class="section-label">Seu estilo de gestão</div>
+
+  <div class="sintese-box">
+    <div class="sintese-title" id="perfil-nome-destaque"></div>
+    <div class="sintese-text" id="perfil-texto-destaque"></div>
+  </div>
+
+  <p style="font-size:15px;font-weight:600;color:#fff;margin-bottom:20px;font-family:'Montserrat',sans-serif;">Conheça todos os estilos de gestão — e onde você pode evoluir:</p>
+
+  <div class="perfil-grid" id="perfil-grid"></div>
+
+  <div class="tres-perguntas">
+    <div class="pergunta-card p1">
+      <div class="pergunta-icon" style="color:#2E4FA3;">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#2E4FA3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      </div>
+      <div class="pergunta-label">Eu comuniquei?</div>
+      <div class="pergunta-sub">A informação certa chegou a quem precisava, no tempo certo?</div>
+    </div>
+    <div class="pergunta-card p2">
+      <div class="pergunta-icon">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#F5C200" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      </div>
+      <div class="pergunta-label">Eu mapeei?</div>
+      <div class="pergunta-sub">Todas as partes interessadas foram identificadas antes de virarem problema?</div>
+    </div>
+    <div class="pergunta-card p3">
+      <div class="pergunta-icon">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#1FA876" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      </div>
+      <div class="pergunta-label">Eu antecipei?</div>
+      <div class="pergunta-sub">Os riscos previsíveis foram registrados e tratados antes de virar crise?</div>
+    </div>
+  </div>
+
+  <p style="font-size:14px;color:rgba(255,255,255,0.5);margin-bottom:28px;max-width:620px;font-style:italic;">Leve essas três perguntas para todo projeto que você iniciar a partir de agora. Elas não substituem todas as ferramentas — mas garantem que você não vai errar pelo básico.</p>
+
+  <button class="btn-reiniciar" onclick="reiniciar()">↺ Refazer com outro case</button>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div id="footer-logo-el"></div>
+  <div class="footer-copy">© 2026 LumTree Treinamentos · Todos os direitos reservados</div>
+  <div class="footer-nav">
+    <a href="index.html">Início</a>
+    <a href="modulo3.html">← Módulo 3</a>
+  </div>
+</footer>
+
+<script>
+// ── LOGO ──
+document.addEventListener('DOMContentLoaded', function(){
+  document.getElementById('nav-logo-el').innerHTML = LOGO_SVG;
+  var fl = LOGO_SVG.replace('height:44px','height:36px');
+  document.getElementById('footer-logo-el').innerHTML = fl;
+});
+
+// ── DADOS DOS CASES ──
+const CASES_DATA = {
+  1:{
+    label:'Case 01 · MaxAtacado S.A.',
+    ctx_com:'No case da MaxAtacado, o diretor comercial pediu um galpão de frios que não estava no escopo original. Se um plano de comunicação existisse desde o início, ele teria sido incluído nas atualizações do projeto e a surpresa teria sido evitada — ou tratada como mudança formal.',
+    ctx_map:'Eduardo Fonseca, o gerente de operações da Granol, não participou do kickoff e não estava no mapa de partes interessadas. Uma Matriz Poder × Influência teria identificado ele como alto poder + postura potencialmente resistente — exigindo engajamento desde o início.',
+    ctx_ant:'O escopo crescendo fora de controle e a possibilidade de um fornecedor externo com preço acima do orçamento eram riscos previsíveis desde o início do projeto. Se registrados e tratados antes, não teriam virado crise.'
+  },
+  2:{
+    label:'Case 02 · Granol Alimentos Ltda.',
+    ctx_com:'Na Granol, Eduardo Fonseca foi surpreendido com um cronograma de parada que afetava sua meta — sem ter sido consultado antes. Um plano de comunicação teria garantido que ele recebesse as informações certas desde o planejamento, com espaço para negociação.',
+    ctx_map:'Eduardo não estava no mapa de partes interessadas. Com alto poder e postura resistente, ele quase cancelou o projeto. O mapeamento correto teria identificado ele como "gerenciar de perto" — com engajamento obrigatório antes mesmo do kickoff.',
+    ctx_ant:'Os parafusos corroídos na estrutura metálica eram um risco técnico que um levantamento mais cuidadoso poderia ter identificado. Um registro de riscos teria incluído "condições estruturais não verificadas" — com inspeção prévia como ação preventiva.'
+  },
+  3:{
+    label:'Case 03 · Construtora Vértice',
+    ctx_com:'A incorporadora enviou uma alteração de escopo por e-mail às 18h de sexta-feira, sem reunião formal. Um plano de comunicação estabelecido definiria como mudanças de escopo devem ser solicitadas, por qual canal e com qual antecedência mínima.',
+    ctx_map:'A equipe da prefeitura e o escritório de arquitetura eram partes interessadas com poder regulatório direto sobre a entrega. Um mapeamento completo teria posicionado ambos como "gerenciar de perto" — com processos de aprovação formalizados desde o início.',
+    ctx_ant:'A possibilidade de alteração de projeto pela incorporadora durante a execução e a dependência de aprovação da prefeitura para qualquer mudança estrutural eram riscos previsíveis. Ambos deveriam constar no registro de riscos com ações preventivas formalizadas.'
+  },
+  4:{
+    label:'Case 04 · Banco Meridian',
+    ctx_com:'A Dra. Camila Rocha, Diretora Jurídica, não recebeu nenhuma comunicação sobre o projeto até aparecer em outra reunião. Um plano de comunicação teria garantido que ela recebesse atualizações desde o início — evitando o bloqueio na fase avançada de desenvolvimento.',
+    ctx_map:'Em instituições financeiras, jurídico e compliance são partes interessadas obrigatórias em qualquer projeto que envolva comunicação com clientes. O mapeamento não foi feito de forma completa — a Dra. Camila ficou invisível até o sprint 4 de 6.',
+    ctx_ant:'A necessidade de consentimento para envio de mensagens via WhatsApp (LGPD) e os limites legais para textos de cobrança (CDC) eram riscos regulatórios previsíveis. Um registro de riscos teria incluído "não-conformidade regulatória" como risco crítico desde o planejamento.'
+  }
+};
+
+// ── PERFIS ──
+const PERFIS = [
+  {
+    id:'estrategico',
+    icon:'<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#F5C200" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>',
+    nome:'Gestão Estratégica',
+    desc:'O planejamento é um ponto forte. A comunicação e o mapeamento de partes interessadas tendem a ser estruturados com cuidado — mas os riscos operacionais durante a execução podem ser subestimados.',
+    dica:'<strong>Próximo passo:</strong> fortaleça a antecipação de riscos técnicos durante a execução, não só no planejamento inicial.'
+  },
+  {
+    id:'reativo',
+    icon:'<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#E05252" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>',
+    nome:'Gestão Reativa',
+    desc:'A resolução de problemas sob pressão é um diferencial real. Mas o investimento em prevenção tende a ser baixo — o que acaba gerando mais crises do que o necessário.',
+    dica:'<strong>Próximo passo:</strong> dedique 20% do tempo do projeto ao planejamento de comunicação e registro de riscos. Isso vai reduzir drasticamente as crises que você precisa apagar.'
+  },
+  {
+    id:'comunicador',
+    icon:'<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1FA876" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>',
+    nome:'Gestão Comunicadora',
+    desc:'O engajamento com pessoas e o alinhamento entre as partes interessadas são pontos fortes. A formalização de escopo e o registro de riscos, porém, costumam ficar em segundo plano.',
+    dica:'<strong>Próximo passo:</strong> use sua habilidade de comunicação para formalizar: plano de comunicação escrito, mapa de stakeholders documentado, registro de riscos atualizado.'
+  },
+  {
+    id:'equilibrado',
+    icon:'<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#2E4FA3" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="2" x2="12" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>',
+    nome:'Gestão Equilibrada',
+    desc:'Os três pilares — comunicação, mapeamento e antecipação — são aplicados de forma consistente. É um estilo confiável em qualquer contexto de projeto.',
+    dica:'<strong>Próximo passo:</strong> escolha um dos três pilares para aprofundar e se tornar referência. Equilíbrio é ótimo — mas excelência em algo transforma carreiras.'
+  }
+];
+
+// ── ESTADO ──
+let selectedCase = null;
+let comOk = false, mapOk = false, riskOk = false;
+let tabsDone = {1:false, 2:false, 3:false};
+
+// ── SELECIONAR CASE ──
+function selectCase(id){
+  selectedCase = id;
+  document.querySelectorAll('.case-btn').forEach(b => b.classList.remove('selected'));
+  document.querySelectorAll('.case-btn')[id-1].classList.add('selected');
+  var btn = document.getElementById('btn-confirmar');
+  btn.classList.add('visible');
+}
+
+function confirmarCase(){
+  if(!selectedCase) return;
+  var d = CASES_DATA[selectedCase];
+  document.getElementById('pilar-section-label').textContent = 'Aplicando os 3 pilares — ' + d.label;
+  document.getElementById('ctx1').textContent = d.ctx_com;
+  document.getElementById('ctx2').textContent = d.ctx_map;
+  document.getElementById('ctx3').textContent = d.ctx_ant;
+  var ps = document.getElementById('pilares-section');
+  ps.classList.add('visible');
+  ps.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+// ── NAVEGAÇÃO ENTRE TABS ──
+function goTab(n){
+  // mark previous as done
+  for(var i=1;i<=3;i++){
+    var tab = document.getElementById('tab'+i);
+    var content = document.getElementById('pilar'+i);
+    tab.classList.remove('active');
+    content.classList.remove('active');
+    if(tabsDone[i]) tab.classList.add('done');
+  }
+  if(n>1) tabsDone[n-1] = true;
+  document.getElementById('tab'+n).classList.add('active');
+  document.getElementById('tab'+n).classList.remove('done');
+  document.getElementById('pilar'+n).classList.add('active');
+  document.getElementById('pilares-section').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+// ── RESPOSTAS COMPORTAMENTAIS ──
+var answers = {com: null, map: null, risk: null};
+
+function selectQ(bloco, val){
+  answers[bloco] = val;
+  var opts = document.querySelectorAll('#opts-'+bloco+' .q-opt');
+  opts.forEach(function(o){ o.classList.remove('selected'); });
+  var clicked = document.querySelector('#opts-'+bloco+' .q-opt[data-val="'+val+'"]');
+  if(clicked) clicked.classList.add('selected');
+  // Habilita botão do próximo passo
+  if(bloco==='com') document.getElementById('btn-com').disabled = false;
+  if(bloco==='map') document.getElementById('btn-map').disabled = false;
+  if(bloco==='risk') document.getElementById('btn-risk').disabled = false;
+}
+
+// ── VALIDAÇÕES — mostram a pergunta quando exercício mínimo preenchido ──
+function checkCom(){
+  var inputs = document.querySelectorAll('#com-rows input');
+  var filled = 0;
+  inputs.forEach(function(inp){ if(inp.value.trim().length > 2) filled++; });
+  if(filled >= 2){
+    document.getElementById('q-com').style.display = 'block';
+    // Botão só habilita após responder a pergunta
+    if(answers.com) document.getElementById('btn-com').disabled = false;
+  }
+}
+function checkMap(){
+  var inputs = document.querySelectorAll('#map-rows input');
+  var filled = 0;
+  inputs.forEach(function(inp){ if(inp.value.trim().length > 2) filled++; });
+  var selects = document.querySelectorAll('#map-rows select');
+  var selFilled = 0;
+  selects.forEach(function(s){ if(s.value) selFilled++; });
+  if(filled >= 2 && selFilled >= 3){
+    document.getElementById('q-map').style.display = 'block';
+    if(answers.map) document.getElementById('btn-map').disabled = false;
+  }
+}
+function checkRisk(){
+  var areas = document.querySelectorAll('#risk-rows textarea');
+  var filled = 0;
+  areas.forEach(function(a){ if(a.value.trim().length > 10) filled++; });
+  var selects = document.querySelectorAll('#risk-rows select');
+  var selFilled = 0;
+  selects.forEach(function(s){ if(s.value) selFilled++; });
+  if(filled >= 2 && selFilled >= 2){
+    document.getElementById('q-risk').style.display = 'block';
+    if(answers.risk) document.getElementById('btn-risk').disabled = false;
+  }
+}
+
+// ── RESULTADO ──
+function mostrarResultado(){
+  tabsDone[3] = true;
+  for(var i=1;i<=3;i++){
+    var tab = document.getElementById('tab'+i);
+    if(tab){ tab.classList.remove('active'); tab.classList.add('done'); }
+    var pilar = document.getElementById('pilar'+i);
+    if(pilar) pilar.classList.remove('active');
+  }
+
+  // Calcular perfil baseado nas respostas
+  var perfil = calcularPerfil();
+  var rs = document.getElementById('resultado-section');
+  rs.classList.add('visible');
+
+  document.getElementById('perfil-nome-destaque').textContent = perfil.icon + ' ' + perfil.nome;
+  document.getElementById('perfil-texto-destaque').textContent = perfil.desc;
+
+  var grid = document.getElementById('perfil-grid');
+  grid.innerHTML = '';
+  PERFIS.forEach(function(p){
+    var card = document.createElement('div');
+    card.className = 'perfil-card' + (p.id === perfil.id ? ' destaque' : '');
+    card.innerHTML = '<div class="perfil-icon">'+p.icon+'</div>'+
+      '<div class="perfil-nome">'+p.nome+'</div>'+
+      '<div class="perfil-desc">'+p.desc+'</div>'+
+      '<div class="perfil-dica">'+p.dica+'</div>';
+    grid.appendChild(card);
+  });
+
+  rs.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function calcularPerfil(){
+  // Lógica real baseada nas 3 respostas comportamentais:
+  // A = prática estruturada e formal
+  // B = reativo / resolve quando aparece
+  // C = intuitivo / sabe mas não formaliza
+  var c = answers.com || 'B';
+  var m = answers.map || 'B';
+  var r = answers.risk || 'B';
+
+  // Todos estruturados → Equilibrada
+  if(c==='A' && m==='A' && r==='A') return PERFIS[3];
+
+  // Todos reativos → Reativa
+  if(c==='B' && m==='B' && r==='B') return PERFIS[1];
+
+  // Forte em comunicação e mapeamento, menos em antecipação → Comunicadora
+  if((c==='A'||c==='C') && (m==='A'||m==='C') && r==='B') return PERFIS[2];
+  if(c==='A' && m==='C' && r==='B') return PERFIS[2];
+  if(c==='C' && m==='A' && r==='B') return PERFIS[2];
+
+  // Forte em mapeamento e antecipação, menos em comunicação → Estratégica
+  if(c==='B' && (m==='A'||m==='C') && (r==='A'||r==='C')) return PERFIS[0];
+  if(c==='C' && m==='A' && r==='A') return PERFIS[0];
+
+  // Dois ou mais A com um C → Equilibrada
+  var As = [c,m,r].filter(function(x){return x==='A';}).length;
+  if(As >= 2) return PERFIS[3];
+
+  // Dois ou mais C → Comunicadora (sabe mas não formaliza)
+  var Cs = [c,m,r].filter(function(x){return x==='C';}).length;
+  if(Cs >= 2) return PERFIS[2];
+
+  // Default → Reativa
+  return PERFIS[1];
+}
+
+function reiniciar(){
+  selectedCase = null;
+  comOk = false; mapOk = false; riskOk = false;
+  tabsDone = {1:false, 2:false, 3:false};
+  document.querySelectorAll('.case-btn').forEach(function(b){ b.classList.remove('selected'); });
+  document.getElementById('btn-confirmar').classList.remove('visible');
+  document.getElementById('pilares-section').classList.remove('visible');
+  document.getElementById('resultado-section').classList.remove('visible');
+  for(var i=1;i<=3;i++){
+    var tab = document.getElementById('tab'+i);
+    tab.classList.remove('active','done');
+    document.getElementById('pilar'+i).classList.remove('active');
+  }
+  document.getElementById('tab1').classList.add('active');
+  document.getElementById('pilar1').classList.add('active');
+  document.getElementById('btn-com').disabled = true;
+  document.getElementById('btn-map').disabled = true;
+  document.getElementById('btn-risk').disabled = true;
+  answers = {com:null, map:null, risk:null};
+  ['q-com','q-map','q-risk'].forEach(function(id){
+    try {
+      var el = document.getElementById(id);
+      if(el) el.style.display='none';
+    } catch(e){}
+  });
+  document.querySelectorAll('.q-opt').forEach(function(o){ o.classList.remove('selected'); });
+  document.querySelectorAll('.ex-input').forEach(function(el){
+    if(el.tagName==='SELECT') el.selectedIndex=0;
+    else el.value='';
+  });
+  document.getElementById('case-select').scrollIntoView({behavior:'smooth', block:'start'});
+}
+</script>
+</body>
+</html>
