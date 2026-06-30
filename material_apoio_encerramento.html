@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lumtree · Material de Apoio · Checklist + Guia de Sobrevivência</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --yellow:#FCC70A;--yellow-light:rgba(252,199,10,0.12);
+  --blue:#3664AC;--blue-light:rgba(54,100,172,0.15);
+  --green:#2EAE88;--green-light:rgba(46,174,136,0.12);
+  --red:#E32328;--red-light:rgba(227,35,40,0.12);
+  --border:rgba(255,255,255,0.10);
+}
+html{scroll-behavior:smooth}
+body{font-family:'Montserrat',sans-serif;background:#000;color:#fff;overflow-x:hidden}
+
+/* NAV */
+.nav{display:flex;align-items:center;justify-content:space-between;padding:18px 48px;border-bottom:1px solid var(--border);background:#000;position:sticky;top:0;z-index:100}
+.nav-logo{display:flex;align-items:center;gap:12px}
+.nav-label{font-size:11px;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.38)}
+.nav-tag{font-size:11px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--yellow);background:var(--yellow-light);border:1px solid rgba(252,199,10,0.25);border-radius:100px;padding:5px 14px}
+
+/* HERO */
+.hero{min-height:72vh;display:grid;grid-template-columns:1fr 1fr}
+.hero-left{background:#000;padding:72px 56px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
+.hero-left::after{content:'';position:absolute;bottom:-80px;right:-80px;width:0;height:0;border-left:200px solid transparent;border-right:200px solid transparent;border-bottom:360px solid rgba(46,174,136,0.04);pointer-events:none}
+.kicker{font-size:10px;font-weight:700;letter-spacing:0.25em;text-transform:uppercase;color:var(--yellow);display:flex;align-items:center;gap:10px;margin-bottom:20px}
+.kicker::before{content:'';display:inline-block;width:28px;height:2px;background:var(--yellow)}
+.title-main{font-family:'Montserrat',sans-serif;font-size:clamp(36px,4vw,56px);font-weight:800;line-height:1.05;color:#fff;margin-bottom:16px;letter-spacing:-0.02em}
+.title-main .yl{color:var(--yellow)}
+.title-sub{font-family:'Manrope',sans-serif;font-size:clamp(15px,1.6vw,18px);font-weight:400;font-style:italic;color:rgba(255,255,255,0.52);line-height:1.45;margin-bottom:40px}
+.hero-badges{display:flex;flex-wrap:wrap;gap:10px}
+.badge{border:1px solid rgba(255,255,255,0.14);border-radius:100px;padding:7px 16px;font-size:11px;font-weight:600;color:rgba(255,255,255,0.65)}
+.badge-yellow{background:var(--yellow);border-color:var(--yellow);color:#000;font-weight:700}
+.badge-green{background:var(--green);border-color:var(--green);color:#fff}
+.hero-foot{margin-top:48px;font-size:11px;color:rgba(255,255,255,0.18);letter-spacing:0.06em;font-weight:500}
+.hero-right{background:#0d0d0d;padding:72px 52px;display:flex;flex-direction:column;justify-content:center;border-left:1px solid var(--border)}
+.eyebrow{font-size:10px;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:rgba(255,255,255,0.32);margin-bottom:28px;display:flex;align-items:center;gap:12px}
+.eyebrow::after{content:'';flex:1;height:1px;background:rgba(255,255,255,0.07)}
+.intro-text{font-family:'Manrope',sans-serif;font-size:19px;font-weight:400;line-height:1.7;color:#fff;margin-bottom:28px}
+.intro-text em{font-style:italic;color:var(--yellow);font-weight:500}
+.accent-bar{width:40px;height:3px;background:var(--yellow);margin:28px 0;border-radius:2px}
+.body-text{font-size:15px;line-height:1.8;color:rgba(255,255,255,0.72);margin-bottom:18px}
+
+/* SEÇÕES */
+.section-full{padding:88px 60px;border-top:1px solid rgba(255,255,255,0.06)}
+.s-dark{background:#000}.s-warm{background:#0a0a0a}.s-mid{background:#0d0d0d}
+.section-heading{font-family:'Montserrat',sans-serif;font-size:clamp(26px,3.2vw,38px);font-weight:800;line-height:1.15;letter-spacing:-0.01em;margin-bottom:16px;max-width:640px;color:#fff}
+.hl-y{color:var(--yellow)}.hl-b{color:var(--blue)}.hl-g{color:var(--green)}.hl-r{color:var(--red)}
+.section-desc{font-size:15px;line-height:1.8;color:rgba(255,255,255,0.60);max-width:600px;margin-bottom:48px}
+
+/* CHECKLIST */
+.checklist-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.check-item{display:flex;align-items:flex-start;gap:16px;background:#0a0a0a;border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:20px;transition:border-color .2s,transform .15s;cursor:default}
+.check-item:hover{border-color:rgba(46,174,136,0.3);transform:translateY(-1px)}
+.check-item.checked .check-box{background:var(--green);border-color:var(--green)}
+.check-item.checked .check-box svg{opacity:1}
+.check-box{width:24px;height:24px;border-radius:6px;border:2px solid rgba(255,255,255,0.2);flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s}
+.check-box svg{opacity:0;transition:opacity .2s}
+.check-item.checked .check-box{background:var(--green);border-color:var(--green)}
+.check-item.checked .check-box svg{opacity:1}
+.check-content{flex:1}
+.check-num{font-size:10px;font-weight:700;letter-spacing:0.15em;color:var(--yellow);margin-bottom:4px}
+.check-title{font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;color:#fff;margin-bottom:6px;line-height:1.3}
+.check-desc{font-size:12.5px;line-height:1.65;color:rgba(255,255,255,0.52)}
+.check-example{margin-top:8px;font-size:11.5px;color:rgba(255,255,255,0.35);font-style:italic;padding-top:8px;border-top:1px solid rgba(255,255,255,0.07)}
+
+/* Barra de progresso do checklist */
+.progress-bar-wrap{margin-bottom:32px;display:flex;align-items:center;gap:16px}
+.progress-bar{flex:1;height:6px;background:rgba(255,255,255,0.08);border-radius:100px;overflow:hidden}
+.progress-fill{height:100%;background:var(--green);border-radius:100px;transition:width .4s ease;width:0%}
+.progress-label{font-size:12px;font-weight:600;color:rgba(46,174,136,0.8);white-space:nowrap}
+
+.btn-download-check{display:inline-flex;align-items:center;gap:10px;background:var(--green);color:#fff;padding:13px 28px;border-radius:10px;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;cursor:pointer;border:none;transition:all .15s;margin-top:32px}
+.btn-download-check:hover{background:#259e7a;transform:translateY(-1px)}
+
+/* GUIA DE SOBREVIVÊNCIA */
+.situacoes-grid{display:flex;flex-direction:column;gap:16px}
+.situacao-card{background:#0a0a0a;border:1px solid rgba(255,255,255,0.08);border-radius:14px;overflow:hidden;cursor:pointer;transition:border-color .2s}
+.situacao-card:hover{border-color:rgba(252,199,10,0.25)}
+.situacao-card.open{border-color:var(--yellow)}
+.sit-header{display:flex;align-items:center;gap:16px;padding:20px 24px}
+.sit-num{font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.15em;color:var(--yellow);width:28px;flex-shrink:0}
+.sit-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sit-info{flex:1}
+.sit-title{font-family:'Montserrat',sans-serif;font-size:15px;font-weight:700;color:#fff;margin-bottom:3px}
+.sit-subtitle{font-size:12px;color:rgba(255,255,255,0.38);font-style:italic}
+.sit-arrow{font-size:18px;color:rgba(255,255,255,0.25);transition:transform .25s;flex-shrink:0}
+.situacao-card.open .sit-arrow{transform:rotate(90deg);color:var(--yellow)}
+.sit-body{display:none;padding:0 24px 24px;border-top:1px solid rgba(255,255,255,0.07)}
+.situacao-card.open .sit-body{display:block;padding-top:20px}
+
+.sit-sintoma{background:rgba(227,35,40,0.06);border:1px solid rgba(227,35,40,0.15);border-radius:10px;padding:14px 18px;margin-bottom:16px}
+.sit-sintoma-label{font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--red);margin-bottom:6px}
+.sit-sintoma-text{font-size:13.5px;line-height:1.7;color:rgba(255,255,255,0.65)}
+
+.sit-passos{display:flex;flex-direction:column;gap:10px;margin-bottom:16px}
+.sit-passo{display:flex;align-items:flex-start;gap:12px}
+.sit-passo-num{width:24px;height:24px;border-radius:50%;background:var(--yellow);color:#000;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.sit-passo-text{font-size:13.5px;line-height:1.7;color:rgba(255,255,255,0.68)}
+
+.sit-frase{background:rgba(46,174,136,0.06);border-left:3px solid var(--green);border-radius:0 8px 8px 0;padding:12px 16px}
+.sit-frase-label{font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--green);margin-bottom:6px}
+.sit-frase-text{font-size:13px;line-height:1.7;color:rgba(255,255,255,0.60);font-style:italic}
+
+/* CONCLUSÃO FINAL */
+.conclusao-final{background:#0d0d0d;border-radius:16px;padding:56px;text-align:center;margin-top:48px}
+.conclusao-final h2{font-family:'Montserrat',sans-serif;font-size:clamp(24px,3vw,36px);font-weight:800;color:#fff;margin-bottom:16px;letter-spacing:-0.01em}
+.conclusao-final h2 em{font-style:italic;color:var(--yellow)}
+.conclusao-final p{font-family:'Manrope',sans-serif;font-size:16px;line-height:1.75;color:rgba(255,255,255,0.60);max-width:560px;margin:0 auto 28px}
+.conclusao-frase{font-family:'Montserrat',sans-serif;font-size:20px;font-weight:800;color:var(--green);letter-spacing:-0.01em}
+
+.kiwify-msg{background:rgba(252,199,10,0.08);border:1px solid rgba(252,199,10,0.25);border-left:3px solid var(--yellow);border-radius:0 12px 12px 0;padding:20px 28px;margin-top:32px;max-width:640px}
+.kiwify-msg p{font-size:14px;line-height:1.7;color:rgba(255,255,255,0.85)}
+.kiwify-msg strong{color:var(--yellow)}
+
+.footer{padding:44px 60px;border-top:1px solid rgba(255,255,255,0.07);display:flex;align-items:center;justify-content:space-between;background:#000}
+.footer-copy{font-size:11px;color:rgba(255,255,255,0.22);font-weight:500}
+
+@media print{
+  .nav,.hero-badges,.btn-download-check,.kiwify-msg,.footer,
+  .sit-arrow,.progress-bar-wrap{display:none!important}
+  body{background:#fff;color:#000}
+  .hero{display:block;min-height:auto;padding:32px 0}
+  .hero-left,.hero-right{background:#fff;padding:0 0 24px;border:none}
+  .title-main,.section-heading{color:#000}
+  .title-main .yl,.hl-y,.hl-g,.hl-b{color:#000}
+  .section-full{padding:32px 0;border:none}
+  .s-dark,.s-warm,.s-mid{background:#fff}
+  .check-item{background:#f8f8f8;border:1.5px solid #ddd;break-inside:avoid;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .check-title,.sit-title,.sit-passo-text,.sit-sintoma-text,.sit-frase-text{color:#1a1a1a!important}
+  .check-desc,.check-example,.body-text,.section-desc,.sit-subtitle{color:#555!important}
+  .check-num{color:#3664AC!important}
+  .check-box{width:20px;height:20px;border:2px solid #bbb;border-radius:4px;display:flex;align-items:center;justify-content:center;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .check-item.checked{background:#f0faf7!important;border-color:#2EAE88!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .check-item.checked .check-box{background:#2EAE88!important;border-color:#2EAE88!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .check-item.checked .check-box svg{opacity:1!important;display:block!important}
+  .check-item:not(.checked) .check-box svg{opacity:0!important}
+  .situacao-card{background:#f8f8f8;border-color:#ddd}
+  .sit-body{display:block!important}
+  .conclusao-final{background:#f0f0f0;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .conclusao-final h2,.conclusao-final p,.conclusao-frase{color:#000!important}
+  @page{margin:16mm;size:A4}
+}
+}
+
+@media(max-width:960px){
+  .hero{grid-template-columns:1fr}
+  .hero-right{padding:48px 32px}
+  .checklist-wrap{grid-template-columns:1fr}
+  .section-full{padding:64px 28px}
+  .nav{padding:16px 24px}
+  .footer{padding:36px 28px;flex-direction:column;gap:16px;text-align:center}
+  .conclusao-final{padding:36px 24px}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-logo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1522.18 1913.52" style="width:44px;height:55px;"><defs><style>.st1{fill:#fff}</style></defs><g id="COR_BRANCA"><g><g><path class="st1" d="M1295.79,1294.28c76.42-35.96,74.92-61.44,74.92-61.44-40.46,11.99-89.91-13.49-89.91-13.49-37.73,48.91-54.6,106.9-56.7,114.5,1.51-2.45,11.4-11.2,71.69-39.57Z"/><path class="st1" d="M1148.94,1397.68c-23.98-62.94-118.38-101.9-118.38-101.9-102.19,28.37-137.86-59.94-137.86-59.94-44.51-128.69,76.42-170.82,76.42-170.82-40.75-71.16,4.5-121.37,4.5-121.37,60.2-60.47,121.38-20.98,121.38-20.98,74.92-136.36,181.31-25.47,181.31-25.47,134.86-41.96,140.85,94.4,140.85,94.4,47.95,28.47,58.44,76.42,58.44,76.42,22.45,10.3,37,23.69,46.23,38.01-21.87-178.76-174.1-317.24-358.77-317.24-199.69,0-361.57,161.88-361.57,361.57s153.62,353.09,346.15,361.18l1.29-113.86Z"/><path class="st1" d="M1171.41,1246.33c13.49,20.98,19.48,64.43,19.48,64.43l34.46-86.91c-16.48,17.98-53.94,22.48-53.94,22.48Z"/><path class="st1" d="M1411.17,1246.33c-8.99,19.48-16.48,28.47-16.48,28.47-22.48,34.46-95.9,58.44-134.86,82.42-38.96,23.98-37.46,43.46-37.46,43.46l1.25,106.11c148.98-25.13,266.94-141.31,294.72-289.38-41.83,53.21-107.16,28.93-107.16,28.93Z"/><path class="st1" d="M1106.98,1231.35c-19.48,38.96-35.96,43.46-35.96,43.46,41.96,22.48,79.42,59.94,79.42,59.94,1.5-55.44-22.48-97.4-22.48-97.4-16.48,0-20.98-5.99-20.98-5.99Z"/></g><circle class="st1" cx="412.7" cy="361.39" r="361.39"/><rect class="st1" x="801.5" y="11.27" width="717.69" height="691.54"/><polygon class="st1" points="405.82 807.35 816.24 1511.92 0 1511.92 405.82 807.35"/><g><path class="st1" d="M33.57,1612.25h69.93v236.08s-.33,13.39,12.74,13.71c13.07.33,19.28,0,19.28,0l2.29,45.06s-38.56,10.78-67.96,1.96c0,0-32.68-9.14-36.27-51.92v-244.9Z"/><path class="st1" d="M148.26,1694.54h75.48v124.08s.98,39.84,33.98,38.86c0,0,18.63,2.94,34.96-16v-146.94h75.15v213.22h-71.23v-27.43s-22.55,32.11-63.06,32.11c0,0-73.2,9.03-85.29-81.74v-136.16Z"/><path class="st1" d="M405.42,1694.54h69.6v27.43s15.68-32,63.06-31.02c0,0,40.19-2.94,62.41,34.94,0,0,27.77-38.31,68.95-34.99,0,0,57.18-6.48,78.09,57.52,0,0,4.25,10.45,5.23,42.12v117.88h-71.89l-.65-130.61s-8.15-33.8-35.27-32.82c0,0-15.05-1.47-29.08,13.5l-.02,149.93h-72.21l-.98-123.43s2.29-43.43-32.68-40.49c0,0-19.61-1.63-32.35,17.31v146.61h-72.21v-213.88Z"/><path class="st1" d="M796.87,1639.03h69.6v55.84h61.1v52.24h-61.1l.33,90.78s1.63,21.55,24.83,20.24c0,0,19.93.33,32.02-4.57l3.92,48.98s-23.2,9.8-57.84,9.47c0,0-71.89,4.24-72.87-74.78v-89.8l-32.68-.06v-52.84h32.35l.33-55.51Z"/><path class="st1" d="M942.44,1694.78h71.8v33.55s10.78-30.86,43.87-33.55c0,0,8.33-2.45,29.65,0v59.75s-53.91-3.8-72.66,21v132.88h-72.66v-213.63Z"/><g><path class="st1" d="M1295.96,1822.25h-136.39c2.18,30.36,21.3,45.53,57.38,45.53,23,0,43.21-5.44,60.64-16.33v46.55c-19.33,10.35-44.44,15.52-75.34,15.52-33.76,0-59.96-9.36-78.6-28.07-18.65-18.72-27.97-44.82-27.97-78.3s10.07-62.2,30.22-82.49c20.14-20.28,44.92-30.42,74.32-30.42s54.07,9.05,70.74,27.15c16.67,18.11,25.01,42.67,25.01,73.71v27.16ZM1236.14,1782.64c0-29.94-12.11-44.92-36.34-44.92-10.35,0-19.3,4.29-26.85,12.86-7.56,8.58-12.15,19.26-13.78,32.06h76.97Z"/><path class="st1" d="M1522.18,1822.25h-136.39c2.18,30.36,21.3,45.53,57.38,45.53,23,0,43.21-5.44,60.64-16.33v46.55c-19.33,10.35-44.44,15.52-75.34,15.52-33.76,0-59.96-9.36-78.6-28.07-18.65-18.72-27.97-44.82-27.97-78.3s10.07-62.2,30.22-82.49c20.14-20.28,44.92-30.42,74.32-30.42s54.07,9.05,70.74,27.15c16.67,18.11,25.01,42.67,25.01,73.71v27.16ZM1462.36,1782.64c0-29.94-12.11-44.92-36.34-44.92-10.35,0-19.3,4.29-26.85,12.86-7.56,8.58-12.15,19.26-13.78,32.06h76.97Z"/></g></g></g></g></svg>
+    <span class="nav-label">Lumtree Educação Corporativa</span>
+  </div>
+  <span class="nav-tag">Material de Apoio</span>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="kicker">Base da Gestão de Projetos · Encerramento</div>
+    <div>
+      <h1 class="title-main">Para levar<br><span class="yl">para sempre</span></h1>
+      <p class="title-sub">Duas ferramentas práticas para usar em qualquer projeto — agora e daqui a cinco anos.</p>
+      <div class="hero-badges">
+        <span class="badge badge-yellow">Checklist de abertura</span>
+        <span class="badge badge-green">Guia de sobrevivência</span>
+        <span class="badge">Imprimível</span>
+      </div>
+    </div>
+    <div class="hero-foot">lumtree.com.br · 2026</div>
+  </div>
+  <div class="hero-right">
+    <div class="eyebrow">Por que este material existe</div>
+    <p class="intro-text">
+      O curso acabou — mas os projetos continuam.<br><br>
+      Dois momentos concentram a maioria dos erros: <em>o início</em>, quando ninguém diz "opa, vamos estruturar.", e <em>as crises</em>, quando tudo parece urgente e nada tem solução óbvia.
+    </p>
+    <div class="accent-bar"></div>
+    <p class="body-text">Este material foi criado para esses dois momentos. O checklist te protege no início. O guia te orienta quando o projeto começa a travar.</p>
+    <p class="body-text" style="margin-bottom:0">Imprima, salve ou cole na parede. O valor está em usar — não em guardar.</p>
+  </div>
+</section>
+
+<!-- CHECKLIST -->
+<section class="section-full s-warm" id="checklist">
+  <div class="eyebrow">Ferramenta 1</div>
+  <h2 class="section-heading">Checklist de <span class="hl-y">abertura de projeto</span></h2>
+  <p class="section-desc">10 perguntas que toda pessoa profissional deveria responder antes de começar qualquer projeto. Marque à medida que for respondendo. Quando todas estiverem marcadas, o projeto está pronto para começar.</p>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <span class="progress-label" id="progressLabel">0 de 10 respondidas</span>
+  </div>
+
+  <div class="checklist-wrap" id="checklistWrap">
+
+    <div class="check-item" onclick="toggleCheck(this)">
+      <div class="check-box">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <div class="check-content">
+        <div class="check-num">01</div>
+        <div class="check-title">O objetivo está definido em uma frase mensurável?</div>
+        <div class="check-desc">Não "melhorar o atendimento" — mas "reduzir o tempo de resposta de 48h para 24h até julho".</div>
+        <div class="check-example">Se não consegue escrever em uma frase com prazo e número, o objetivo ainda não está claro.</div>
+      </div>
+    </div>
+
+    <div class="check-item" onclick="toggleCheck(this)">
+      <div class="check-box">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <div class="check-content">
+        <div class="check-num">02</div>
+        <div class="check-title">O escopo está documentado — dentro E fora?</div>
+        <div class="check-desc">O que está incluído é tão importante quanto o que não está. Sem o "fora", o scope creep (expansão não controlada) é questão de tempo.</div>
+        <div class="check-example">Ex: "Dentro: sede. Fora: filiais e migração de dados históricos."</div>
+      </div>
+    </div>
+
+    <div class="check-item" onclick="toggleCheck(this)">
+      <div class="check-box">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <div class="check-content">
+        <div class="check-num">03</div>
+        <div class="check-title">O patrocinador (sponsor) está identificado e comprometido?</div>
+        <div class="check-desc">Projeto sem patrocinador ativo é projeto sem proteção. Quem vai destravar quando o orçamento for cortado ou duas áreas entrarem em conflito?</div>
+        <div class="check-example">Se a resposta for "acho que é o meu gestor", confirme antes de começar.</div>
+      </div>
+    </div>
+
+    <div class="check-item" onclick="toggleCheck(this)">
+      <div class="check-box">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <div class="check-content">
+        <div class="check-num">04</div>
+        <div class="check-title">Os stakeholders (pessoas com interesse no projeto) foram mapeados?</div>
+        <div class="check-desc">Inclui quem vai usar, quem vai aprovar, quem pode bloquear e quem será impactado — mesmo que indiretamente.</div>
+        <div class="check-example">O jurídico que aprova no final mas nunca foi envolvido no início é o stakeholder mais caro que existe.</div>
+      </div>
+    </div>
+
+    <div class="check-item" onclick="toggleCheck(this)">
+      <div class="check-box">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <div class="check-content">
+        <div class="check-num">05</div>
+        <div class="check-title">Os papéis e responsabilidades estão claros para toda a equipe?</div>
+        <div class="check-desc">Quem executa, quem aprova, quem precisa ser consultado e quem apenas recebe o resultado. Sem RACI (matriz de responsabilidades), a frase mais cara do projeto é "eu achei que você ia fazer isso".</div>
+        <div class="check-example">Se mais de uma pessoa "é responsável", ninguém é.</div>
+      </div>
+    </div>
+
+    <div class="check-item" onclick="toggleCheck(this)">
+      <div class="check-box">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <div class="check-content">
+        <div class="check-num">06</div>
+        <div class="check-title">O cronograma tem datas realistas — com dependências?</div>
+        <div class="check-desc">Não é a lista de tarefas. É a sequência lógica com o que depende do quê. Um cronograma sem dependências é só uma lista de desejos com datas.</div>
+        <div class="check-example">A aprovação jurídica depende do contrato pronto. O contrato depende da proposta aprovada. Coloque isso no cronograma.</div>
+      </div>
+    </div>
+
+    <div class="check-item" onclick="toggleCheck(this)">
+      <div class="check-box">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <div class="check-content">
+        <div class="check-num">07</div>
+        <div class="check-title">Os 5 maiores riscos foram identificados e têm plano de resposta?</div>
+        <div class="check-desc">Não precisa ser uma planilha elaborada. Cinco riscos com probabilidade, impacto e o que fazer se acontecer já é infinitamente melhor do que zero.</div>
+        <div class="check-example">Risco não gerenciado não deixa de existir — só aparece mais tarde, quando custa mais resolver.</div>
+      </div>
+    </div>
+
+    <div class="check-item" onclick="toggleCheck(this)">
+      <div class="check-box">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <div class="check-content">
+        <div class="check-num">08</div>
+        <div class="check-title">O orçamento aprovado cobre o escopo planejado — com reserva?</div>
+        <div class="check-desc">Todo projeto tem surpresas. A reserva de contingência não é pessimismo — é gestão profissional. Recomendação mínima: 10% do valor total.</div>
+        <div class="check-example">Se o orçamento foi aprovado sem reserva, documente o risco com o patrocinador antes de começar.</div>
+      </div>
+    </div>
+
+    <div class="check-item" onclick="toggleCheck(this)">
+      <div class="check-box">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <div class="check-content">
+        <div class="check-num">09</div>
+        <div class="check-title">O plano de comunicação está definido?</div>
+        <div class="check-desc">Quem recebe o quê, com qual frequência e por qual canal. Sem isso, a comunicação será reativa — e reuniões de emergência viram rotina.</div>
+        <div class="check-example">Status report semanal para o sponsor. Daily de 15 minutos para o time. Nada mais complicado do que isso para começar.</div>
+      </div>
+    </div>
+
+    <div class="check-item" onclick="toggleCheck(this)">
+      <div class="check-box">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <div class="check-content">
+        <div class="check-num">10</div>
+        <div class="check-title">O kickoff (reunião de abertura) está agendado com todas as pessoas-chave?</div>
+        <div class="check-desc">O kickoff não é formalidade — é o momento em que todas as pessoas envolvidas alinham o objetivo, os papéis e as expectativas ao mesmo tempo. Projetos que pulam o kickoff começam com suposições.</div>
+        <div class="check-example">Se não consegue reunir as pessoas-chave, o projeto não está pronto para começar.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <button class="btn-download-check" onclick="imprimirChecklist()">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+    Imprimir / Salvar como PDF
+  </button>
+</section>
+
+<!-- GUIA DE SOBREVIVÊNCIA -->
+<section class="section-full s-dark" id="guia">
+  <div class="eyebrow">Ferramenta 2</div>
+  <h2 class="section-heading">Guia de <span class="hl-r">sobrevivência</span> executiva</h2>
+  <p class="section-desc">5 situações difíceis que acontecem em todo projeto bem-intencionado — e como navegar cada uma sem perder o controle ou a credibilidade.</p>
+
+  <div class="situacoes-grid">
+
+    <div class="situacao-card" onclick="toggleSit(this)">
+      <div class="sit-header">
+        <span class="sit-num">01</span>
+        <div class="sit-icon" style="background:rgba(227,35,40,0.12)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#E32328" stroke-width="2"><path d="M3 3l18 18M10.5 10.677a2 2 0 1 0 2.823 2.823"/><path d="M13.5 13.5a9 9 0 0 0-8.41-1.02M6 6a9 9 0 0 1 12.842 1.53"/></svg>
+        </div>
+        <div class="sit-info">
+          <div class="sit-title">O escopo está crescendo sem parar</div>
+          <div class="sit-subtitle">Scope creep — o assassino silencioso dos projetos</div>
+        </div>
+        <span class="sit-arrow">›</span>
+      </div>
+      <div class="sit-body">
+        <div class="sit-sintoma">
+          <div class="sit-sintoma-label">Como reconhecer</div>
+          <p class="sit-sintoma-text">O cliente ou a liderança pede "só uma pequena mudança" toda semana. Individualmente parece razoável. Somadas, essas mudanças estão consumindo o cronograma e o orçamento.</p>
+        </div>
+        <div class="sit-passos">
+          <div class="sit-passo">
+            <div class="sit-passo-num">1</div>
+            <p class="sit-passo-text"><strong style="color:#fff">Documente cada solicitação</strong> — mesmo as "pequenas". Sem registro, não há base para negociar.</p>
+          </div>
+          <div class="sit-passo">
+            <div class="sit-passo-num">2</div>
+            <p class="sit-passo-text"><strong style="color:#fff">Avalie o impacto real</strong> de cada solicitação em prazo, custo e escopo. Torne o impacto visível — números concretos.</p>
+          </div>
+          <div class="sit-passo">
+            <div class="sit-passo-num">3</div>
+            <p class="sit-passo-text"><strong style="color:#fff">Apresente a escolha</strong>: incluir a mudança significa [X dias a mais / R$Y a mais / retirar Z do escopo original]. Quem decide é o sponsor — não você.</p>
+          </div>
+          <div class="sit-passo">
+            <div class="sit-passo-num">4</div>
+            <p class="sit-passo-text"><strong style="color:#fff">Formalize a decisão</strong> por e-mail. Sempre. Mesmo que seja uma conversa informal — mande o resumo escrito depois.</p>
+          </div>
+        </div>
+        <div class="sit-frase">
+          <div class="sit-frase-label">Como comunicar</div>
+          <p class="sit-frase-text">"Posso incluir essa mudança — mas precisamos alinhar o impacto antes de seguir. Isso vai adicionar [prazo/custo] ou vai exigir retirar [X] do escopo original. Como você quer proceder?"</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="situacao-card" onclick="toggleSit(this)">
+      <div class="sit-header">
+        <span class="sit-num">02</span>
+        <div class="sit-icon" style="background:rgba(252,199,10,0.10)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FCC70A" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <div class="sit-info">
+          <div class="sit-title">Um stakeholder importante sumiu</div>
+          <div class="sit-subtitle">O aprovador que não aprova — e não nega</div>
+        </div>
+        <span class="sit-arrow">›</span>
+      </div>
+      <div class="sit-body">
+        <div class="sit-sintoma">
+          <div class="sit-sintoma-label">Como reconhecer</div>
+          <p class="sit-sintoma-text">Uma pessoa com alto poder não responde e-mails, cancela reuniões ou simplesmente está "ocupada demais". O projeto depende de uma aprovação que não vem.</p>
+        </div>
+        <div class="sit-passos">
+          <div class="sit-passo">
+            <div class="sit-passo-num">1</div>
+            <p class="sit-passo-text"><strong style="color:#fff">Entenda o porquê</strong> antes de agir. Resistência passiva geralmente tem uma causa — não sabe o que decidir, não concorda com o escopo ou não foi bem informado.</p>
+          </div>
+          <div class="sit-passo">
+            <div class="sit-passo-num">2</div>
+            <p class="sit-passo-text"><strong style="color:#fff">Simplifique a decisão</strong>. Em vez de "precisamos de sua aprovação", ofereça: "Preciso de um sim ou um não sobre [ponto específico] até [data]."</p>
+          </div>
+          <div class="sit-passo">
+            <div class="sit-passo-num">3</div>
+            <p class="sit-passo-text"><strong style="color:#fff">Documente o impacto do silêncio</strong>. "Se não recebermos uma definição até [data], o projeto vai atrasar [X semanas]." Torne o custo da omissão visível.</p>
+          </div>
+          <div class="sit-passo">
+            <div class="sit-passo-num">4</div>
+            <p class="sit-passo-text"><strong style="color:#fff">Acione o patrocinador</strong> se o bloqueio persistir. É exatamente para isso que o sponsor existe — não como recurso de último caso, mas como aliado estratégico.</p>
+          </div>
+        </div>
+        <div class="sit-frase">
+          <div class="sit-frase-label">Como comunicar</div>
+          <p class="sit-frase-text">"Preciso da sua definição sobre [ponto X] até [data] para manter o prazo de entrega. Caso não receba até lá, vou assumir [alternativa] e seguir — ou podemos agendar 15 minutos essa semana para alinhar?"</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="situacao-card" onclick="toggleSit(this)">
+      <div class="sit-header">
+        <span class="sit-num">03</span>
+        <div class="sit-icon" style="background:rgba(227,35,40,0.12)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#E32328" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <div class="sit-info">
+          <div class="sit-title">O prazo vai estourar</div>
+          <div class="sit-subtitle">Quando o cronograma encontra a realidade</div>
+        </div>
+        <span class="sit-arrow">›</span>
+      </div>
+      <div class="sit-body">
+        <div class="sit-sintoma">
+          <div class="sit-sintoma-label">Como reconhecer</div>
+          <p class="sit-sintoma-text">As entregas estão atrasando consistentemente, a equipe está sobrecarregada e os marcos foram perdidos mais de uma vez. O prazo original não vai ser cumprido.</p>
+        </div>
+        <div class="sit-passos">
+          <div class="sit-passo">
+            <div class="sit-passo-num">1</div>
+            <p class="sit-passo-text"><strong style="color:#fff">Confirme o diagnóstico</strong> com dados antes de comunicar. Quantos dias de atraso? Qual é a causa raiz? Quanto custaria recuperar?</p>
+          </div>
+          <div class="sit-passo">
+            <div class="sit-passo-num">2</div>
+            <p class="sit-passo-text"><strong style="color:#fff">Apresente 3 alternativas</strong> ao sponsor: (a) manter prazo reduzindo escopo; (b) manter escopo estendendo prazo; (c) manter ambos aumentando recursos. A decisão é dele — não sua.</p>
+          </div>
+          <div class="sit-passo">
+            <div class="sit-passo-num">3</div>
+            <p class="sit-passo-text"><strong style="color:#fff">Comunique cedo</strong>. Avisar com antecedência é profissionalismo. Avisar na véspera é crise. A liderança perdoa o atraso — dificilmente perdoa a surpresa.</p>
+          </div>
+          <div class="sit-passo">
+            <div class="sit-passo-num">4</div>
+            <p class="sit-passo-text"><strong style="color:#fff">Revise a baseline</strong> após a decisão. O novo prazo aprovado passa a ser a referência — não o original.</p>
+          </div>
+        </div>
+        <div class="sit-frase">
+          <div class="sit-frase-label">Como comunicar</div>
+          <p class="sit-frase-text">"Identifiquei que o prazo original não será cumprido. Trouxe três alternativas com impactos diferentes em escopo, prazo e custo. Qual caminho faz mais sentido para você?"</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="situacao-card" onclick="toggleSit(this)">
+      <div class="sit-header">
+        <span class="sit-num">04</span>
+        <div class="sit-icon" style="background:rgba(54,100,172,0.12)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3664AC" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+        </div>
+        <div class="sit-info">
+          <div class="sit-title">A equipe não está entregando</div>
+          <div class="sit-subtitle">Quando o problema não é técnico — é humano</div>
+        </div>
+        <span class="sit-arrow">›</span>
+      </div>
+      <div class="sit-body">
+        <div class="sit-sintoma">
+          <div class="sit-sintoma-label">Como reconhecer</div>
+          <p class="sit-sintoma-text">Entregas chegam incompletas, fora do prazo ou com qualidade abaixo do esperado. A equipe parece desmotivada, sobrecarregada ou confusa sobre o que precisa fazer.</p>
+        </div>
+        <div class="sit-passos">
+          <div class="sit-passo">
+            <div class="sit-passo-num">1</div>
+            <p class="sit-passo-text"><strong style="color:#fff">Diagnostique antes de cobrar</strong>. O problema é clareza (não sabem o que fazer), capacidade (não conseguem fazer) ou motivação (não querem fazer)? A solução é diferente para cada caso.</p>
+          </div>
+          <div class="sit-passo">
+            <div class="sit-passo-num">2</div>
+            <p class="sit-passo-text"><strong style="color:#fff">Verifique se o RACI está claro</strong>. Muitas vezes o problema não é a pessoa — é que a responsabilidade nunca foi formalizada de forma que ela entendesse.</p>
+          </div>
+          <div class="sit-passo">
+            <div class="sit-passo-num">3</div>
+            <p class="sit-passo-text"><strong style="color:#fff">Converse em privado</strong>, com fatos e sem julgamento. "Observei que [entrega X] não chegou no prazo combinado. O que aconteceu?" — não "você não está entregando".</p>
+          </div>
+          <div class="sit-passo">
+            <div class="sit-passo-num">4</div>
+            <p class="sit-passo-text"><strong style="color:#fff">Se for problema de capacidade ou carga</strong>, leve para o sponsor — é uma decisão de recursos, não sua para resolver sozinha.</p>
+          </div>
+        </div>
+        <div class="sit-frase">
+          <div class="sit-frase-label">Como comunicar</div>
+          <p class="sit-frase-text">"Quero entender o que está dificultando antes de qualquer conclusão. O que você precisa para conseguir entregar [X] até [data]? Tem algo que eu possa remover do seu caminho?"</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="situacao-card" onclick="toggleSit(this)">
+      <div class="sit-header">
+        <span class="sit-num">05</span>
+        <div class="sit-icon" style="background:rgba(46,174,136,0.10)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2EAE88" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </div>
+        <div class="sit-info">
+          <div class="sit-title">A reunião terminou sem decisão</div>
+          <div class="sit-subtitle">Quando todo mundo concorda mas nada avança</div>
+        </div>
+        <span class="sit-arrow">›</span>
+      </div>
+      <div class="sit-body">
+        <div class="sit-sintoma">
+          <div class="sit-sintoma-label">Como reconhecer</div>
+          <p class="sit-sintoma-text">A reunião durou uma hora, todo mundo participou, mas ao sair ninguém sabe ao certo o que foi decidido, quem vai fazer o quê e até quando. O projeto continua no mesmo lugar.</p>
+        </div>
+        <div class="sit-passos">
+          <div class="sit-passo">
+            <div class="sit-passo-num">1</div>
+            <p class="sit-passo-text"><strong style="color:#fff">Defina o objetivo da reunião antes</strong>, não durante. "Precisamos sair com [decisão X]" — não "vamos discutir o projeto".</p>
+          </div>
+          <div class="sit-passo">
+            <div class="sit-passo-num">2</div>
+            <p class="sit-passo-text"><strong style="color:#fff">Reserve os últimos 5 minutos</strong> para o resumo das decisões: o que foi decidido, quem é o responsável e qual é o prazo. Em voz alta, na frente de todos.</p>
+          </div>
+          <div class="sit-passo">
+            <div class="sit-passo-num">3</div>
+            <p class="sit-passo-text"><strong style="color:#fff">Mande a ata em até 2 horas</strong>. Não precisa ser longa — 3 tópicos são suficientes: decisões tomadas, próximas ações com responsáveis e datas, e pontos em aberto.</p>
+          </div>
+          <div class="sit-passo">
+            <div class="sit-passo-num">4</div>
+            <p class="sit-passo-text"><strong style="color:#fff">Se a decisão não puder ser tomada na reunião</strong>, defina quem decide, quando decide e como o resultado será comunicado. Sair sem isso é sair sem nada.</p>
+          </div>
+        </div>
+        <div class="sit-frase">
+          <div class="sit-frase-label">Como fechar a reunião</div>
+          <p class="sit-frase-text">"Antes de encerrar: confirmando o que decidimos — [decisão 1] fica com [nome] até [data], [decisão 2] fica com [nome] até [data]. Correto? Vou mandar o resumo por e-mail até o fim do dia."</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CONCLUSÃO FINAL -->
+<section class="section-full s-mid">
+  <div class="conclusao-final">
+    <h2>O curso acabou.<br><em>A gestão continua.</em></h2>
+    <p>Você sai daqui com método, ferramentas e dois recursos que vão funcionar em qualquer projeto que vier pela frente. Use o checklist sempre que um projeto novo aparecer. Volte ao guia quando as coisas ficarem desafiadoras — e as vezes elas ficam.</p>
+    <div class="conclusao-frase">Vamos juntos e juntas para o próximo curso da Lumtree? 🌿</div>
+  </div>
+
+  <div class="kiwify-msg">
+    <p><strong>Parabéns!</strong> Você fez o seu melhor e aproveitou cada aprendizado! Feche esta página e volte para o ambiente do curso. Use o menu à direita da plataforma para acessar os módulos e toolkits quando precisar. Aproveite e baixe seu certificado!</p>
+  </div>
+</section>
+
+<footer class="footer">
+  <div style="display:flex;align-items:center;gap:10px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1522.18 1913.52" style="width:36px;height:45px;"><defs><style>.st1{fill:#fff}</style></defs><g id="COR_BRANCA"><g><g><path class="st1" d="M1295.79,1294.28c76.42-35.96,74.92-61.44,74.92-61.44-40.46,11.99-89.91-13.49-89.91-13.49-37.73,48.91-54.6,106.9-56.7,114.5,1.51-2.45,11.4-11.2,71.69-39.57Z"/><path class="st1" d="M1148.94,1397.68c-23.98-62.94-118.38-101.9-118.38-101.9-102.19,28.37-137.86-59.94-137.86-59.94-44.51-128.69,76.42-170.82,76.42-170.82-40.75-71.16,4.5-121.37,4.5-121.37,60.2-60.47,121.38-20.98,121.38-20.98,74.92-136.36,181.31-25.47,181.31-25.47,134.86-41.96,140.85,94.4,140.85,94.4,47.95,28.47,58.44,76.42,58.44,76.42,22.45,10.3,37,23.69,46.23,38.01-21.87-178.76-174.1-317.24-358.77-317.24-199.69,0-361.57,161.88-361.57,361.57s153.62,353.09,346.15,361.18l1.29-113.86Z"/><path class="st1" d="M1171.41,1246.33c13.49,20.98,19.48,64.43,19.48,64.43l34.46-86.91c-16.48,17.98-53.94,22.48-53.94,22.48Z"/><path class="st1" d="M1411.17,1246.33c-8.99,19.48-16.48,28.47-16.48,28.47-22.48,34.46-95.9,58.44-134.86,82.42-38.96,23.98-37.46,43.46-37.46,43.46l1.25,106.11c148.98-25.13,266.94-141.31,294.72-289.38-41.83,53.21-107.16,28.93-107.16,28.93Z"/><path class="st1" d="M1106.98,1231.35c-19.48,38.96-35.96,43.46-35.96,43.46,41.96,22.48,79.42,59.94,79.42,59.94,1.5-55.44-22.48-97.4-22.48-97.4-16.48,0-20.98-5.99-20.98-5.99Z"/></g><circle class="st1" cx="412.7" cy="361.39" r="361.39"/><rect class="st1" x="801.5" y="11.27" width="717.69" height="691.54"/><polygon class="st1" points="405.82 807.35 816.24 1511.92 0 1511.92 405.82 807.35"/><g><path class="st1" d="M33.57,1612.25h69.93v236.08s-.33,13.39,12.74,13.71c13.07.33,19.28,0,19.28,0l2.29,45.06s-38.56,10.78-67.96,1.96c0,0-32.68-9.14-36.27-51.92v-244.9Z"/><path class="st1" d="M148.26,1694.54h75.48v124.08s.98,39.84,33.98,38.86c0,0,18.63,2.94,34.96-16v-146.94h75.15v213.22h-71.23v-27.43s-22.55,32.11-63.06,32.11c0,0-73.2,9.03-85.29-81.74v-136.16Z"/><path class="st1" d="M405.42,1694.54h69.6v27.43s15.68-32,63.06-31.02c0,0,40.19-2.94,62.41,34.94,0,0,27.77-38.31,68.95-34.99,0,0,57.18-6.48,78.09,57.52,0,0,4.25,10.45,5.23,42.12v117.88h-71.89l-.65-130.61s-8.15-33.8-35.27-32.82c0,0-15.05-1.47-29.08,13.5l-.02,149.93h-72.21l-.98-123.43s2.29-43.43-32.68-40.49c0,0-19.61-1.63-32.35,17.31v146.61h-72.21v-213.88Z"/><path class="st1" d="M796.87,1639.03h69.6v55.84h61.1v52.24h-61.1l.33,90.78s1.63,21.55,24.83,20.24c0,0,19.93.33,32.02-4.57l3.92,48.98s-23.2,9.8-57.84,9.47c0,0-71.89,4.24-72.87-74.78v-89.8l-32.68-.06v-52.84h32.35l.33-55.51Z"/><path class="st1" d="M942.44,1694.78h71.8v33.55s10.78-30.86,43.87-33.55c0,0,8.33-2.45,29.65,0v59.75s-53.91-3.8-72.66,21v132.88h-72.66v-213.63Z"/><g><path class="st1" d="M1295.96,1822.25h-136.39c2.18,30.36,21.3,45.53,57.38,45.53,23,0,43.21-5.44,60.64-16.33v46.55c-19.33,10.35-44.44,15.52-75.34,15.52-33.76,0-59.96-9.36-78.6-28.07-18.65-18.72-27.97-44.82-27.97-78.3s10.07-62.2,30.22-82.49c20.14-20.28,44.92-30.42,74.32-30.42s54.07,9.05,70.74,27.15c16.67,18.11,25.01,42.67,25.01,73.71v27.16ZM1236.14,1782.64c0-29.94-12.11-44.92-36.34-44.92-10.35,0-19.3,4.29-26.85,12.86-7.56,8.58-12.15,19.26-13.78,32.06h76.97Z"/><path class="st1" d="M1522.18,1822.25h-136.39c2.18,30.36,21.3,45.53,57.38,45.53,23,0,43.21-5.44,60.64-16.33v46.55c-19.33,10.35-44.44,15.52-75.34,15.52-33.76,0-59.96-9.36-78.6-28.07-18.65-18.72-27.97-44.82-27.97-78.3s10.07-62.2,30.22-82.49c20.14-20.28,44.92-30.42,74.32-30.42s54.07,9.05,70.74,27.15c16.67,18.11,25.01,42.67,25.01,73.71v27.16ZM1462.36,1782.64c0-29.94-12.11-44.92-36.34-44.92-10.35,0-19.3,4.29-26.85,12.86-7.56,8.58-12.15,19.26-13.78,32.06h76.97Z"/></g></g></g></g></svg></div>
+  <div class="footer-copy">© 2026 Lumtree Educação Corporativa · Todos os direitos reservados</div>
+</footer>
+
+<script>
+// Checklist interativo
+function toggleCheck(item) {
+  item.classList.toggle('checked');
+  updateProgress();
+}
+
+function updateProgress() {
+  const total = document.querySelectorAll('.check-item').length;
+  const done  = document.querySelectorAll('.check-item.checked').length;
+  const pct   = Math.round((done / total) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = done + ' de ' + total + ' respondidas';
+}
+
+function imprimirChecklist() {
+  window.print();
+}
+
+// Guia de sobrevivência
+function toggleSit(card) {
+  const isOpen = card.classList.contains('open');
+  document.querySelectorAll('.situacao-card.open').forEach(c => c.classList.remove('open'));
+  if (!isOpen) card.classList.add('open');
+}
+</script>
+</body>
+</html>
