@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Módulo 3 — Cases sob pressão · LumTree</title>
+<!-- REVISED: mixed correct answers, inclusive language, jargon glosses, no nav button -->
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --black: #0a0a0a;
+  --ink: #1a1a1a;
+  --blue: #2E4FA3;
+  --yellow: #F5C200;
+  --green: #1FA876;
+  --red: #E05252;
+  --orange: #E07B2A;
+  --border: rgba(255,255,255,0.10);
+  --border2: rgba(255,255,255,0.06);
+  --accent: #2E4FA3;
+  --accent-light: rgba(46,79,163,0.12);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  background: #0a0a0a;
+  color: #fff;
+  line-height: 1.6;
+}
+
+/* ── NAV ── */
+.nav {
+  position: sticky; top: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 52px;
+  background: rgba(10,10,10,0.95);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+
+.nav-logo {
+  font-family: 'Fraunces', serif;
+  font-size: 18px; font-weight: 900;
+  color: #fff; letter-spacing: -0.02em;
+}
+.nav-logo span { color: var(--yellow); }
+
+.nav-pill {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 12px; color: rgba(255,255,255,0.5);
+  border: 1px solid var(--border);
+  padding: 4px 14px; border-radius: 100px;
+}
+
+.nav-links { display: flex; gap: 24px; }
+.nav-links a {
+  font-size: 13px; color: rgba(255,255,255,0.5);
+  text-decoration: none; transition: color 0.2s;
+}
+.nav-links a:hover { color: #fff; }
+.nav-links a.active { color: var(--yellow); font-weight: 500; }
+
+/* ── HERO ── */
+.hero {
+  padding: 80px 52px 60px;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(135deg, #0a0a0a 0%, #0d1228 100%);
+}
+
+.mod-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 11px; font-weight: 600; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--yellow);
+  margin-bottom: 24px;
+}
+.mod-badge::before {
+  content: ''; width: 28px; height: 2px; background: var(--yellow);
+}
+
+.hero h1 {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(36px, 5vw, 58px);
+  font-weight: 900; line-height: 1.08;
+  margin-bottom: 20px;
+}
+
+.hero h1 em { font-style: italic; color: var(--yellow); }
+
+.hero-sub {
+  font-size: 17px; line-height: 1.75;
+  color: rgba(255,255,255,0.65);
+  max-width: 620px; margin-bottom: 40px;
+}
+
+.hero-meta {
+  display: flex; gap: 32px; align-items: center;
+  flex-wrap: wrap;
+}
+
+.meta-item {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 13px; color: rgba(255,255,255,0.5);
+}
+.meta-dot { width: 6px; height: 6px; border-radius: 50%; }
+.meta-dot.blue { background: var(--blue); }
+.meta-dot.yellow { background: var(--yellow); }
+.meta-dot.green { background: var(--green); }
+
+/* ── MAPA DOS CASES ── */
+.cases-map {
+  padding: 60px 52px;
+  border-bottom: 1px solid var(--border);
+}
+
+.section-label {
+  font-size: 10px; font-weight: 600; letter-spacing: 0.22em;
+  text-transform: uppercase; color: rgba(255,255,255,0.3);
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 32px;
+}
+.section-label::after { content:''; flex:1; height:1px; background:var(--border); }
+
+.cases-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.case-card {
+  border: 1.5px solid var(--border);
+  border-radius: 14px;
+  padding: 24px 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: #111;
+  position: relative;
+  overflow: hidden;
+}
+
+.case-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 3px;
+}
+
+.case-card.c1::before { background: var(--orange); }
+.case-card.c2::before { background: var(--blue); }
+.case-card.c3::before { background: var(--green); }
+.case-card.c4::before { background: var(--yellow); }
+
+.case-card:hover {
+  border-color: rgba(255,255,255,0.25);
+  transform: translateY(-4px);
+  box-shadow: 0 16px 48px rgba(0,0,0,0.4);
+}
+
+.case-card.active {
+  border-color: rgba(255,255,255,0.35);
+  background: #161616;
+}
+
+.case-card.done{opacity:0.80;}
+.case-card.done-ok::after{
+  content:'✓ Concluído';
+  position:absolute;top:12px;right:12px;
+  font-size:10px;font-weight:700;letter-spacing:0.1em;
+  font-family:'Montserrat',sans-serif;
+  color:var(--green);border:1px solid rgba(31,168,118,0.4);
+  background:rgba(31,168,118,0.08);padding:3px 10px;border-radius:100px;
+}
+.case-card.done-retry::after{
+  content:'↺ Refazer';
+  position:absolute;top:12px;right:12px;
+  font-size:10px;font-weight:700;letter-spacing:0.1em;
+  font-family:'Montserrat',sans-serif;
+  color:var(--yellow);border:1px solid rgba(245,194,0,0.5);
+  background:rgba(245,194,0,0.08);padding:3px 10px;border-radius:100px;
+}
+
+.case-num {
+  font-family: 'Fraunces', serif;
+  font-size: 11px; font-weight: 600; letter-spacing: 0.15em;
+  text-transform: uppercase; margin-bottom: 12px;
+}
+.c1 .case-num { color: var(--orange); }
+.c2 .case-num { color: #6e8fd4; }
+.c3 .case-num { color: var(--green); }
+.c4 .case-num { color: var(--yellow); }
+
+.case-sector {
+  font-size: 11px; color: rgba(255,255,255,0.4);
+  text-transform: uppercase; letter-spacing: 0.1em;
+  margin-bottom: 8px;
+}
+
+.case-title {
+  font-family: 'Fraunces', serif;
+  font-size: 16px; font-weight: 700; line-height: 1.3;
+  color: #fff; margin-bottom: 12px;
+}
+
+.case-company {
+  font-size: 12px; color: rgba(255,255,255,0.45);
+  margin-bottom: 16px;
+}
+
+.case-tags {
+  display: flex; flex-wrap: wrap; gap: 6px;
+}
+
+.tag {
+  font-size: 10px; font-weight: 600; letter-spacing: 0.08em;
+  padding: 3px 9px; border-radius: 100px;
+  text-transform: uppercase;
+}
+
+.tag.scope { background: rgba(224,123,42,0.15); color: var(--orange); }
+.tag.stake { background: rgba(46,79,163,0.20); color: #6e8fd4; }
+.tag.prazo { background: rgba(224,82,82,0.15); color: var(--red); }
+.tag.risco { background: rgba(31,168,118,0.15); color: var(--green); }
+
+.btn-start {
+  display: inline-flex; align-items: center; gap: 8px;
+  margin-top: 16px;
+  background: transparent; border: 1.5px solid var(--border);
+  border-radius: 8px; padding: 10px 18px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px; color: rgba(255,255,255,0.7);
+  cursor: pointer; transition: all 0.2s;
+  width: 100%; justify-content: center;
+}
+.btn-start:hover { border-color: rgba(255,255,255,0.4); color: #fff; }
+
+/* ── CASE PLAYER ── */
+.case-player {
+  display: none;
+  padding: 60px 52px;
+  border-bottom: 1px solid var(--border);
+}
+
+.case-player.visible { display: block; }
+
+.player-header {
+  display: flex; align-items: flex-start;
+  justify-content: space-between; gap: 24px;
+  margin-bottom: 40px;
+}
+
+.player-badge {
+  font-size: 11px; font-weight: 600; letter-spacing: 0.15em;
+  text-transform: uppercase; margin-bottom: 8px;
+}
+.c1 .player-badge { color: var(--orange); }
+.c2 .player-badge { color: #6e8fd4; }
+.c3 .player-badge { color: var(--green); }
+.c4 .player-badge { color: var(--yellow); }
+
+.player-title {
+  font-family: 'Fraunces', serif;
+  font-size: 28px; font-weight: 700; line-height: 1.2;
+}
+
+.player-company {
+  font-size: 13px; color: rgba(255,255,255,0.45); margin-top: 6px;
+}
+
+.btn-close {
+  background: transparent; border: 1.5px solid var(--border);
+  border-radius: 8px; padding: 10px 18px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px; color: rgba(255,255,255,0.5);
+  cursor: pointer; transition: all 0.2s; white-space: nowrap;
+  flex-shrink: 0;
+}
+.btn-close:hover { border-color: rgba(255,255,255,0.3); color: #fff; }
+
+/* Barra de progresso */
+.progress-bar {
+  display: flex; gap: 8px; margin-bottom: 40px;
+}
+
+.progress-step {
+  flex: 1; height: 4px; border-radius: 100px;
+  background: rgba(255,255,255,0.1);
+  transition: background 0.4s;
+}
+.progress-step.done { background: var(--green); }
+.progress-step.active { background: var(--yellow); }
+
+/* Cenário */
+.scenario-box {
+  background: #111; border: 1px solid var(--border);
+  border-radius: 14px; padding: 32px 36px;
+  margin-bottom: 32px; position: relative;
+}
+
+.scenario-label {
+  position: absolute; top: -11px; left: 24px;
+  font-size: 10px; font-weight: 600; letter-spacing: 0.18em;
+  text-transform: uppercase; background: #111;
+  padding: 0 10px; color: rgba(255,255,255,0.4);
+}
+
+.scenario-step {
+  font-size: 11px; font-weight: 600; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--yellow);
+  margin-bottom: 12px;
+}
+
+.scenario-text {
+  font-size: 15.5px; line-height: 1.8;
+  color: rgba(255,255,255,0.85);
+}
+
+.scenario-text strong { color: #fff; }
+
+.scenario-tension {
+  display: flex; align-items: center; gap: 8px;
+  margin-top: 20px; padding-top: 20px;
+  border-top: 1px solid var(--border);
+  font-size: 13px; color: rgba(255,255,255,0.5);
+}
+
+.tension-icon {
+  width: 28px; height: 28px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; flex-shrink: 0;
+}
+
+/* Opções */
+.options-label {
+  font-size: 11px; font-weight: 600; letter-spacing: 0.18em;
+  text-transform: uppercase; color: rgba(255,255,255,0.35);
+  margin-bottom: 16px;
+}
+
+.options-grid {
+  display: flex; flex-direction: column; gap: 12px;
+  margin-bottom: 32px;
+}
+
+.option-btn {
+  background: #111; border: 1.5px solid var(--border);
+  border-radius: 12px; padding: 20px 24px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14.5px; line-height: 1.55;
+  color: rgba(255,255,255,0.80);
+  cursor: pointer; text-align: left;
+  transition: all 0.2s; display: flex;
+  align-items: flex-start; gap: 14px;
+  width: 100%;
+}
+
+.option-btn:hover {
+  border-color: rgba(255,255,255,0.3);
+  background: #161616; color: #fff;
+}
+
+.option-btn:disabled { cursor: default; }
+
+.option-btn.correct {
+  border-color: var(--green);
+  background: rgba(31,168,118,0.08);
+  color: #fff;
+}
+
+.option-btn.wrong {
+  border-color: var(--red);
+  background: rgba(224,82,82,0.08);
+  color: rgba(255,255,255,0.5);
+}
+
+.option-btn.neutral {
+  border-color: var(--border);
+  opacity: 0.5;
+}
+
+.opt-letter {
+  font-family: 'Fraunces', serif;
+  font-size: 14px; font-weight: 700;
+  width: 28px; height: 28px;
+  border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(255,255,255,0.07);
+  transition: all 0.2s;
+}
+
+.option-btn.correct .opt-letter { background: var(--green); color: #fff; }
+.option-btn.wrong .opt-letter { background: var(--red); color: #fff; }
+
+/* Feedback da decisão */
+.decision-feedback {
+  display: none;
+  border-radius: 14px; padding: 28px 32px;
+  margin-bottom: 28px; animation: fadeIn 0.4s ease;
+}
+
+.decision-feedback.visible { display: block; }
+.decision-feedback.good { background: rgba(31,168,118,0.08); border: 1px solid rgba(31,168,118,0.25); border-left: 3px solid var(--green); }
+.decision-feedback.bad { background: rgba(224,82,82,0.08); border: 1px solid rgba(224,82,82,0.25); border-left: 3px solid var(--red); }
+
+.feedback-title {
+  font-family: 'Fraunces', serif;
+  font-size: 18px; font-weight: 700;
+  margin-bottom: 10px;
+}
+.decision-feedback.good .feedback-title { color: var(--green); }
+.decision-feedback.bad .feedback-title { color: var(--red); }
+
+.feedback-text {
+  font-size: 14.5px; line-height: 1.75;
+  color: rgba(255,255,255,0.85);
+}
+
+.feedback-pilar {
+  display: inline-flex; align-items: center; gap: 6px;
+  margin-top: 16px; padding: 8px 14px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 8px;
+  font-size: 12.5px; color: rgba(255,255,255,0.6);
+}
+
+.feedback-pilar strong { color: var(--yellow); }
+
+.btn-next-step {
+  background: var(--blue); border: none;
+  border-radius: 10px; padding: 14px 28px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px; font-weight: 500; color: #fff;
+  cursor: pointer; transition: all 0.2s;
+  display: flex; align-items: center; gap: 8px;
+}
+.btn-next-step:hover { background: #1e3580; }
+
+/* Resultado final do case */
+.case-result {
+  display: none;
+  padding: 40px;
+  background: #111; border: 1px solid var(--border);
+  border-radius: 16px; text-align: center;
+  animation: fadeIn 0.5s ease;
+}
+.case-result.visible { display: block; }
+
+.result-score {
+  font-family: 'Fraunces', serif;
+  font-size: 64px; font-weight: 900; line-height: 1;
+  margin-bottom: 8px;
+}
+
+.result-label {
+  font-size: 13px; color: rgba(255,255,255,0.45);
+  margin-bottom: 24px; letter-spacing: 0.05em;
+}
+
+.result-title {
+  font-family: 'Fraunces', serif;
+  font-size: 24px; font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.result-text {
+  font-size: 15px; line-height: 1.75;
+  color: rgba(255,255,255,0.7);
+  max-width: 560px; margin: 0 auto 32px;
+}
+
+.result-actions {
+  display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
+}
+
+.btn-retry {
+  background: transparent; border: 1.5px solid var(--border);
+  border-radius: 10px; padding: 12px 24px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px; color: rgba(255,255,255,0.6);
+  cursor: pointer; transition: all 0.2s;
+}
+.btn-retry:hover { border-color: rgba(255,255,255,0.3); color: #fff; }
+
+.btn-next-case {
+  background: var(--yellow); border: none;
+  border-radius: 10px; padding: 12px 24px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px; font-weight: 600; color: #000;
+  cursor: pointer; transition: all 0.2s;
+  display: flex; align-items: center; gap: 8px;
+}
+.btn-next-case:hover { background: #d4a800; }
+
+/* ── FECHAMENTO ── */
+.closing {
+  padding: 80px 52px;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(135deg, #0a0a0a 0%, #0d1228 100%);
+}
+
+.reflexao-box {
+  background: rgba(245,194,0,0.06);
+  border: 1px solid rgba(245,194,0,0.20);
+  border-radius: 12px; padding: 28px 32px;
+  max-width: 680px; margin: 32px 0;
+}
+
+.reflexao-title {
+  font-size: 11px; font-weight: 600; letter-spacing: 0.15em;
+  text-transform: uppercase; color: var(--yellow); margin-bottom: 10px;
+}
+
+.reflexao-text {
+  font-size: 15px; line-height: 1.75;
+  color: rgba(255,255,255,0.80); font-style: italic;
+}
+
+.btn-next-mod {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: var(--yellow); color: #000;
+  border-radius: 10px; padding: 16px 32px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 15px; font-weight: 600;
+  text-decoration: none; transition: all 0.2s;
+}
+.btn-next-mod:hover { background: #d4a800; gap: 14px; }
+
+/* ── FOOTER ── */
+.footer {
+  background: #000; padding: 32px 52px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.footer-copy { font-size: 12px; color: rgba(255,255,255,0.25); }
+.footer-nav { display: flex; gap: 24px; }
+.footer-nav a { font-size: 12px; color: rgba(255,255,255,0.25); text-decoration: none; }
+.footer-nav a:hover { color: rgba(255,255,255,0.5); }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+@media (max-width: 900px) {
+  .nav, .hero, .cases-map, .case-player, .closing, .footer { padding-left: 24px; padding-right: 24px; }
+  .cases-grid { grid-template-columns: 1fr 1fr; }
+  .nav-links { display: none; }
+}
+
+@media (max-width: 560px) {
+  .cases-grid { grid-template-columns: 1fr; }
+}
+
+/* ── TIPOGRAFIA MONTSERRAT ── */
+h1,h2{font-family:'Fraunces',serif;}
+h3,.player-title,.result-title,.feedback-title{font-family:'Montserrat',sans-serif;font-weight:700;}
+.mod-badge,.section-label,.scenario-step,.options-label,.case-num,.case-sector,.reflexao-title,
+.player-badge,.result-label,.feedback-pilar,.meta-item,.nav-pill{font-family:'Montserrat',sans-serif;font-weight:600;}
+.scenario-text,.feedback-text,.result-text,.hero-sub,.case-title,.case-company,
+.option-btn,.btn-start,.btn-close,.btn-next-step,.btn-retry,.btn-next-case,
+.footer-copy,.footer-nav a,.nav-links a,.reflexao-text{font-family:'Montserrat',sans-serif;}
+.player-title{font-size:26px;letter-spacing:-0.02em;line-height:1.2;}
+.result-title{font-size:22px;letter-spacing:-0.01em;}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-logo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1522.18 1913.52" style="height:48px;width:auto;display:block;">
+  <defs><style>.lt0{fill:#19b78c}.lt1{fill:#fff}.lt3{fill:#ffca06}.lt4{fill:#ed1b23}.lt5{fill:#3364b1}</style></defs>
+  <!-- colored icon -->
+  <path class="lt0" d="M1295.79,1294.28c76.42-35.96,74.92-61.44,74.92-61.44-40.46,11.99-89.91-13.49-89.91-13.49-37.73,48.91-54.6,106.9-56.7,114.5,1.51-2.45,11.4-11.2,71.69-39.57Z"/>
+  <path class="lt0" d="M1148.94,1397.68c-23.98-62.94-118.38-101.9-118.38-101.9-102.19,28.37-137.86-59.94-137.86-59.94-44.51-128.69,76.42-170.82,76.42-170.82-40.75-71.16,4.5-121.37,4.5-121.37,60.2-60.47,121.38-20.98,121.38-20.98,74.92-136.36,181.31-25.47,181.31-25.47,134.86-41.96,140.85,94.4,140.85,94.4,47.95,28.47,58.44,76.42,58.44,76.42,22.45,10.3,37,23.69,46.23,38.01-21.87-178.76-174.1-317.24-358.77-317.24-199.69,0-361.57,161.88-361.57,361.57s153.62,353.09,346.15,361.18l1.29-113.86Z"/>
+  <path class="lt0" d="M1171.41,1246.33c13.49,20.98,19.48,64.43,19.48,64.43l34.46-86.91c-16.48,17.98-53.94,22.48-53.94,22.48Z"/>
+  <path class="lt0" d="M1411.17,1246.33c-8.99,19.48-16.48,28.47-16.48,28.47-22.48,34.46-95.9,58.44-134.86,82.42-38.96,23.98-37.46,43.46-37.46,43.46l1.25,106.11c148.98-25.13,266.94-141.31,294.72-289.38-41.83,53.21-107.16,28.93-107.16,28.93Z"/>
+  <path class="lt0" d="M1106.98,1231.35c-19.48,38.96-35.96,43.46-35.96,43.46,41.96,22.48,79.42,59.94,79.42,59.94,1.5-55.44-22.48-97.4-22.48-97.4-16.48,0-20.98-5.99-20.98-5.99Z"/>
+  <circle class="lt4" cx="412.7" cy="361.39" r="361.39"/>
+  <rect class="lt5" x="801.5" y="11.27" width="717.69" height="691.54"/>
+  <polygon class="lt3" points="405.82 807.35 816.24 1511.92 0 1511.92 405.82 807.35"/>
+  <!-- white text -->
+  <path class="lt1" d="M33.57,1612.25h69.93v236.08s-.33,13.39,12.74,13.71c13.07.33,19.28,0,19.28,0l2.29,45.06s-38.56,10.78-67.96,1.96c0,0-32.68-9.14-36.27-51.92v-244.9Z"/>
+  <path class="lt1" d="M148.26,1694.54h75.48v124.08s.98,39.84,33.98,38.86c0,0,18.63,2.94,34.96-16v-146.94h75.15v213.22h-71.23v-27.43s-22.55,32.11-63.06,32.11c0,0-73.2,9.03-85.29-81.74v-136.16Z"/>
+  <path class="lt1" d="M405.42,1694.54h69.6v27.43s15.68-32,63.06-31.02c0,0,40.19-2.94,62.41,34.94,0,0,27.77-38.31,68.95-34.99,0,0,57.18-6.48,78.09,57.52,0,0,4.25,10.45,5.23,42.12v117.88h-71.89l-.65-130.61s-8.15-33.8-35.27-32.82c0,0-15.05-1.47-29.08,13.5l-.02,149.93h-72.21l-.98-123.43s2.29-43.43-32.68-40.49c0,0-19.61-1.63-32.35,17.31v146.61h-72.21v-213.88Z"/>
+  <path class="lt1" d="M796.87,1639.03h69.6v55.84h61.1v52.24h-61.1l.33,90.78s1.63,21.55,24.83,20.24c0,0,19.93.33,32.02-4.57l3.92,48.98s-23.2,9.8-57.84,9.47c0,0-71.89,4.24-72.87-74.78v-89.8l-32.68-.06v-52.84h32.35l.33-55.51Z"/>
+  <path class="lt1" d="M942.44,1694.78h71.8v33.55s10.78-30.86,43.87-33.55c0,0,8.33-2.45,29.65,0v59.75s-53.91-3.8-72.66,21v132.88h-72.66v-213.63Z"/>
+  <path class="lt1" d="M1295.96,1822.25h-136.39c2.18,30.36,21.3,45.53,57.38,45.53,23,0,43.21-5.44,60.64-16.33v46.55c-19.33,10.35-44.44,15.52-75.34,15.52-33.76,0-59.96-9.36-78.6-28.07-18.65-18.72-27.97-44.82-27.97-78.3s10.07-62.2,30.22-82.49c20.14-20.28,44.92-30.42,74.32-30.42s54.07,9.05,70.74,27.15c16.67,18.11,25.01,42.67,25.01,73.71v27.16ZM1236.14,1782.64c0-29.94-12.11-44.92-36.34-44.92-10.35,0-19.3,4.29-26.85,12.86-7.56,8.58-12.15,19.26-13.78,32.06h76.97Z"/>
+  <path class="lt1" d="M1522.18,1822.25h-136.39c2.18,30.36,21.3,45.53,57.38,45.53,23,0,43.21-5.44,60.64-16.33v46.55c-19.33,10.35-44.44,15.52-75.34,15.52-33.76,0-59.96-9.36-78.6-28.07-18.65-18.72-27.97-44.82-27.97-78.3s10.07-62.2,30.22-82.49c20.14-20.28,44.92-30.42,74.32-30.42s54.07,9.05,70.74,27.15c16.67,18.11,25.01,42.67,25.01,73.71v27.16ZM1462.36,1782.64c0-29.94-12.11-44.92-36.34-44.92-10.35,0-19.3,4.29-26.85,12.86-7.56,8.58-12.15,19.26-13.78,32.06h76.97Z"/>
+</svg></div>
+  <div class="nav-links">
+    <a href="index.html">Início</a>
+    <a href="modulo1.html">Módulo 1</a>
+    <a href="modulo2.html">Módulo 2</a>
+    <a href="modulo3.html" class="active">Módulo 3</a>
+  </div>
+  <div class="nav-pill">
+    <span style="width:6px;height:6px;border-radius:50%;background:var(--yellow)"></span>
+    Módulo 3 de 5
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="mod-badge">Módulo 3</div>
+  <h1>Cases <em>sob pressão</em></h1>
+  <p class="hero-sub">
+    Quatro situações reais. Decisões que se desdobram. Cada escolha tem consequência —
+    assim como na vida profissional. Aqui você vai treinar o que aprendeu com pressão de tempo e contexto.
+  </p>
+  <div class="hero-meta">
+    <div class="meta-item">
+      <div class="meta-dot blue"></div>
+      4 cases interativos
+    </div>
+    <div class="meta-item">
+      <div class="meta-dot yellow"></div>
+      3 etapas de decisão cada
+    </div>
+    <div class="meta-item">
+      <div class="meta-dot green"></div>
+      ~35 minutos no total
+    </div>
+  </div>
+</section>
+
+<!-- MAPA DOS CASES -->
+<section class="cases-map">
+  <div class="section-label">Escolha por onde começar</div>
+
+  <div class="cases-grid">
+
+    <!-- Case 1 -->
+    <div class="case-card c1" id="card-1">
+      <div class="case-num">Case 01</div>
+      <div class="case-sector">Atacarejo</div>
+      <div class="case-title">"O galpão que não estava no contrato"</div>
+      <div class="case-company">MaxAtacado S.A.</div>
+      <div class="case-tags">
+        <span class="tag scope">Scope creep</span>
+        <span class="tag prazo">Prazo</span>
+      </div>
+      <button class="btn-start" onclick="openCase(1)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        Iniciar case
+      </button>
+    </div>
+
+    <!-- Case 2 -->
+    <div class="case-card c2" id="card-2">
+      <div class="case-num">Case 02</div>
+      <div class="case-sector">Indústria</div>
+      <div class="case-title">"A linha que o gerente não quer parar"</div>
+      <div class="case-company">Granol Alimentos Ltda.</div>
+      <div class="case-tags">
+        <span class="tag stake">Stakeholder difícil</span>
+        <span class="tag risco">Risco oculto</span>
+      </div>
+      <button class="btn-start" onclick="openCase(2)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        Iniciar case
+      </button>
+    </div>
+
+    <!-- Case 3 -->
+    <div class="case-card c3" id="card-3">
+      <div class="case-num">Case 03</div>
+      <div class="case-sector">Construção Civil</div>
+      <div class="case-title">"O pavimento que ninguém aprovou"</div>
+      <div class="case-company">Construtora Vértice</div>
+      <div class="case-tags">
+        <span class="tag risco">Risco não mapeado</span>
+        <span class="tag prazo">Decisão urgente</span>
+      </div>
+      <button class="btn-start" onclick="openCase(3)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        Iniciar case
+      </button>
+    </div>
+
+    <!-- Case 4 -->
+    <div class="case-card c4" id="card-4">
+      <div class="case-num">Case 04</div>
+      <div class="case-sector">Mercado Financeiro</div>
+      <div class="case-title">"O projeto que o jurídico não viu"</div>
+      <div class="case-company">Banco Meridian</div>
+      <div class="case-tags">
+        <span class="tag stake">Stakeholder oculto</span>
+        <span class="tag scope">Scope creep</span>
+      </div>
+      <button class="btn-start" onclick="openCase(4)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        Iniciar case
+      </button>
+    </div>
+
+  </div>
+</section>
+
+<!-- CASE PLAYER -->
+<div class="case-player" id="case-player">
+  <div class="player-header">
+    <div>
+      <div class="player-badge" id="player-badge"></div>
+      <div class="player-title" id="player-title"></div>
+      <div class="player-company" id="player-company"></div>
+    </div>
+    <button class="btn-close" onclick="closeCase()">← Voltar aos cases</button>
+  </div>
+
+  <div class="progress-bar" id="progress-bar">
+    <div class="progress-step" id="ps1"></div>
+    <div class="progress-step" id="ps2"></div>
+    <div class="progress-step" id="ps3"></div>
+  </div>
+
+  <!-- Cenário -->
+  <div class="scenario-box" id="scenario-box">
+    <div class="scenario-label">Situação</div>
+    <div class="scenario-step" id="scenario-step"></div>
+    <div class="scenario-text" id="scenario-text"></div>
+    <div class="scenario-tension" id="scenario-tension"></div>
+  </div>
+
+  <!-- Opções -->
+  <div class="options-label">Qual é a sua decisão?</div>
+  <div class="options-grid" id="options-grid"></div>
+
+  <!-- Feedback da decisão -->
+  <div class="decision-feedback" id="decision-feedback">
+    <div class="feedback-title" id="feedback-title"></div>
+    <div class="feedback-text" id="feedback-text"></div>
+    <div class="feedback-pilar" id="feedback-pilar"></div>
+    <br/><br/>
+    <button class="btn-next-step" id="btn-next-step" onclick="nextStep()">
+      Próxima etapa
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+    </button>
+  </div>
+
+  <!-- Resultado final do case -->
+  <div class="case-result" id="case-result">
+    <div class="result-score" id="result-score"></div>
+    <div class="result-label">acertos em 3 decisões</div>
+    <div class="result-title" id="result-title"></div>
+    <div class="result-text" id="result-text"></div>
+    <div class="result-actions">
+      <button class="btn-retry" onclick="replayCase()">↺ Refazer case</button>
+      <button class="btn-next-case" id="btn-next-case" onclick="goNextCase()">
+        Próximo case
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- FECHAMENTO -->
+<section class="closing" id="closing">
+  <div class="section-label">Reflexão final</div>
+  <h2 style="font-family:'Fraunces',serif;font-size:clamp(28px,3vw,40px);font-weight:700;line-height:1.2;margin-bottom:16px;">
+    O que os 4 cases <em style="font-style:italic;color:var(--yellow)">têm em comum?</em>
+  </h2>
+  <p style="font-size:16px;line-height:1.8;color:rgba(255,255,255,0.65);max-width:640px;">
+    Em todos os cenários, o problema não era técnico — era de <strong style="color:#fff">comunicação, mapeamento e antecipação</strong>.
+    Scope creep acontece quando o escopo não foi formalizado. Stakeholder surpresa aparece quando o mapa foi feito de forma rasa.
+    Prazo estoura quando o risco era previsível e não foi registrado.
+  </p>
+
+  <div class="reflexao-box">
+    <div class="reflexao-title">Para levar para o próximo projeto</div>
+    <div class="reflexao-text">
+      "Qual desses quatro cenários tem mais chance de acontecer no seu contexto atual?
+      O que você faria diferente agora, com o que aprendeu até aqui?"
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div style="display:flex;align-items:center;">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1522.18 1913.52" style="height:40px;width:auto;display:block;">
+      <defs><style>.lt0{fill:#19b78c}.lt1{fill:#fff}.lt3{fill:#ffca06}.lt4{fill:#ed1b23}.lt5{fill:#3364b1}</style></defs>
+      <path class="lt0" d="M1295.79,1294.28c76.42-35.96,74.92-61.44,74.92-61.44-40.46,11.99-89.91-13.49-89.91-13.49-37.73,48.91-54.6,106.9-56.7,114.5,1.51-2.45,11.4-11.2,71.69-39.57Z"/>
+      <path class="lt0" d="M1148.94,1397.68c-23.98-62.94-118.38-101.9-118.38-101.9-102.19,28.37-137.86-59.94-137.86-59.94-44.51-128.69,76.42-170.82,76.42-170.82-40.75-71.16,4.5-121.37,4.5-121.37,60.2-60.47,121.38-20.98,121.38-20.98,74.92-136.36,181.31-25.47,181.31-25.47,134.86-41.96,140.85,94.4,140.85,94.4,47.95,28.47,58.44,76.42,58.44,76.42,22.45,10.3,37,23.69,46.23,38.01-21.87-178.76-174.1-317.24-358.77-317.24-199.69,0-361.57,161.88-361.57,361.57s153.62,353.09,346.15,361.18l1.29-113.86Z"/>
+      <path class="lt0" d="M1171.41,1246.33c13.49,20.98,19.48,64.43,19.48,64.43l34.46-86.91c-16.48,17.98-53.94,22.48-53.94,22.48Z"/>
+      <path class="lt0" d="M1411.17,1246.33c-8.99,19.48-16.48,28.47-16.48,28.47-22.48,34.46-95.9,58.44-134.86,82.42-38.96,23.98-37.46,43.46-37.46,43.46l1.25,106.11c148.98-25.13,266.94-141.31,294.72-289.38-41.83,53.21-107.16,28.93-107.16,28.93Z"/>
+      <path class="lt0" d="M1106.98,1231.35c-19.48,38.96-35.96,43.46-35.96,43.46,41.96,22.48,79.42,59.94,79.42,59.94,1.5-55.44-22.48-97.4-22.48-97.4-16.48,0-20.98-5.99-20.98-5.99Z"/>
+      <circle class="lt4" cx="412.7" cy="361.39" r="361.39"/>
+      <rect class="lt5" x="801.5" y="11.27" width="717.69" height="691.54"/>
+      <polygon class="lt3" points="405.82 807.35 816.24 1511.92 0 1511.92 405.82 807.35"/>
+      <path class="lt1" d="M33.57,1612.25h69.93v236.08s-.33,13.39,12.74,13.71c13.07.33,19.28,0,19.28,0l2.29,45.06s-38.56,10.78-67.96,1.96c0,0-32.68-9.14-36.27-51.92v-244.9Z"/>
+      <path class="lt1" d="M148.26,1694.54h75.48v124.08s.98,39.84,33.98,38.86c0,0,18.63,2.94,34.96-16v-146.94h75.15v213.22h-71.23v-27.43s-22.55,32.11-63.06,32.11c0,0-73.2,9.03-85.29-81.74v-136.16Z"/>
+      <path class="lt1" d="M405.42,1694.54h69.6v27.43s15.68-32,63.06-31.02c0,0,40.19-2.94,62.41,34.94,0,0,27.77-38.31,68.95-34.99,0,0,57.18-6.48,78.09,57.52,0,0,4.25,10.45,5.23,42.12v117.88h-71.89l-.65-130.61s-8.15-33.8-35.27-32.82c0,0-15.05-1.47-29.08,13.5l-.02,149.93h-72.21l-.98-123.43s2.29-43.43-32.68-40.49c0,0-19.61-1.63-32.35,17.31v146.61h-72.21v-213.88Z"/>
+      <path class="lt1" d="M796.87,1639.03h69.6v55.84h61.1v52.24h-61.1l.33,90.78s1.63,21.55,24.83,20.24c0,0,19.93.33,32.02-4.57l3.92,48.98s-23.2,9.8-57.84,9.47c0,0-71.89,4.24-72.87-74.78v-89.8l-32.68-.06v-52.84h32.35l.33-55.51Z"/>
+      <path class="lt1" d="M942.44,1694.78h71.8v33.55s10.78-30.86,43.87-33.55c0,0,8.33-2.45,29.65,0v59.75s-53.91-3.8-72.66,21v132.88h-72.66v-213.63Z"/>
+      <path class="lt1" d="M1295.96,1822.25h-136.39c2.18,30.36,21.3,45.53,57.38,45.53,23,0,43.21-5.44,60.64-16.33v46.55c-19.33,10.35-44.44,15.52-75.34,15.52-33.76,0-59.96-9.36-78.6-28.07-18.65-18.72-27.97-44.82-27.97-78.3s10.07-62.2,30.22-82.49c20.14-20.28,44.92-30.42,74.32-30.42s54.07,9.05,70.74,27.15c16.67,18.11,25.01,42.67,25.01,73.71v27.16ZM1236.14,1782.64c0-29.94-12.11-44.92-36.34-44.92-10.35,0-19.3,4.29-26.85,12.86-7.56,8.58-12.15,19.26-13.78,32.06h76.97Z"/>
+      <path class="lt1" d="M1522.18,1822.25h-136.39c2.18,30.36,21.3,45.53,57.38,45.53,23,0,43.21-5.44,60.64-16.33v46.55c-19.33,10.35-44.44,15.52-75.34,15.52-33.76,0-59.96-9.36-78.6-28.07-18.65-18.72-27.97-44.82-27.97-78.3s10.07-62.2,30.22-82.49c20.14-20.28,44.92-30.42,74.32-30.42s54.07,9.05,70.74,27.15c16.67,18.11,25.01,42.67,25.01,73.71v27.16ZM1462.36,1782.64c0-29.94-12.11-44.92-36.34-44.92-10.35,0-19.3,4.29-26.85,12.86-7.56,8.58-12.15,19.26-13.78,32.06h76.97Z"/>
+    </svg>
+  </div>
+  <div class="footer-copy">© 2026 LumTree Treinamentos · Todos os direitos reservados</div>
+  <div class="footer-nav">
+    <a href="index.html">Início</a>
+    <a href="modulo2.html">← Módulo 2</a>
+  </div>
+</footer>
+
+<script>
+const CASES={
+1:{badge:'Case 01 · Atacarejo',title:'"O galpão que não estava no contrato"',company:'MaxAtacado S.A.',colorClass:'c1',steps:[
+{label:'Etapa 1 de 3 — A surpresa no terreno',
+text:'Você é coordenador de projetos na <strong>MaxAtacado S.A.</strong>, rede de atacarejo com 18 unidades no interior de São Paulo. O projeto: reformar e ampliar o CD (Centro de Distribuição — armazém central que abastece as lojas) regional em Campinas, com prazo de 90 dias para não afetar o abastecimento do trimestre.\n\nNo dia 12, o engenheiro responsável te liga: a planta original não incluía o galpão de frios — mas o diretor comercial confirmou que a nova linha de laticínios entra no portfólio em 60 dias e quer a infraestrutura pronta no mesmo prazo da reforma.',
+tension:'⚠️ Escopo crescendo além do planejado — uma entrega que não estava no projeto original está sendo cobrada como se estivesse.',
+options:[
+{letter:'A',text:'Comunicar formalmente que a demanda está fora do escopo, apresentar o impacto em prazo e custo e abrir uma solicitação de mudança estruturada.',correct:true},
+{letter:'B',text:'Aceitar a demanda do diretor e incluir o galpão de frios no projeto, ajustando o time de forma informal.',correct:false},
+{letter:'C',text:'Escalar para o patrocinador (sponsor — a liderança que aprova e financia o projeto) e aguardar decisão antes de qualquer ação.',correct:false}
+],
+feedback:{
+A:{type:'good',title:'Decisão correta.',text:'Você preservou a integridade do projeto original, trouxe transparência ao impacto real e abriu o caminho correto: uma solicitação de mudança com análise de custo, prazo e recursos. Isso protege o projeto — e protege você.',pilar:'🔍 Pilar acionado: <strong>Gestão de Escopo</strong> — mudanças são bem-vindas, desde que documentadas, analisadas e aprovadas.'},
+B:{type:'bad',title:'Decisão arriscada.',text:'Absorver escopo sem registro formal é o início do escopo crescendo fora de controle. O time vai trabalhar mais, o prazo vai estourar e a responsabilidade vai recair sobre você — sem documentação para se respaldar. Nunca aceite escopo novo sem processo de mudança formal.',pilar:'🔍 Pilar acionado: <strong>Gestão de Escopo</strong> — toda adição de escopo exige análise de impacto e aprovação formal.'},
+C:{type:'bad',title:'Parcialmente correto, mas incompleto.',text:'Escalar é válido, mas chegar ao patrocinador sem dados é chegar de mãos vazias. Antes de escalar, você precisa ter o impacto estimado: quanto custa incluir o galpão, quanto tempo adicional isso exige, quais recursos seriam realocados. Decisão precisa de informação.',pilar:'🔍 Pilar acionado: <strong>Comunicação e Stakeholders</strong> — escaladas eficientes chegam com dados, não apenas com perguntas.'}
+}},
+{label:'Etapa 2 de 3 — A pressão aumenta',
+text:'A solicitação de mudança foi aprovada. O galpão de frios entra no escopo. Mas o prazo geral foi estendido apenas 15 dias (de 90 para 105) — a diretoria não quer mais do que isso. O engenheiro avisa que tecnicamente precisa de ao menos 25 dias adicionais para o galpão de frios com segurança.\n\nO fornecedor de refrigeração diz que pode entregar em 18 dias — mas com preço 30% acima do orçamento de referência. O patrocinador pergunta: "Como você resolve?"',
+tension:'⏱️ Prazo sob pressão — a solicitação foi aprovada, mas o tempo concedido é insuficiente para execução segura.',
+options:[
+{letter:'A',text:'Negociar diretamente com o engenheiro para ele "fazer acontecer" em 15 dias, mesmo que ele tenha dito que 25 é o mínimo seguro.',correct:false},
+{letter:'B',text:'Fechar com o fornecedor mais caro para cumprir o prazo de 105 dias, sem comunicar o estouro de custo antes da assinatura.',correct:false},
+{letter:'C',text:'Apresentar ao patrocinador três alternativas: prazo ajustado (25 dias), custo ajustado (fornecedor premium) ou redução de escopo do galpão (câmara menor, expansível depois).',correct:true}
+],
+feedback:{
+A:{type:'bad',title:'Isso vai explodir.',text:'Pressionar um especialista a comprimir um prazo técnico mínimo é plantar uma bomba. O engenheiro vai tentar, algo vai falhar na execução, e o custo de correção vai superar de longe os 10 dias ganhos. Nunca troque segurança técnica por acomodação de prazo.',pilar:'🔍 Pilar acionado: <strong>Gestão de Riscos</strong> — ignorar riscos técnicos por pressão de prazo está na origem da maioria das crises em projetos.'},
+B:{type:'bad',title:'Erro grave de governança.',text:'Fechar contrato com estouro de custo sem comunicar antes é uma quebra de governança (as regras que garantem que o projeto seja gerido com responsabilidade). O patrocinador vai descobrir — e a pergunta será: "Por que não me avisou antes de assinar?" Transparência em projetos não é opcional.',pilar:'🔍 Pilar acionado: <strong>Gestão de Custos</strong> — desvios precisam ser comunicados antes de se tornarem fatos consumados.'},
+C:{type:'good',title:'Excelente decisão.',text:'Você não trouxe um problema — trouxe uma análise com opções. Isso é o papel do gestor de projetos: estruturar as alternativas para que quem decide possa decidir bem. A escolha final é do patrocinador; a clareza das opções é sua responsabilidade.',pilar:'🔍 Pilar acionado: <strong>Gestão de Custos + Comunicação</strong> — análise de trade-offs (compensações entre custo, prazo e escopo) é a linguagem do gestor que cresce.'}
+}},
+{label:'Etapa 3 de 3 — O dia da entrega',
+text:'O projeto terminou. O galpão de frios foi entregue com 8 dias de atraso em relação ao plano ajustado, mas dentro do prazo comunicado ao diretor comercial (que tinha folga embutida). O sistema de refrigeração apresentou um problema de calibração no primeiro dia — não identificado nos testes porque o comissionamento (verificação técnica final antes de liberar o equipamento para uso) foi suprimido para ganhar tempo.\n\nO diretor de operações quer uma reunião de encerramento e pergunta: "O que deu errado e quem é o responsável?"',
+tension:'🔥 Falha operacional logo após a entrega. Como você conduz o encerramento?',
+options:[
+{letter:'A',text:'Apresentar uma análise de causa raiz (investigação para entender por que o problema aconteceu): o comissionamento foi suprimido para compensar o prazo, o risco não foi formalmente registrado — e propor um checklist de encerramento para os próximos projetos.',correct:true},
+{letter:'B',text:'Apontar o engenheiro como responsável pela decisão de suprimir o comissionamento.',correct:false},
+{letter:'C',text:'Explicar que o comissionamento foi suprimido por decisão coletiva da equipe, sem indicar responsabilidades específicas.',correct:false}
+],
+feedback:{
+A:{type:'good',title:'Maturidade de gestor.',text:'Você assumiu a responsabilidade pelo processo, identificou a causa real e já trouxe uma solução. Isso é o que transforma um coordenador em referência. Profissionais que aprendem com o que dá errado constroem times mais seguros e projetos mais sólidos.',pilar:'🔍 Pilar acionado: <strong>Encerramento e Lições Aprendidas</strong> — a pergunta certa não é "quem errou?", mas "o que o processo não preveniu?"'},
+B:{type:'bad',title:'Erro de liderança.',text:'Apontar um membro da equipe em reunião com a diretoria destrói a confiança do time. A decisão de suprimir o comissionamento deveria ter sido formal e aprovada — e se não foi, a responsabilidade pelo processo é do gestor do projeto.',pilar:'🔍 Pilar acionado: <strong>Liderança de Equipes</strong> — o gestor protege o time nos erros de processo e reconhece erros de execução com dados, não com culpados.'},
+C:{type:'bad',title:'Evasão não é liderança.',text:'"Decisão coletiva" sem registro é responsabilidade sem dono. Não apontar a causa real impede que o problema seja resolvido e que o aprendizado aconteça. O próximo projeto vai repetir o erro.',pilar:'🔍 Pilar acionado: <strong>Encerramento e Lições Aprendidas</strong> — encerramento honesto é o que transforma falha em evolução.'}
+}}
+]},
+
+2:{badge:'Case 02 · Indústria',title:'"A linha que o gerente não quer parar"',company:'Granol Alimentos Ltda.',colorClass:'c2',steps:[
+{label:'Etapa 1 de 3 — O bloqueio interno',
+text:'Você é coordenadora de projetos na <strong>Granol Alimentos Ltda.</strong>, indústria de alimentos com planta em Sorocaba. O projeto: substituição da esteira de embalagem da linha 3 por um modelo automatizado, com prazo de 45 dias e janela de parada programada de 5 dias úteis — combinada com a diretoria.\n\nAo apresentar o cronograma ao Gerente de Operações, Eduardo Fonseca, ele diz: <em>"Cinco dias de parada é inaceitável. Minha meta de produção vai por água abaixo. Vou falar com o diretor para cancelar esse projeto."</em>\n\nEduardo não participou da reunião de abertura do projeto (kickoff — reunião inicial onde todos os envolvidos alinham objetivos, papéis e cronograma). Ele não estava no mapa de partes interessadas.',
+tension:'🚫 Uma parte interessada com poder real surge como bloqueadora — e não foi mapeada no início do projeto.',
+options:[
+{letter:'A',text:'Marcar uma reunião com Eduardo para entender suas restrições, apresentar o impacto da não-substituição a longo prazo e negociar uma parada em fases (parcial durante a semana + complemento no fim de semana).',correct:true},
+{letter:'B',text:'Escalar para o patrocinador e comunicar que Eduardo está atrapalhando o projeto, aguardando orientação.',correct:false},
+{letter:'C',text:'Reduzir a janela de parada para 3 dias para acomodar Eduardo, ajustando o escopo da substituição.',correct:false}
+],
+feedback:{
+A:{type:'good',title:'Gestão de parte interessada bem feita.',text:'Você não tratou Eduardo como obstáculo — tratou como alguém com preocupações legítimas. Entender a restrição dele antes de qualquer concessão é o caminho correto. E a proposta de parada em fases é uma solução que preserva o escopo técnico.',pilar:'🔍 Pilar acionado: <strong>Gestão de Stakeholders</strong> — resistência de parte interessada raramente é pessoal; quase sempre é legítima e gerenciável.'},
+B:{type:'bad',title:'Escalada precipitada.',text:'Levar Eduardo ao patrocinador como "problema" vai criar um conflito institucional. Eduardo vai se sentir desrespeitado e tende a mobilizar resistência ativa. Uma parte interessada contrariada com acesso à diretoria pode derrubar projetos tecnicamente sólidos.',pilar:'🔍 Pilar acionado: <strong>Comunicação e Stakeholders</strong> — nunca trate resistência como ruído; trate como sinal de que algo precisa ser negociado.'},
+C:{type:'bad',title:'Concessão prematura.',text:'Ceder sem entender a real restrição de Eduardo é negociação fraca. Você pode estar abrindo mão de algo desnecessariamente — e criando um risco técnico real ao comprimir uma parada que tem especificação mínima. Entender primeiro, negociar depois.',pilar:'🔍 Pilar acionado: <strong>Gestão de Stakeholders</strong> — parte interessada não mapeada precisa ser engajada, não contornada.'}
+}},
+{label:'Etapa 2 de 3 — O risco que ninguém viu',
+text:'A negociação com Eduardo foi bem. A parada foi dividida: 3 dias úteis + 1 sábado. Mas no segundo dia, o técnico da fornecedora identifica que os parafusos de fixação da estrutura metálica estão corroídos — risco não identificado no levantamento inicial. A troca deles exige mais 2 dias de parada não programada.\n\nSe a linha não voltar no prazo combinado, Eduardo vai acionar a diretoria. Se a troca não for feita, há risco de acidente de trabalho em 3 a 6 meses.',
+tension:'⚡ Risco não mapeado se materializou — segurança em conflito direto com prazo.',
+options:[
+{letter:'A',text:'Registrar o risco no relatório do projeto e deixar a decisão para a manutenção programada do próximo trimestre.',correct:false},
+{letter:'B',text:'Fazer a troca dos parafusos de forma parcial — apenas os mais críticos — para ganhar tempo e retomar a produção no prazo.',correct:false},
+{letter:'C',text:'Comunicar imediatamente o patrocinador e Eduardo com os fatos: risco de segurança identificado, impacto em prazo e recomendação técnica de fazer a troca completa agora.',correct:true}
+],
+feedback:{
+A:{type:'bad',title:'Omissão grave.',text:'Registrar um risco de segurança iminente e adiar a solução é omissão. Se o acidente acontecer no próximo trimestre, o registro no relatório vai mostrar que você sabia e não agiu. Segurança não entra na equação de escolhas com prazo.',pilar:'🔍 Pilar acionado: <strong>Gestão de Riscos</strong> — registrar não é resolver. Risco mapeado exige resposta, não só documentação.'},
+B:{type:'bad',title:'Solução paliativa com risco real.',text:'Troca parcial de componentes de segurança estrutural é postergação de acidente. Em indústria de alimentos, um incidente de segurança tem consequência muito maior do que 2 dias de parada. Nunca comprima decisões de segurança por pressão de prazo.',pilar:'🔍 Pilar acionado: <strong>Gestão de Riscos</strong> — riscos de segurança têm prioridade sobre cronograma, sempre.'},
+C:{type:'good',title:'Transparência e recomendação técnica.',text:'Você trouxe o problema com evidência, o risco com dados e uma recomendação — não apenas uma reclamação. Isso é o que transforma um coordenador em parceiro estratégico. Eduardo e o patrocinador podem tomar a decisão com informação completa. E se decidirem assumir o risco, a responsabilidade é deles, devidamente documentada.',pilar:'🔍 Pilar acionado: <strong>Gestão de Riscos + Comunicação</strong> — risco identificado precisa ser comunicado, não absorvido silenciosamente.'}
+}},
+{label:'Etapa 3 de 3 — O encerramento sob auditoria',
+text:'A parada adicional foi aprovada. A troca foi feita. A linha voltou a operar 2 dias depois do prazo combinado — mas com estrutura segura e esteira nova funcionando. O fornecedor cumpriu o prazo técnico, mas não entregou o relatório de comissionamento (documento que comprova que o equipamento foi verificado e está pronto para uso com segurança).\n\nA auditoria interna da Granol pede o dossiê (pasta completa com toda a documentação do projeto) em 48 horas. Você tem cronograma, atas de reunião e solicitação de mudança aprovada — mas sem o relatório do fornecedor.',
+tension:'📋 Encerramento sob auditoria — documentação incompleta e necessidade de prestar contas.',
+options:[
+{letter:'A',text:'Entregar o dossiê sem o relatório de comissionamento e explicar que a responsabilidade era do fornecedor.',correct:false},
+{letter:'B',text:'Acionar o fornecedor urgentemente para o relatório, montar o dossiê com o que há e incluir uma nota formal registrando a pendência e a data de entrega comprometida pelo fornecedor.',correct:true},
+{letter:'C',text:'Pedir prazo adicional para a auditoria até ter o dossiê completo.',correct:false}
+],
+feedback:{
+A:{type:'bad',title:'Transferência de responsabilidade não resolve.',text:'Apontar o fornecedor para a auditoria interna pode até ser verdade — mas você é o gestor do projeto e a documentação é responsabilidade sua. O contrato com o fornecedor deveria prever a entrega do relatório técnico. Isso é uma lição aprendida, não uma justificativa para a lacuna no dossiê.',pilar:'🔍 Pilar acionado: <strong>Gestão de Fornecedores</strong> — a responsabilidade pela documentação do projeto não se delega, mesmo que a execução seja terceirizada.'},
+B:{type:'good',title:'Gestão de encerramento com profissionalismo.',text:'Você agiu no que podia controlar (acionou o fornecedor), entregou o que tinha e foi transparente sobre a lacuna e quando ela seria resolvida. Uma nota formal de pendência com data comprometida é muito mais profissional do que uma entrega incompleta sem explicação.',pilar:'🔍 Pilar acionado: <strong>Encerramento de Projeto</strong> — dossiê completo é evidência de gestão. Pendências precisam de registro formal, não de silêncio.'},
+C:{type:'bad',title:'Prazo adicional tem custo político.',text:'Pedir mais tempo para a auditoria quando o projeto já estourou o prazo vai reforçar a percepção negativa. É preferível entregar o que há, com transparência sobre a lacuna, do que pedir mais tempo — que pode ou não ser concedido.',pilar:'🔍 Pilar acionado: <strong>Comunicação com Stakeholders</strong> — em situações de pressão, transparência e ação valem mais do que perfeição e demora.'}
+}}
+]},
+
+3:{badge:'Case 03 · Construção Civil',title:'"O pavimento que ninguém aprovou"',company:'Construtora Vértice',colorClass:'c3',steps:[
+{label:'Etapa 1 de 3 — A alteração de última hora',
+text:'Você é coordenador de projetos na <strong>Construtora Vértice</strong>, responsável pela obra de um edifício comercial de 8 andares em Ribeirão Preto. O projeto está na fase de estrutura — 60% executado — quando a incorporadora envia um e-mail às 18h de sexta-feira com uma "pequena alteração": o 3º pavimento, que seria sala comercial padrão, agora deve ser adaptado para clínica médica. Isso exige adequação elétrica, hidráulica e de ventilação.\n\nA equipe já foi mobilizada para a semana seguinte com base no projeto original. A aprovação da prefeitura para o projeto adaptado pode levar de 20 a 45 dias.',
+tension:'🏗️ Alteração de projeto em plena execução — impacto técnico, legal e de prazo ainda não dimensionado.',
+options:[
+{letter:'A',text:'Paralisar toda a obra no 3º pavimento imediatamente e aguardar nova aprovação da prefeitura antes de qualquer ação.',correct:false},
+{letter:'B',text:'Iniciar as adaptações no 3º pavimento com base no e-mail, já que a autorização veio da incorporadora.',correct:false},
+{letter:'C',text:'Responder formalmente à incorporadora solicitando reunião técnica urgente para mapear o impacto da alteração em prazo, custo e aprovações legais, sem paralisar o restante da obra enquanto o escopo não estiver definido.',correct:true}
+],
+feedback:{
+A:{type:'bad',title:'Paralisação total é desproporcional.',text:'Paralisar toda a obra por uma alteração que afeta apenas um pavimento vai gerar custo e conflito desnecessários. A obra nos outros andares pode e deve continuar. O que precisa ser reavaliado é o 3º pavimento — após análise técnica formal.',pilar:'🔍 Pilar acionado: <strong>Gestão de Escopo</strong> — o impacto de uma mudança deve ser mapeado antes de qualquer ação, mas a gestão é pontual, não paralisante.'},
+B:{type:'bad',title:'Risco legal gravíssimo.',text:'Executar adaptações estruturais sem aprovação da prefeitura é infração ao código de obras. A obra pode ser embargada, a construtora multada e o projeto obrigado a desfazer o que foi feito. Um e-mail da incorporadora não substitui um alvará de modificação (documento oficial que autoriza a alteração no projeto). Nunca execute alteração estrutural sem aprovação regulatória.',pilar:'🔍 Pilar acionado: <strong>Gestão de Riscos Regulatórios</strong> — em construção civil, conformidade legal não é negociável, independentemente de quem autorizou.'},
+C:{type:'good',title:'Resposta equilibrada e profissional.',text:'Você não ignorou a mudança, não paralisou tudo e não executou sem análise. Pediu reunião técnica, manteve a obra nos pavimentos não afetados e abriu o processo correto: avaliação de impacto antes de qualquer decisão. Um e-mail de incorporadora não é ordem de serviço — especialmente quando há implicação legal.',pilar:'🔍 Pilar acionado: <strong>Gestão de Mudanças</strong> — alteração em projeto em execução exige análise técnica e aprovação formal, não apenas autorização verbal ou por e-mail.'}
+}},
+{label:'Etapa 2 de 3 — O prazo na mesa',
+text:'A reunião técnica aconteceu. O impacto ficou evidente: a adaptação do 3º pavimento para clínica médica vai exigir projeto complementar (30 dias), aprovação da prefeitura (25 a 40 dias) e execução adicional (18 dias). Total: até 88 dias de atraso no pavimento — com reflexo nos andares superiores que dependem da estrutura do 3º.\n\nA incorporadora diz que não pode atrasar. O cliente final tem contrato com a rede de clínicas com data de entrega fixada. Ela pergunta: "Tem como fazer diferente?"',
+tension:'⏱️ Prazo impossível — o que é tecnicamente necessário conflita com o compromisso comercial da incorporadora.',
+options:[
+{letter:'A',text:'Apresentar um plano de paralelismo (execução simultânea de atividades independentes): elaborar o projeto complementar e dar entrada na aprovação imediatamente, enquanto os andares que não dependem do 3º continuam. Propor que o 3º seja entregue com 60 dias de defasagem, com comunicação formal ao investidor.',correct:true},
+{letter:'B',text:'Propor executar a obra do 3º pavimento com base no projeto original e adaptar depois, quando a aprovação sair.',correct:false},
+{letter:'C',text:'Informar que é impossível cumprir o prazo e transferir a decisão para a incorporadora.',correct:false}
+],
+feedback:{
+A:{type:'good',title:'Planejamento criativo com realismo.',text:'Você encontrou o caminho possível: paralelismo de atividades, comunicação transparente sobre a defasagem e entrega parcial viável. Você não prometeu o que não dá, não abandonou o problema e encontrou a solução mais eficiente dentro das restrições reais.',pilar:'🔍 Pilar acionado: <strong>Cronograma e Paralelismo</strong> — identificar atividades que podem ser executadas em paralelo é diferencial de quem está evoluindo na carreira.'},
+B:{type:'bad',title:'Não funciona tecnicamente.',text:'Construir com o projeto original e adaptar depois é retrabalho com custo elevadíssimo — incluindo demolição e reconstrução de instalações. Se a clínica exige adequações estruturais (lajes, shafts — espaços técnicos para tubulações e fiações), é inviável "adaptar depois" sem impacto estrutural grave.',pilar:'🔍 Pilar acionado: <strong>Qualidade e Escopo Técnico</strong> — em construção civil, retrabalho não é opção de gestão: é resultado de gestão ruim.'},
+C:{type:'bad',title:'Abdicação de função.',text:'"Isso é impossível" sem alternativa é a resposta mais fraca que um gestor de projetos pode dar. A incorporadora e o cliente final precisam de orientação técnica — não de uma declaração de impossibilidade. Seu papel é mapear o que é possível, mesmo que parcialmente.',pilar:'🔍 Pilar acionado: <strong>Liderança em Projetos</strong> — o gestor é o profissional que encontra caminho onde parece não haver — com dados, não com improviso.'}
+}},
+{label:'Etapa 3 de 3 — A não-conformidade na entrega',
+text:'O plano de paralelismo foi aprovado. Os 7 andares foram entregues no prazo. O 3º pavimento está em fase final, mas a vistoria da prefeitura identificou uma não-conformidade na ventilação — a norma ANVISA RDC 50 exige exaustão mecânica (sistema de ventilação forçada) que não foi incluída no projeto complementar, por falha do escritório de arquitetura contratado pela incorporadora.\n\nA entrega do 3º pavimento vai atrasar mais 15 dias. A rede de clínicas ameaça acionar penalidade contratual à Construtora Vértice.',
+tension:'📋 Penalidade iminente por falha de terceiro — como posicionar a Construtora diante do cliente final?',
+options:[
+{letter:'A',text:'Documentar formalmente que a não-conformidade é de responsabilidade do projeto complementar (elaborado pelo escritório indicado pela incorporadora), comunicar a rede de clínicas com os fatos e os documentos e abrir processo de ressarcimento junto à incorporadora.',correct:true},
+{letter:'B',text:'Corrigir a ventilação em 5 dias para evitar a penalidade, mesmo que o acabamento fique abaixo do padrão da obra.',correct:false},
+{letter:'C',text:'Assumir o erro, pagar a penalidade e resolver internamente com o escritório de arquitetura depois.',correct:false}
+],
+feedback:{
+A:{type:'good',title:'Postura profissional e juridicamente correta.',text:'Você protegeu a Construtora com documentação, foi transparente com o cliente final e abriu o caminho correto de ressarcimento. Em projetos com múltiplos contratos e partes, a documentação é o que separa quem paga pelo erro de quem deveria pagar.',pilar:'🔍 Pilar acionado: <strong>Encerramento e Gestão Contratual</strong> — em obras com terceiros, rastreabilidade de responsabilidade é proteção jurídica e financeira.'},
+B:{type:'bad',title:'Solução que cria novo problema.',text:'Executar instalações de ventilação fora dos padrões de acabamento para ganhar 10 dias vai gerar uma não-conformidade de qualidade que pode resultar em reclamação futura — ou retrabalho ainda mais caro.',pilar:'🔍 Pilar acionado: <strong>Qualidade e Gestão de Riscos</strong> — solução que resolve um problema criando outro não é solução: é postergação de crise.'},
+C:{type:'bad',title:'Responsabilidade mal posicionada.',text:'Assumir penalidade por falha que não é sua, sem documentação, é prejuízo sem aprendizado. E não resolve nada — a incorporadora e o escritório não terão incentivo para melhorar. Responsabilidade precisa ser proporcional à causa.',pilar:'🔍 Pilar acionado: <strong>Gestão de Contratos e Fornecedores</strong> — responsabilidade contratual deve acompanhar a causa da falha, com documentação.'}
+}}
+]},
+
+4:{badge:'Case 04 · Mercado Financeiro',title:'"O projeto que o jurídico não viu"',company:'Banco Meridian',colorClass:'c4',steps:[
+{label:'Etapa 1 de 3 — A parte interessada invisível',
+text:'Você é coordenadora de projetos no <strong>Banco Meridian</strong>, banco de médio porte focado em crédito empresarial. O projeto: implantação de nova régua de cobrança automatizada para clientes inadimplentes — notificações por WhatsApp, e-mail e SMS com regras de escalonamento progressivo (cada contato mais firme que o anterior).\n\nO projeto foi aprovado pela Diretoria de Operações e pelo COO (Chief Operating Officer — Diretor de Operações da empresa). O time está na sprint 4 de 6 (sprint: ciclo curto de desenvolvimento, geralmente de 2 semanas). Faltam 3 semanas para a entrada em produção (momento em que o sistema passa a funcionar com dados reais). Então a Diretora Jurídica, Dra. Camila Rocha, aparece em outra reunião e pergunta: "Qual é esse projeto de cobrança que ninguém me apresentou?"',
+tension:'⚠️ Parte interessada de alta influência não foi mapeada — e está entrando no projeto em fase avançada de desenvolvimento.',
+options:[
+{letter:'A',text:'Agendar reunião urgente com a Dra. Camila para apresentar o projeto completo, entender as preocupações do jurídico e avaliar se há ajustes necessários antes da entrada em produção.',correct:true},
+{letter:'B',text:'Incluir a Dra. Camila apenas como "informada" no mapa de partes interessadas e enviar o material do projeto por e-mail.',correct:false},
+{letter:'C',text:'Explicar que o projeto foi aprovado pela Diretoria de Operações e que o jurídico não estava no escopo de aprovação.',correct:false}
+],
+feedback:{
+A:{type:'good',title:'Engajamento correto e urgente.',text:'Reunião imediata, apresentação completa e escuta ativa. Você reconheceu a falha no mapeamento sem se defender e abriu espaço para que o jurídico contribua antes que seja tarde. Três semanas ainda é tempo para ajustes — mas só se você agir agora.',pilar:'🔍 Pilar acionado: <strong>Gestão de Stakeholders</strong> — parte interessada de alto poder identificada tardiamente precisa de engajamento imediato e intenso, não de formalidade.'},
+B:{type:'bad',title:'Subestimar a influência é um erro estratégico.',text:'Colocar a Diretora Jurídica como apenas "informada" em um projeto de comunicação com clientes inadimplentes é não entender o papel do jurídico em instituições financeiras. Ela pode solicitar revisão completa, envolver o regulador ou bloquear a entrada em produção — e vai ter argumento sólido para isso.',pilar:'🔍 Pilar acionado: <strong>Análise de Poder e Interesse</strong> — parte interessada de alto poder precisa de engajamento ativo, nunca apenas informativo.'},
+C:{type:'bad',title:'Postura defensiva que vai agravar a situação.',text:'Dizer que o jurídico "não estava no escopo de aprovação" para a Diretora Jurídica é o caminho mais rápido para um conflito institucional. Projetos de cobrança automatizada têm implicação direta do BACEN (Banco Central do Brasil), LGPD (Lei Geral de Proteção de Dados) e CDC (Código de Defesa do Consumidor) — o jurídico deveria ter sido mapeado desde o início.',pilar:'🔍 Pilar acionado: <strong>Mapeamento de Stakeholders</strong> — em instituições financeiras, jurídico e compliance são partes interessadas obrigatórias em projetos que envolvem comunicação com clientes.'}
+}},
+{label:'Etapa 2 de 3 — As restrições do jurídico',
+text:'A reunião com a Dra. Camila aconteceu. Ela identificou dois pontos críticos:\n\n1. O envio de mensagens via WhatsApp para cobrança exige consentimento explícito do cliente — obrigação prevista na LGPD (Lei Geral de Proteção de Dados) e na normativa BACEN 4.680 — que não foi coletado no fluxo atual.\n2. O texto da mensagem de escalonamento máximo ("sua dívida será protestada em 48 horas") pode configurar ameaça indevida segundo o CDC (Código de Defesa do Consumidor).\n\nO time estima que corrigir os dois pontos levará de 2 a 3 semanas adicionais. O COO não quer atrasar a entrada em produção.',
+tension:'⚖️ Conformidade regulatória versus pressão de prazo — com risco legal real para o banco.',
+options:[
+{letter:'A',text:'Realizar a entrada em produção completa e corrigir as conformidades no primeiro mês de operação, já que o risco de ação judicial é baixo no curto prazo.',correct:false},
+{letter:'B',text:'Adiar a entrada em produção por completo até que todos os pontos do jurídico estejam 100% resolvidos.',correct:false},
+{letter:'C',text:'Realizar a entrada em produção parcial: sem o canal WhatsApp por ora (apenas e-mail e SMS) e com os textos de escalonamento corrigidos antes da entrada. O WhatsApp entra após a regularização do consentimento dos clientes.',correct:true}
+],
+feedback:{
+A:{type:'bad',title:'Risco inaceitável em instituição financeira.',text:'Em banco, violação de LGPD e normativa BACEN não é "risco baixo no curto prazo" — é multa, processo administrativo e dano à reputação com o regulador. A Dra. Camila vai registrar em ata que alertou sobre o risco. Se algo acontecer, a responsabilidade vai recair sobre quem decidiu seguir mesmo assim.',pilar:'🔍 Pilar acionado: <strong>Gestão de Riscos Regulatórios</strong> — em mercado financeiro, risco regulatório tem prioridade sobre velocidade de entrega, sempre.'},
+B:{type:'bad',title:'Paralisação total desnecessária.',text:'O WhatsApp e o texto de escalonamento são os dois pontos críticos — não todo o sistema. Adiar a entrada em produção completa quando e-mail e SMS estão em conformidade é desperdiçar valor já entregue pelo time e criar conflito desnecessário com o COO.',pilar:'🔍 Pilar acionado: <strong>Tomada de Decisão em Projetos</strong> — paralisação total por problema parcial é resposta desproporcional que gera custo sem benefício equivalente.'},
+C:{type:'good',title:'Decisão inteligente e juridicamente segura.',text:'Você encontrou o meio-termo: entrega parcial que preserva o valor do projeto (e-mail e SMS já funcionando), elimina o risco maior (WhatsApp sem consentimento) e corrige o texto problemático. O COO tem algo para apresentar, o jurídico está protegido. Isso é gestão de risco com foco em valor.',pilar:'🔍 Pilar acionado: <strong>Gestão de Riscos + Escopo</strong> — entrega parcial em conformidade é superior à entrega completa com exposição legal.'}
+}},
+{label:'Etapa 3 de 3 — O incidente na primeira semana',
+text:'A entrada em produção parcial foi bem. E-mail e SMS funcionando, WhatsApp na fila para a próxima sprint. Mas na primeira semana, uma cliente inadimplente publica nas redes sociais um print de uma mensagem de SMS do banco: "Regularize sua situação ou seu nome será negativado." Ela afirma que nunca autorizou o banco a entrar em contato por SMS e que vai acionar o PROCON (órgão público de defesa do consumidor).\n\nA Dra. Camila te chama com urgência. O texto do SMS estava correto — mas o banco não tinha na base de dados o registro de quem havia ou não consentido com SMS. O consentimento não foi verificado no fluxo de envio.',
+tension:'📱 Incidente público com potencial regulatório — falha de processo que não estava no radar do jurídico nem do time.',
+options:[
+{letter:'A',text:'Responder publicamente à cliente explicando que o banco agiu dentro da lei e aguardar o processo do PROCON.',correct:false},
+{letter:'B',text:'Continuar os envios apenas para clientes de maior inadimplência, priorizando a recuperação de crédito enquanto a situação é avaliada.',correct:false},
+{letter:'C',text:'Suspender imediatamente todos os envios de SMS e e-mail até que o banco tenha evidência de quem consentiu com cada canal.',correct:true}
+],
+feedback:{
+A:{type:'bad',title:'Resposta pública é combustível para a crise.',text:'Responder publicamente a uma reclamação com argumento jurídico raramente resolve — quase sempre escala o problema. O PROCON vai investigar independentemente da resposta pública. O que o banco precisa agora é conter o incidente internamente e preparar uma resposta institucional estruturada.',pilar:'🔍 Pilar acionado: <strong>Comunicação em Crise</strong> — crise de imagem em banco exige gestão institucional, não resposta reativa em canal público.'},
+B:{type:'bad',title:'Priorização equivocada.',text:'Continuar enviando para clientes de maior inadimplência enquanto o banco não sabe quem consentiu é multiplicar a exposição ao risco. A inadimplência do cliente não altera o direito dele de não ser contatado sem autorização. Recuperação de crédito não justifica violação de LGPD.',pilar:'🔍 Pilar acionado: <strong>Ética e Conformidade em Projetos</strong> — valor de negócio nunca justifica violação de direitos do consumidor ou norma regulatória.'},
+C:{type:'good',title:'Contenção de risco imediata e correta.',text:'Suspender os envios é a decisão mais importante nesse momento. Mesmo que a maioria dos clientes tenha consentido, o banco não tem como comprovar isso agora — e continuar enviando enquanto o incidente está aberto é agravar a exposição. Parar, mapear os consentimentos e retomar com base de dados correta é o caminho correto.',pilar:'🔍 Pilar acionado: <strong>Gestão de Crises + LGPD</strong> — em incidente regulatório, a primeira ação é conter o risco ativo, não se defender.'}
+}}
+]}
+};
+
+let state={currentCase:null,currentStep:0,scores:{},answered:false,doneCases:[]};
+
+function openCase(id){
+  state.currentCase=id;state.currentStep=0;state.answered=false;
+  const c=CASES[id];
+  document.getElementById('player-badge').textContent=c.badge;
+  document.getElementById('player-badge').className='player-badge '+c.colorClass;
+  document.getElementById('player-title').textContent=c.title;
+  document.getElementById('player-company').textContent=c.company;
+  const player=document.getElementById('case-player');
+  player.className='case-player visible '+c.colorClass;
+  player.scrollIntoView({behavior:'smooth',block:'start'});
+  renderStep(0);
+}
+function closeCase(){
+  document.getElementById('case-player').classList.remove('visible');
+  document.getElementById('cases-map').scrollIntoView({behavior:'smooth',block:'start'});
+}
+function renderStep(i){
+  const step=CASES[state.currentCase].steps[i];
+  state.answered=false;
+  for(let j=0;j<3;j++){
+    const ps=document.getElementById('ps'+(j+1));
+    ps.className='progress-step'+(j<i?' done':j===i?' active':'');
+  }
+  document.getElementById('scenario-step').textContent=step.label;
+  document.getElementById('scenario-text').innerHTML=step.text.replace(/\n/g,'<br/>');
+  document.getElementById('scenario-tension').innerHTML='<div class="tension-icon" style="background:rgba(224,82,82,0.12)">⚡</div>'+step.tension;
+  const grid=document.getElementById('options-grid');
+  grid.innerHTML='';
+  step.options.forEach(opt=>{
+    const btn=document.createElement('button');
+    btn.className='option-btn';
+    btn.innerHTML='<span class="opt-letter">'+opt.letter+'</span><span>'+opt.text+'</span>';
+    btn.onclick=()=>selectOption(opt.letter,opt.correct);
+    grid.appendChild(btn);
+  });
+  document.getElementById('decision-feedback').classList.remove('visible');
+  document.getElementById('case-result').classList.remove('visible');
+  document.getElementById('scenario-box').style.display='block';
+  document.querySelector('.options-label').style.display='block';
+  grid.style.display='flex';
+}
+function selectOption(letter,isCorrect){
+  if(state.answered)return;
+  state.answered=true;
+  const step=CASES[state.currentCase].steps[state.currentStep];
+  const fb=step.feedback[letter];
+  if(!state.scores[state.currentCase])state.scores[state.currentCase]=0;
+  if(isCorrect)state.scores[state.currentCase]++;
+  document.querySelectorAll('.option-btn').forEach(btn=>{
+    btn.disabled=true;
+    const l=btn.querySelector('.opt-letter').textContent;
+    if(l===letter)btn.classList.add(isCorrect?'correct':'wrong');
+    else if(step.options.find(o=>o.letter===l&&o.correct))btn.classList.add('correct');
+    else btn.classList.add('neutral');
+  });
+  const feedbackEl=document.getElementById('decision-feedback');
+  feedbackEl.className='decision-feedback visible '+(fb.type==='good'?'good':'bad');
+  document.getElementById('feedback-title').textContent=fb.title;
+  document.getElementById('feedback-text').textContent=fb.text;
+  document.getElementById('feedback-pilar').innerHTML=fb.pilar;
+  const btnNext=document.getElementById('btn-next-step');
+  btnNext.innerHTML=(state.currentStep===2?'Ver resultado do case':'Próxima etapa')+' <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>';
+  feedbackEl.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+function nextStep(){
+  if(state.currentStep<2){state.currentStep++;renderStep(state.currentStep);document.getElementById('scenario-box').scrollIntoView({behavior:'smooth',block:'start'});}
+  else showResult();
+}
+function showResult(){
+  const score=state.scores[state.currentCase]||0;
+  const id=state.currentCase;
+  const card=document.getElementById('card-'+id);
+  card.classList.add('done');
+  if(score>=2){card.classList.add('done-ok');card.classList.remove('done-retry');}
+  else{card.classList.add('done-retry');card.classList.remove('done-ok');}
+  if(!state.doneCases.includes(id))state.doneCases.push(id);
+  for(let i=1;i<=3;i++)document.getElementById('ps'+i).className='progress-step done';
+  document.getElementById('scenario-box').style.display='none';
+  document.querySelector('.options-label').style.display='none';
+  document.getElementById('options-grid').style.display='none';
+  document.getElementById('decision-feedback').classList.remove('visible');
+  const scoreEl=document.getElementById('result-score');
+  scoreEl.textContent=score+'/3';
+  let title,text,color;
+  if(score===3){title='Excelente gestão!';text='Você tomou as decisões certas nas três etapas. Isso mostra que está aplicando os pilares de gestão com maturidade — escopo, partes interessadas e riscos estão no seu radar. Leve essa mentalidade para os seus projetos reais.';color='var(--green)';}
+  else if(score===2){title='Bom desempenho — com pontos de atenção.';text='Você acertou 2 de 3 decisões. Revise a etapa onde errou: o feedback traz o pilar que precisava ser ativado. Em projetos reais, uma decisão equivocada pode ser corrigida — mas custa tempo, dinheiro e credibilidade.';color='var(--yellow)';}
+  else{title='Vale rever os pilares do Módulo 2.';text='As situações desse case são comuns no dia a dia de qualquer projeto. Releia os feedbacks de cada etapa — eles mostram exatamente qual pilar estava em jogo. Refaça o case e observe como sua percepção muda.';color='var(--red)';}
+  scoreEl.style.color=color;
+  document.getElementById('result-title').textContent=title;
+  document.getElementById('result-text').textContent=text;
+  const nextId=id<4?id+1:null;
+  const btnNext=document.getElementById('btn-next-case');
+  if(nextId){btnNext.style.display='flex';btnNext.innerHTML='Case '+nextId+' → <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>';}
+  else btnNext.style.display='none';
+  document.getElementById('case-result').classList.add('visible');
+  document.getElementById('case-result').scrollIntoView({behavior:'smooth',block:'center'});
+}
+function replayCase(){
+  state.scores[state.currentCase]=0;
+  const card=document.getElementById('card-'+state.currentCase);
+  card.classList.remove('done','done-ok','done-retry');
+  state.doneCases=state.doneCases.filter(id=>id!==state.currentCase);
+  renderStep(0);
+  document.getElementById('scenario-box').scrollIntoView({behavior:'smooth',block:'start'});
+}
+function goNextCase(){const n=state.currentCase<4?state.currentCase+1:null;if(n)openCase(n);}
+</script>
+</body>
+</html>
