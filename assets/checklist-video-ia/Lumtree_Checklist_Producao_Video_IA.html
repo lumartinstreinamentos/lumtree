@@ -1,0 +1,644 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Lumtree · Checklist de Produção de Vídeo com IA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0A0A0A;
+    --surface: #161616;
+    --surface-raised: #1E1E1E;
+    --line: #2A2A2A;
+    --text: #F2F2F0;
+    --text-dim: #9A9A96;
+    --azul: #3664AC;
+    --vermelho: #E32328;
+    --amarelo: #FCC70A;
+    --verde: #2EAE88;
+    --radius: 10px;
+  }
+  *{ box-sizing: border-box; }
+  html,body{ margin:0; padding:0; }
+  body{
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Manrope', sans-serif;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap{ max-width: 880px; margin: 0 auto; padding: 32px 20px 80px; }
+
+  .slate{
+    position: relative; border: 2px solid var(--amarelo); border-radius: var(--radius);
+    padding: 22px 24px 20px; margin-bottom: 22px;
+    background: repeating-linear-gradient(135deg, #000 0 22px, #111 22px 44px);
+    overflow: hidden;
+  }
+  .slate::before{ content:""; position:absolute; inset:0; background: linear-gradient(180deg, rgba(10,10,10,0.55), rgba(10,10,10,0.9)); }
+  .slate-inner{ position: relative; z-index: 1; }
+  .eyebrow{ font-family:'Montserrat',sans-serif; font-weight:700; font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:var(--amarelo); margin:0 0 6px; }
+  h1{ font-family:'Montserrat',sans-serif; font-weight:800; font-size:clamp(24px,4vw,32px); margin:0 0 6px; color:#fff; letter-spacing:-0.01em; }
+  .subtitle{ color:var(--text-dim); font-size:14.5px; margin:0; max-width:60ch; line-height:1.5; }
+
+  .project-bar{ display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin-top:18px; padding-top:16px; border-top:1px solid rgba(255,255,255,0.08); }
+  select, input[type=text]{ font-family:'Manrope',sans-serif; background:var(--surface-raised); border:1px solid var(--line); color:var(--text); border-radius:8px; padding:9px 12px; font-size:14px; outline:none; }
+  select:focus, input[type=text]:focus{ border-color: var(--amarelo); }
+  select{ min-width:200px; }
+  input[type=text]{ min-width:200px; }
+  button{ font-family:'Montserrat',sans-serif; font-weight:700; font-size:13px; cursor:pointer; border:none; border-radius:8px; padding:10px 16px; transition: transform .08s ease, filter .15s ease; display:inline-flex; align-items:center; gap:7px; }
+  button:active{ transform: scale(0.97); }
+  button:focus-visible, select:focus-visible, input:focus-visible{ outline:2px solid var(--amarelo); outline-offset:2px; }
+  .btn-primary{ background:var(--amarelo); color:#1a1300; }
+  .btn-primary:hover{ filter: brightness(1.08); }
+  .btn-ghost{ background:transparent; color:var(--text-dim); border:1px solid var(--line); }
+  .btn-ghost:hover{ color:var(--vermelho); border-color:var(--vermelho); }
+  .btn-icon svg{ width:15px; height:15px; flex-shrink:0; }
+  .toolbar-row{ display:flex; flex-wrap:wrap; gap:10px; margin-bottom:22px; }
+
+  .progress-card{ background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:18px 20px; margin-bottom:22px; }
+  .progress-top{ display:flex; justify-content:space-between; align-items:baseline; margin-bottom:10px; flex-wrap:wrap; gap:6px; }
+  .progress-label{ font-family:'Montserrat',sans-serif; font-weight:700; font-size:13px; letter-spacing:0.04em; color:var(--text-dim); text-transform:uppercase; }
+  .progress-pct{ font-family:'Montserrat',sans-serif; font-weight:800; font-size:22px; }
+  .track{ height:10px; border-radius:6px; background:#262626; overflow:hidden; }
+  .fill{ height:100%; border-radius:6px; background: linear-gradient(90deg, var(--vermelho), var(--amarelo), var(--verde)); transition: width .35s ease; }
+  .status-msg{ margin-top:8px; font-size:13px; color:var(--text-dim); }
+  .status-msg.error{ color: var(--vermelho); }
+
+  .glossary-card{ background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); margin-bottom:22px; overflow:hidden; }
+  .glossary-head{ display:flex; align-items:center; justify-content:space-between; gap:10px; padding:15px 18px; cursor:pointer; user-select:none; }
+  .glossary-head:hover{ background: rgba(255,255,255,0.02); }
+  .glossary-title{ display:flex; align-items:center; gap:10px; font-family:'Montserrat',sans-serif; font-weight:700; font-size:15px; color:var(--amarelo); }
+  .glossary-title svg{ width:18px; height:18px; flex-shrink:0; }
+  .glossary-body{ max-height:0; overflow:hidden; transition: max-height .3s ease; }
+  .glossary-card.open .glossary-body{ max-height:3000px; }
+  .glossary-card.open .glossary-chevron{ transform: rotate(180deg); }
+  .glossary-chevron{ width:18px; height:18px; color:var(--text-dim); transition: transform .2s ease; flex-shrink:0; }
+  .glossary-content{ padding:4px 18px 18px; }
+  .glossary-sub-title{ font-family:'Montserrat',sans-serif; font-weight:700; font-size:13px; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-dim); margin:14px 0 8px; }
+  .glossary-sub-title:first-child{ margin-top:4px; }
+  .gloss-grid{ display:grid; grid-template-columns:1fr 1fr; gap:8px 18px; }
+  @media (max-width:560px){ .gloss-grid{ grid-template-columns:1fr; } }
+  .gloss-item{ padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.06); font-size:13.5px; line-height:1.45; }
+  .gloss-term{ font-weight:700; color:#fff; }
+  .gloss-def{ color:var(--text-dim); }
+
+  .phase{ background:var(--surface); border:1px solid var(--line); border-left:4px solid var(--phase-color, var(--azul)); border-radius:var(--radius); margin-bottom:14px; overflow:hidden; }
+  .phase-head{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding:16px 18px; cursor:pointer; user-select:none; }
+  .phase-head:hover{ background: rgba(255,255,255,0.02); }
+  .phase-title-group{ display:flex; align-items:center; gap:12px; min-width:0; }
+  .phase-tag{ font-family:'Montserrat',sans-serif; font-weight:800; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:var(--phase-color, var(--azul)); white-space:nowrap; border:1px solid var(--phase-color, var(--azul)); padding:3px 8px; border-radius:999px; }
+  .phase-title{ font-family:'Montserrat',sans-serif; font-weight:700; font-size:16px; color:#fff; display:flex; align-items:center; }
+  .phase-sub{ font-size:12.5px; color:var(--text-dim); margin-top:2px; }
+  .phase-right{ display:flex; align-items:center; gap:14px; flex-shrink:0; }
+  .phase-count{ font-family:'Montserrat',sans-serif; font-size:13px; font-weight:700; color:var(--text-dim); white-space:nowrap; }
+  .phase-count.done{ color:var(--verde); }
+  .chevron{ width:18px; height:18px; flex-shrink:0; transition: transform .2s ease; color:var(--text-dim); }
+  .phase.open .chevron{ transform: rotate(180deg); }
+  .phase-mini-track{ height:4px; background:#262626; }
+  .phase-mini-fill{ height:100%; background: var(--phase-color, var(--azul)); transition: width .3s ease; }
+
+  .phase-body{ max-height:0; overflow:hidden; transition: max-height .3s ease; }
+  .phase.open .phase-body{ max-height:2600px; }
+  .items{ padding:4px 18px 16px; }
+
+  .item{ padding:9px 4px; border-bottom:1px solid rgba(255,255,255,0.05); }
+  .item:last-child{ border-bottom:none; }
+  .item-row{ display:flex; align-items:flex-start; gap:11px; }
+  .checkbox{ flex-shrink:0; width:20px; height:20px; border-radius:5px; border:1.5px solid var(--text-dim); margin-top:1px; cursor:pointer; display:flex; align-items:center; justify-content:center; background:transparent; transition: all .15s ease; }
+  .checkbox svg{ width:13px; height:13px; opacity:0; transform: scale(0.6); transition: all .15s ease; }
+  .checkbox.checked{ background:var(--verde); border-color:var(--verde); }
+  .checkbox.checked svg{ opacity:1; transform:scale(1); }
+  .item-main{ flex: 1; min-width: 0; }
+  .item-text{ font-size:14.5px; line-height:1.5; cursor:pointer; color:var(--text); }
+  .item.checked .item-text{ color:var(--text-dim); text-decoration: line-through; text-decoration-color: rgba(154,154,150,0.5); }
+  .hint{ color:var(--amarelo); font-style:italic; font-weight:500; }
+  .item.checked .hint{ color:var(--text-dim); }
+
+  .example-toggle{ background:none; border:none; padding:0; margin-top:4px; font-family:'Manrope',sans-serif; font-weight:700; font-size:12px; color:var(--azul); cursor:pointer; display:inline-flex; align-items:center; gap:4px; }
+  .example-toggle:hover{ color: var(--amarelo); }
+  .example-toggle svg{ width:11px; height:11px; transition: transform .2s ease; }
+  .example-toggle.open svg{ transform: rotate(180deg); }
+  .example-box{ display:none; margin-top:6px; padding:9px 12px; background: var(--surface-raised); border-left:3px solid var(--azul); border-radius:6px; font-size:13px; color:var(--text-dim); line-height:1.5; }
+  .example-box.open{ display:block; }
+  .example-box b{ color: var(--text); }
+
+  .clapper-icon{ width:16px; height:16px; margin-right:7px; vertical-align:-3px; flex-shrink:0; }
+
+  .footer-note{ text-align:center; color:var(--text-dim); font-size:12px; margin-top:28px; line-height:1.6; }
+  .footer-note a{ color:var(--amarelo); text-decoration:none; }
+
+  @media print {
+    :root{ --bg:#fff; --surface:#fff; --surface-raised:#f7f7f7; --line:#ccc; --text:#000; --text-dim:#3a3a3a; }
+    body{ background:#fff; }
+    .slate{ background:#fff !important; border-color:#000; }
+    .slate::before{ display:none; }
+    .eyebrow, .subtitle, h1{ color:#000 !important; }
+    .project-bar, .toolbar-row, .chevron, .glossary-chevron, .example-toggle{ display:none !important; }
+    .phase-body, .glossary-body{ max-height:none !important; }
+    .example-box{ display:block !important; }
+    .phase{ break-inside: avoid; }
+    .checkbox{ border-color:#000; }
+    .checkbox.checked{ background:#000; border-color:#000; }
+    .hint{ color:#555 !important; }
+    .fill{ background:#000 !important; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="slate">
+    <div class="slate-inner">
+      <p class="eyebrow">Lumtree · Produção Audiovisual com IA</p>
+      <h1>Checklist de Take: do roteiro à entrega</h1>
+      <p class="subtitle">Marque cada item conforme avança na produção. O progresso é salvo automaticamente por projeto de vídeo — feche e volte quando quiser.</p>
+
+      <div class="project-bar">
+        <select id="projectSelect" aria-label="Selecionar projeto"></select>
+        <input type="text" id="newProjectInput" placeholder="Nome do novo vídeo..." aria-label="Nome do novo projeto" />
+        <button class="btn-primary" id="addProjectBtn">+ Novo projeto</button>
+        <button class="btn-ghost" id="resetBtn">Zerar checklist</button>
+        <button class="btn-ghost" id="deleteBtn">Excluir projeto</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="glossary-card" id="glossaryCard">
+    <div class="glossary-head" id="glossaryToggle">
+      <div class="glossary-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        Glossário de câmera e luz — para orientar o designer
+      </div>
+      <svg class="glossary-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+    </div>
+    <div class="glossary-body">
+      <div class="glossary-content">
+        <p class="glossary-sub-title">Enquadramento (o quanto aparece no quadro)</p>
+        <div class="gloss-grid" id="glossFraming"></div>
+        <p class="glossary-sub-title">Movimento de câmera</p>
+        <div class="gloss-grid" id="glossMovement"></div>
+        <p class="glossary-sub-title">Ângulo de câmera</p>
+        <div class="gloss-grid" id="glossAngle"></div>
+        <p class="glossary-sub-title">Tipos de luz</p>
+        <div class="gloss-grid" id="glossLight"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toolbar-row">
+    <button class="btn-primary btn-icon" id="printBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+      Salvar em PDF / Imprimir
+    </button>
+  </div>
+
+  <div class="progress-card">
+    <div class="progress-top">
+      <span class="progress-label" id="progressLabel">Progresso geral</span>
+      <span class="progress-pct" id="progressPct">0%</span>
+    </div>
+    <div class="track"><div class="fill" id="progressFill" style="width:0%"></div></div>
+    <p class="status-msg" id="statusMsg">Carregando...</p>
+  </div>
+
+  <div id="phasesContainer"></div>
+
+  <p class="footer-note">Ferramenta interna Lumtree — baseada no Guia de Prompt Design para Vídeo com IA.<br/><a href="https://www.lumtree.com.br" target="_blank" rel="noopener">lumtree.com.br</a></p>
+</div>
+
+<script>
+const CHECK_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="#08130F" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+const CHEVRON_ICON = '<svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>';
+const CLAPPER_ICON = '<svg class="clapper-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7 4 7"/><path d="m5 7 1.2-3.6A1 1 0 0 1 7.14 2.7l11.9 2.1A1 1 0 0 1 20 5.8L19.6 7"/><rect x="4" y="7" width="16" height="13" rx="1.5"/><path d="M9 13.5v3"/><path d="M14 13.5v3"/></svg>';
+const CARET_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>';
+
+const PHASES = [
+  {
+    id: "p1", tag: "Tomada 1", title: "Roteiro-síntese",
+    sub: "Os 7 elementos, antes de abrir qualquer ferramenta", color: "var(--azul)",
+    items: [
+      { text: "Defini o sujeito: quem/o que é o foco, aparência, roupa, expressão",
+        example: "\"Uma gestora de projetos, 40 anos, blazer azul-marinho, postura confiante\"" },
+      { text: "Defini o contexto: onde, quando, atmosfera do cenário",
+        example: "\"Sala de reunião corporativa moderna, luz natural de manhã\"" },
+      { text: "Descrevi a ação com intensidade clara — o que acontece e como",
+        example: "\"Aponta para um gráfico na tela enquanto explica um ponto com firmeza\"" },
+      { text: "Escolhi o enquadramento e o movimento de câmera <span class='hint'>(veja o glossário de câmera acima)</span>",
+        example: "\"Plano médio, leve dolly-in, altura dos olhos\"" },
+      { text: "Defini a luz, a cor e o grading da cena <span class='hint'>(grading = o tratamento de cor aplicado depois, tipo um filtro profissional de tom e contraste)</span>",
+        example: "\"Luz suave lateral, tons quentes, contraste moderado\"" },
+      { text: "Escolhi o estilo ou referência estética (cinematográfico, documental, ilustrado...)",
+        example: "\"Cinematográfico, 35mm, documental corporativo\"" },
+      { text: "Declarei o áudio — fala, ambiente, música ou silêncio — nunca deixei em branco",
+        example: "\"Voz confiante em português, ambiente com burburinho leve de escritório\"" },
+      { text: "O roteiro tem entre 3 e 6 frases (100–150 palavras): nem curto nem longo demais",
+        example: "Evite \"vídeo de um instrutor falando\" (curto demais) e um parágrafo de 300 palavras (longo demais)" },
+    ],
+  },
+  {
+    id: "p2", tag: "Tomada 2", title: "Imagem-base",
+    sub: "Magnific — geração e upscale", color: "var(--verde)",
+    items: [
+      { text: "Descrevi explicitamente o que a IA deve \"inventar\" (textura, material) em vez de deixar genérico",
+        example: "Em vez de \"pele realista\", escreva \"pele com poros visíveis e leve textura, sem parecer plástico\"" },
+      { text: "Incluí um prompt negativo <span class='hint'>(a lista do que você NÃO quer que apareça, tipo \"borrado, com erros\")</span>",
+        example: "\"blur, artefatos jpeg, baixa qualidade, expressão artificial\"" },
+      { text: "Reaproveitei a mesma imagem de referência em toda a peça, se preciso de consistência visual",
+        example: "Usar a mesma imagem do instrutor validada no Módulo 1 como referência para os Módulos 2 e 3" },
+      { text: "Escolhi o preset certo <span class='hint'>(preset = uma configuração pronta da ferramenta)</span> para o tipo de imagem: Precision/Subtle para fidelidade, Illusio para ilustração, Vivid/Wild só para arte conceitual",
+        example: "Foto real do instrutor → Precision. Ícone/ilustração do curso → Illusio" },
+      { text: "Se a imagem tem texto ou logo, mantive o Creativity baixo <span class='hint'>(Creativity = o quanto a IA pode \"inventar\" detalhes novos ao ampliar a imagem; alto demais distorce letras e logos)</span>, abaixo de 0,2",
+        example: "Creativity 0,1 numa imagem com o logo do cliente no canto" },
+    ],
+  },
+  {
+    id: "p3", tag: "Tomada 3", title: "Geração de vídeo",
+    sub: "Gemini (Veo) ou Adobe Firefly", color: "var(--amarelo)",
+    items: [
+      { text: "Separei o prompt <span class='hint'>(prompt = o texto de instrução que você escreve para a IA gerar a cena)</span> em frases por elemento (cena / ação / câmera / áudio)",
+        example: "\"Cena: escritório moderno. Ação: caminha até a mesa. Câmera: dolly-in lento. Áudio: passos leves, ambiente de escritório.\"" },
+      { text: "Escrevi tudo em afirmações positivas — nunca negações (\"corredor vazio\" em vez de \"sem gente\")",
+        example: "Troque \"sem pessoas ao fundo\" por \"um corredor vazio e silencioso\"" },
+      { text: "Descrevi um único plano por prompt — nada de múltiplos cortes na mesma geração",
+        example: "Gerar um prompt só para o \"plano de abertura\" e outro separado para o \"close no rosto\"" },
+      { text: "Se há fala, usei aspas e descrevi o tom de voz antes da fala",
+        example: "\"Em tom calmo e seguro, ela diz: 'Vamos revisar o cronograma.'\"" },
+      { text: "Gerei mais de uma variação <span class='hint'>(mudando a seed, ou seja, o \"número da sorte\" que a IA usa para variar o resultado)</span> antes de escolher a definitiva",
+        example: "Gerar 3 versões da mesma cena e escolher a de expressão mais natural" },
+    ],
+  },
+  {
+    id: "p4", tag: "Tomada 4", title: "Voz e áudio",
+    sub: "ElevenLabs", color: "var(--vermelho)",
+    items: [
+      { text: "Enviei para o cliente 3 vozes para a validação dele antes de gerar o prompt para o designer",
+        example: "Gerar 3 opções de voz institucional no ElevenLabs e mandar um áudio de 10s de cada, antes de fechar a narração completa" },
+      { text: "Escolhi a voz certa para o tom do vídeo antes de escrever qualquer tag <span class='hint'>(tag = marcação entre colchetes, tipo [sussurrando], que dá instrução de emoção para a voz)</span>",
+        example: "Não usar [sussurrando] numa voz grave e séria de diretor institucional" },
+      { text: "Usei uma emoção por trecho — sem tags conflitantes na mesma frase",
+        example: "\"[calorosa] Vamos construir juntos... [pausa] ...o seu plano de ação.\"" },
+      { text: "Usei reticências e pontuação para pausas naturais, sem excesso de tags de pausa",
+        example: "\"Vamos começar... com calma.\" em vez de vários <break time=\"2s\" /> seguidos" },
+      { text: "Ouvi o áudio inteiro e confirmei que nenhum texto de emoção \"vazou\" na fala",
+        example: "Conferir se a IA não \"leu\" a palavra [animada] em voz alta por engano" },
+    ],
+  },
+  {
+    id: "p5", tag: "Tomada 5", title: "Montagem final",
+    sub: "Adobe Premiere / After Effects", color: "var(--azul)",
+    items: [
+      { text: "Apliquei a paleta e a tipografia da marca do cliente (ou da Lumtree) em todos os elementos",
+        example: "Usar a mesma fonte e a mesma cor azul da marca do cliente em todos os textos do vídeo" },
+      { text: "Conferi que a luz e o grading combinam entre elementos gerados por IA e fotografia real de banco de imagens",
+        example: "Se o banco de imagens tem tom mais frio e a IA gerou tom quente, ajustar um dos dois no grading final" },
+      { text: "Textos, logos e números nas imagens upscaladas <span class='hint'>(ampliadas com IA)</span> estão legíveis",
+        example: "Ampliar e conferir se o nome da empresa no crachá do personagem não virou um borrão" },
+      { text: "Adicionei trilha, títulos e ritmo de corte alinhados ao roteiro original",
+        example: "Cortar a trilha exatamente no ponto da fala principal, sem sobrepor volume" },
+    ],
+  },
+  {
+    id: "p6", tag: "Claquete final", title: "QA antes da entrega",
+    sub: "O último filtro antes do cliente ver", color: "var(--vermelho)", clapper: true,
+    items: [
+      { text: "Assisti o vídeo inteiro, com som, do início ao fim — não só conferi em still frames",
+        example: "Assistir com fone de ouvido, do primeiro ao último segundo, sem pular trechos" },
+      { text: "Confirmei que o vídeo combina com a identidade visual do cliente",
+        example: "Conferir se logo, cores e fonte são do cliente — não os da Lumtree por engano" },
+      { text: "Utilizei as vozes, imagens e tom de voz validados pelo cliente",
+        example: "Confirmar por e-mail/mensagem que o cliente aprovou a voz nº 2 e a imagem do instrutor antes de gerar a versão final" },
+      { text: "Tenho uma variação alternativa pronta, caso o cliente peça ajuste de tom",
+        example: "Ter uma versão com tom mais informal engavetada, caso o cliente ache o vídeo sério demais" },
+      { text: "Revisei ortografia e informações técnicas (datas, nomes, números)",
+        example: "Conferir se a data do treinamento e o nome do instrutor estão escritos corretamente" },
+    ],
+  },
+];
+
+const GLOSSARY = {
+  framing: [
+    ["Plano geral", "Mostra o ambiente inteiro; a pessoa aparece pequena no quadro. Bom para situar o lugar."],
+    ["Plano médio", "Enquadra da cintura para cima. É o \"padrão\" para alguém falando para a câmera."],
+    ["Close-up (close)", "Enquadra só o rosto. Transmite emoção e proximidade."],
+    ["Plano detalhe", "Foca em um detalhe pequeno (mãos, um objeto, um gesto)."],
+  ],
+  movement: [
+    ["Dolly-in / dolly-out", "A câmera se aproxima ou se afasta fisicamente do sujeito."],
+    ["Travelling (travelling lateral)", "A câmera se desloca de lado, acompanhando quem se move."],
+    ["Pan (panorâmica)", "A câmera gira na horizontal, sem sair do lugar — como virar a cabeça de um lado a outro."],
+    ["Tilt", "A câmera gira na vertical, de baixo para cima ou o contrário."],
+    ["Handheld (câmera na mão)", "Simula uma câmera segurada na mão, com leve tremor — dá um ar mais real e documental."],
+    ["Estática / fixa", "A câmera não se move. Passa firmeza e institucionalidade."],
+  ],
+  angle: [
+    ["Altura dos olhos", "Câmera na mesma altura do rosto da pessoa — o mais neutro e natural."],
+    ["Ângulo baixo (contra-plongée)", "Câmera abaixo do olho, olhando para cima. Transmite força, autoridade."],
+    ["Ângulo alto (plongée)", "Câmera acima do olho, olhando para baixo. Transmite vulnerabilidade ou vista panorâmica."],
+    ["POV (ponto de vista)", "A câmera \"é\" os olhos de alguém — mostra a cena como se você mesmo estivesse vivendo."],
+  ],
+  light: [
+    ["Luz suave (soft light)", "Luz difusa, sem sombras marcadas. Resultado mais amigável e acolhedor — ideal para institucional."],
+    ["Luz dura (hard light)", "Luz direta, com sombras bem definidas. Resultado mais dramático e contrastado."],
+    ["Contraluz (backlight)", "A luz vem de trás do sujeito, criando um contorno/silhueta. Dá um ar cinematográfico."],
+    ["Luz lateral", "Vem de um dos lados, criando volume e profundidade no rosto ou objeto."],
+    ["Luz frontal", "Vem de frente para o sujeito. Achata um pouco o rosto — é o padrão de vídeo institucional simples."],
+    ["Luz dourada (golden hour)", "Luz quente do fim de tarde/começo da manhã. Transmite calor humano e nostalgia."],
+    ["Tons quentes / frios", "Quente = amarelado/avermelhado (aconchegante). Frio = azulado (tecnológico, distante)."],
+  ],
+};
+
+function renderGlossary(){
+  const map = [
+    ["glossFraming", GLOSSARY.framing], ["glossMovement", GLOSSARY.movement],
+    ["glossAngle", GLOSSARY.angle], ["glossLight", GLOSSARY.light],
+  ];
+  map.forEach(([id, list]) => {
+    document.getElementById(id).innerHTML = list.map(([term, def]) => `
+      <div class="gloss-item"><span class="gloss-term">${term}</span> — <span class="gloss-def">${def}</span></div>
+    `).join("");
+  });
+}
+
+const STORAGE_PROJECT_LIST_KEY = "video-checklist-projects";
+const dataKey = (id) => `video-checklist-data-${id}`;
+
+// Camada de armazenamento no próprio navegador (funciona em qualquer site, inclusive GitHub Pages).
+// Cada pessoa que abrir esta página guarda seu progresso no seu próprio navegador/computador.
+const storage = {
+  async get(key){
+    try {
+      const v = localStorage.getItem(key);
+      return v === null ? null : { key, value: v };
+    } catch (err) { throw err; }
+  },
+  async set(key, value){
+    try { localStorage.setItem(key, value); return { key, value }; }
+    catch (err) { throw err; }
+  },
+  async delete(key){
+    try { localStorage.removeItem(key); return { key, deleted: true }; }
+    catch (err) { throw err; }
+  },
+};
+
+function slugify(name){
+  const base = name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-").replace(/(^-+|-+$)/g, "");
+  return base || "projeto";
+}
+
+let currentProjectId = null;
+let currentProjectName = null;
+let currentData = {};
+let openPhases = new Set(["p1"]);
+let openExamples = new Set();
+
+const el = (sel) => document.querySelector(sel);
+const projectSelect = el("#projectSelect");
+const newProjectInput = el("#newProjectInput");
+const statusMsg = el("#statusMsg");
+
+function totalItemCount(){ return PHASES.reduce((sum, ph) => sum + ph.items.length, 0); }
+function checkedCountFor(phase){ return phase.items.filter((_, i) => currentData[`${phase.id}-${i}`]).length; }
+
+function renderPhases(){
+  const container = el("#phasesContainer");
+  container.innerHTML = "";
+  PHASES.forEach((phase) => {
+    const isOpen = openPhases.has(phase.id);
+    const checkedCount = checkedCountFor(phase);
+    const total = phase.items.length;
+    const pct = total ? Math.round((checkedCount / total) * 100) : 0;
+
+    const phaseEl = document.createElement("div");
+    phaseEl.className = "phase" + (isOpen ? " open" : "");
+    phaseEl.style.setProperty("--phase-color", phase.color);
+
+    phaseEl.innerHTML = `
+      <div class="phase-head" data-phase="${phase.id}">
+        <div class="phase-title-group">
+          <span class="phase-tag">${phase.tag}</span>
+          <div>
+            <div class="phase-title">${phase.clapper ? CLAPPER_ICON : ""}${phase.title}</div>
+            <div class="phase-sub">${phase.sub}</div>
+          </div>
+        </div>
+        <div class="phase-right">
+          <span class="phase-count ${checkedCount === total ? 'done' : ''}">${checkedCount}/${total}</span>
+          ${CHEVRON_ICON}
+        </div>
+      </div>
+      <div class="phase-mini-track"><div class="phase-mini-fill" style="width:${pct}%"></div></div>
+      <div class="phase-body">
+        <div class="items">
+          ${phase.items.map((item, i) => {
+            const itemId = `${phase.id}-${i}`;
+            const checked = !!currentData[itemId];
+            const exOpen = openExamples.has(itemId);
+            return `
+              <div class="item ${checked ? 'checked' : ''}" data-item-row="${itemId}">
+                <div class="item-row">
+                  <div class="checkbox ${checked ? 'checked' : ''}" data-item="${itemId}" role="checkbox" aria-checked="${checked}" tabindex="0">${CHECK_ICON}</div>
+                  <div class="item-main">
+                    <div class="item-text" data-item="${itemId}">${item.text}</div>
+                    <button class="example-toggle ${exOpen ? 'open' : ''}" data-example="${itemId}" type="button">${CARET_ICON} Ver exemplo</button>
+                    <div class="example-box ${exOpen ? 'open' : ''}" data-examplebox="${itemId}"><b>Exemplo:</b> ${item.example}</div>
+                  </div>
+                </div>
+              </div>
+            `;
+          }).join("")}
+        </div>
+      </div>
+    `;
+    container.appendChild(phaseEl);
+  });
+
+  container.querySelectorAll(".phase-head").forEach((headEl) => {
+    headEl.addEventListener("click", () => {
+      const id = headEl.dataset.phase;
+      if (openPhases.has(id)) openPhases.delete(id); else openPhases.add(id);
+      renderPhases();
+    });
+  });
+
+  container.querySelectorAll("[data-item]").forEach((node) => {
+    node.addEventListener("click", (e) => { e.stopPropagation(); toggleItem(node.dataset.item); });
+    node.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggleItem(node.dataset.item); }
+    });
+  });
+
+  container.querySelectorAll("[data-example]").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const id = btn.dataset.example;
+      if (openExamples.has(id)) openExamples.delete(id); else openExamples.add(id);
+      renderPhases();
+    });
+  });
+
+  renderProgress();
+}
+
+function renderProgress(){
+  const total = totalItemCount();
+  const checked = Object.values(currentData).filter(Boolean).length;
+  const pct = total ? Math.round((checked / total) * 100) : 0;
+  el("#progressPct").textContent = `${pct}%`;
+  el("#progressFill").style.width = `${pct}%`;
+  el("#progressLabel").textContent = currentProjectName ? `Progresso — ${currentProjectName}` : "Progresso geral";
+
+  if (!statusMsg.classList.contains("error")) {
+    if (pct === 100 && total > 0) statusMsg.textContent = "Take aprovada. Vídeo pronto para o cliente ver.";
+    else if (pct === 0) statusMsg.textContent = "Nenhum item marcado ainda — comece pela Tomada 1.";
+    else statusMsg.textContent = `${checked} de ${total} itens concluídos.`;
+  }
+}
+
+async function toggleItem(itemId){
+  currentData[itemId] = !currentData[itemId];
+  renderPhases();
+  await saveCurrentProject();
+}
+
+async function saveWithRetry(key, value, attempts = 2){
+  for (let i = 0; i < attempts; i++) {
+    try { await storage.set(key, value); return true; }
+    catch (err) {
+      if (i === attempts - 1) throw err;
+      await new Promise((r) => setTimeout(r, 400));
+    }
+  }
+  return false;
+}
+
+async function saveCurrentProject(){
+  if (!currentProjectId) return;
+  try {
+    await saveWithRetry(dataKey(currentProjectId), JSON.stringify({ name: currentProjectName, checked: currentData, updatedAt: Date.now() }));
+    statusMsg.classList.remove("error");
+    renderProgress();
+  } catch (err) {
+    console.error("Erro ao salvar:", err);
+    statusMsg.classList.add("error");
+    statusMsg.textContent = "Não foi possível salvar no navegador agora (isso pode acontecer em modo anônimo/privado ou com armazenamento bloqueado). Suas marcações continuam visíveis nesta tela — ou finalize com o botão de imprimir/PDF para não perder o registro.";
+  }
+}
+
+async function loadProjectList(){
+  try { const r = await storage.get(STORAGE_PROJECT_LIST_KEY); return r ? JSON.parse(r.value) : []; }
+  catch { return []; }
+}
+async function saveProjectList(list){
+  try { await storage.set(STORAGE_PROJECT_LIST_KEY, JSON.stringify(list)); }
+  catch (err) { console.error("Erro ao salvar lista de projetos:", err); }
+}
+async function loadProjectData(id){
+  try {
+    const r = await storage.get(dataKey(id));
+    if (!r) return {};
+    const parsed = JSON.parse(r.value);
+    return parsed.checked || {};
+  } catch { return {}; }
+}
+
+function populateSelect(list){
+  projectSelect.innerHTML = "";
+  if (list.length === 0) {
+    const opt = document.createElement("option");
+    opt.textContent = "Nenhum projeto ainda"; opt.disabled = true; opt.selected = true;
+    projectSelect.appendChild(opt);
+    return;
+  }
+  list.forEach((proj) => {
+    const opt = document.createElement("option");
+    opt.value = proj.id; opt.textContent = proj.name;
+    if (proj.id === currentProjectId) opt.selected = true;
+    projectSelect.appendChild(opt);
+  });
+}
+
+async function switchToProject(id, name){
+  currentProjectId = id;
+  currentProjectName = name;
+  openExamples = new Set();
+  statusMsg.classList.remove("error");
+  statusMsg.textContent = "Carregando...";
+  currentData = await loadProjectData(id);
+  renderPhases();
+}
+
+function uniqueId(baseId, list){
+  let id = baseId, n = 2;
+  while (list.some((p) => p.id === id)) { id = `${baseId}-${n}`; n++; }
+  return id;
+}
+
+async function init(){
+  renderGlossary();
+  let list = await loadProjectList();
+  if (list.length === 0) {
+    list = [{ id: "meu-primeiro-video", name: "Meu primeiro vídeo" }];
+    await saveProjectList(list);
+  }
+  populateSelect(list);
+  const first = list[0];
+  await switchToProject(first.id, first.name);
+}
+
+projectSelect.addEventListener("change", async (e) => {
+  const list = await loadProjectList();
+  const proj = list.find((p) => p.id === e.target.value);
+  if (!proj) return;
+  await switchToProject(proj.id, proj.name);
+  populateSelect(list);
+});
+
+el("#addProjectBtn").addEventListener("click", async () => {
+  const name = newProjectInput.value.trim();
+  if (!name) return;
+  let list = await loadProjectList();
+  const existing = list.find((p) => p.name.toLowerCase() === name.toLowerCase());
+  if (existing) { await switchToProject(existing.id, existing.name); populateSelect(list); newProjectInput.value = ""; return; }
+  const id = uniqueId(slugify(name), list);
+  list.push({ id, name });
+  await saveProjectList(list);
+  newProjectInput.value = "";
+  await switchToProject(id, name);
+  populateSelect(list);
+});
+
+newProjectInput.addEventListener("keydown", (e) => { if (e.key === "Enter") el("#addProjectBtn").click(); });
+
+el("#resetBtn").addEventListener("click", async () => {
+  if (!currentProjectId) return;
+  if (!confirm(`Zerar todas as marcações de "${currentProjectName}"?`)) return;
+  currentData = {};
+  renderPhases();
+  await saveCurrentProject();
+});
+
+el("#deleteBtn").addEventListener("click", async () => {
+  if (!currentProjectId) return;
+  if (!confirm(`Excluir o projeto "${currentProjectName}" e todo o progresso salvo?`)) return;
+  let list = await loadProjectList();
+  list = list.filter((p) => p.id !== currentProjectId);
+  try { await storage.delete(dataKey(currentProjectId)); } catch {}
+  if (list.length === 0) list = [{ id: "meu-primeiro-video", name: "Meu primeiro vídeo" }];
+  await saveProjectList(list);
+  const first = list[0];
+  await switchToProject(first.id, first.name);
+  populateSelect(list);
+});
+
+el("#glossaryToggle").addEventListener("click", () => { el("#glossaryCard").classList.toggle("open"); });
+el("#printBtn").addEventListener("click", () => { window.print(); });
+
+init();
+</script>
+</body>
+</html>
