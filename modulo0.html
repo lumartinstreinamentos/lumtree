@@ -1,0 +1,1334 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lumtree · Módulo 0 · Base da Gestão de Projetos</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;1,9..144,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #ffffff;
+    --ink-soft: rgba(255,255,255,0.78);
+    --ink-muted: rgba(255,255,255,0.45);
+    --paper: #000000;
+    --paper-warm: #111111;
+    --accent: #2E4FA3;
+    --accent-light: rgba(46,79,163,0.15);
+    --green: #1FA876;
+    --green-light: rgba(31,168,118,0.15);
+    --gold: #F5C200;
+    --gold-light: rgba(245,194,0,0.10);
+    --red: #D42B2B;
+    --border: rgba(255,255,255,0.10);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── GRAIN OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 0; opacity: 0.5;
+  }
+
+  .wrapper { position: relative; z-index: 1; }
+
+  /* ── HERO ABERTURA ── */
+  .hero {
+    background: #000000;
+    padding: 0;
+  }
+
+  .hero-left {
+    background: #000000;
+    padding: 20px 48px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .hero-left-inner {
+    max-width: 820px;
+    margin: 0 auto;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .hero-left::after {
+    content: '';
+    position: absolute;
+    bottom: -120px; right: -120px;
+    width: 340px; height: 340px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+  .hero-left::before {
+    content: '';
+    position: absolute;
+    bottom: -60px; right: -60px;
+    width: 220px; height: 220px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.04);
+  }
+
+  .logo-tag {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+  }
+
+  .hero-headline {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 40px 0;
+  }
+
+  .kicker {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #F5C200;
+    margin-bottom: 20px;
+  }
+
+  .title-main {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(42px, 5vw, 62px);
+    font-weight: 700;
+    line-height: 1.05;
+    color: #fff;
+    margin-bottom: 12px;
+  }
+
+  .title-sub {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(20px, 2.5vw, 28px);
+    font-weight: 300;
+    font-style: italic;
+    color: rgba(255,255,255,0.65);
+    line-height: 1.3;
+    margin-bottom: 36px;
+  }
+
+  .hero-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .badge {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 100px;
+    padding: 6px 16px;
+    font-size: 12px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.7);
+    letter-spacing: 0.02em;
+  }
+
+  .badge-accent {
+    background: #2E4FA3;
+    border-color: #2E4FA3;
+    color: #fff;
+  }
+
+  .hero-footer {
+    font-size: 11px;
+    color: rgba(255,255,255,0.25);
+    letter-spacing: 0.05em;
+  }
+
+  /* ── HERO RIGHT ── */
+  .hero-right {
+    background: #111111;
+    padding: 56px 48px;
+    max-width: 820px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .section-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.40);
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(255,255,255,0.08);
+  }
+
+  .welcome-text {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-weight: 300;
+    line-height: 1.55;
+    color: #ffffff;
+    margin-bottom: 28px;
+  }
+
+  .welcome-text strong {
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  .welcome-text em {
+    font-style: italic;
+    color: #F5C200;
+  }
+
+  .divider {
+    width: 40px; height: 2px;
+    background: #F5C200;
+    margin: 32px 0;
+  }
+
+  .body-text {
+    font-size: 15px;
+    line-height: 1.75;
+    color: rgba(255,255,255,0.78);
+    margin-bottom: 20px;
+  }
+
+  /* ── OBJETIVOS ── */
+  .section-full {
+    padding: 80px 60px;
+    border-top: 1px solid rgba(255,255,255,0.07);
+    background: #0d0d0d;
+  }
+
+  .section-full.dark {
+    background: #000000;
+    color: #fff;
+  }
+
+  .section-full.cream {
+    background: #111111;
+  }
+
+  .section-heading {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(28px, 3.5vw, 40px);
+    font-weight: 700;
+    line-height: 1.15;
+    margin-bottom: 48px;
+    max-width: 560px;
+  }
+
+  .section-heading .accent { color: var(--accent); }
+  .dark .section-heading .accent { color: #f0a090; }
+
+  /* Objetivos grid */
+  .obj-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .obj-card {
+    background: #0d0d0d;
+    padding: 32px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    transition: background 0.2s;
+  }
+
+  .obj-card:hover { background: rgba(46,79,163,0.10); }
+
+  .obj-num {
+    font-family: 'Fraunces', serif;
+    font-size: 42px;
+    font-weight: 700;
+    color: #F5C200;
+    line-height: 1;
+    opacity: 0.35;
+  }
+
+  .obj-title {
+    font-family: 'Fraunces', serif;
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 1.3;
+    color: #ffffff;
+  }
+
+  .obj-body {
+    font-size: 14px;
+    line-height: 1.65;
+    color: rgba(255,255,255,0.72);
+  }
+
+  /* ── CARGA HORÁRIA ── */
+  .timeline {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .tl-item {
+    padding: 24px 20px;
+    background: rgba(255,255,255,0.03);
+    transition: background 0.2s;
+  }
+
+  .tl-item:hover { background: rgba(255,255,255,0.07); }
+
+  .tl-mod {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.35);
+    margin-bottom: 10px;
+  }
+
+  .tl-name {
+    font-family: 'Fraunces', serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.3;
+    margin-bottom: 8px;
+  }
+
+  .tl-time {
+    font-size: 20px;
+    font-weight: 300;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .tl-time span {
+    font-size: 11px;
+    color: rgba(255,255,255,0.3);
+    margin-left: 2px;
+  }
+
+  /* ── DICAS ── */
+  .dicas-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .dica-card {
+    background: #111111;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 28px;
+    display: flex;
+    gap: 20px;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+
+  .dica-card:hover {
+    border-color: #F5C200;
+    transform: translateY(-2px);
+  }
+
+  .dica-icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .dica-icon.red { background: rgba(212,43,43,0.12); }
+  .dica-icon.green { background: rgba(31,168,118,0.12); }
+  .dica-icon.gold { background: rgba(245,194,0,0.10); }
+
+  .dica-title {
+    font-family: 'Fraunces', serif;
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: #ffffff;
+  }
+
+  .dica-body {
+    font-size: 13.5px;
+    line-height: 1.65;
+    color: rgba(255,255,255,0.72);
+  }
+
+  /* ── DIAGNÓSTICO ── */
+  .diag-wrapper {
+    background: #111111;
+    border: 1px solid rgba(255,255,255,0.10);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  .diag-header {
+    background: #000000;
+    padding: 32px 40px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .diag-header-left h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 6px;
+  }
+
+  .diag-header-left p {
+    font-size: 13px;
+    color: rgba(255,255,255,0.45);
+    line-height: 1.5;
+    max-width: 480px;
+  }
+
+  .diag-steps {
+    display: flex;
+    gap: 6px;
+  }
+
+  .step-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+    transition: background 0.3s;
+  }
+
+  .step-dot.active { background: #F5C200; }
+  .step-dot.done { background: rgba(255,255,255,0.4); }
+
+  /* Question cards */
+  .diag-body { padding: 40px; }
+
+  .q-screen { display: none; animation: fadeIn 0.3s ease; }
+  .q-screen.visible { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .q-num {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #F5C200;
+    margin-bottom: 12px;
+  }
+
+  .q-text {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1.35;
+    color: #ffffff;
+    margin-bottom: 8px;
+  }
+
+  .q-hint {
+    font-size: 13.5px;
+    color: rgba(255,255,255,0.45);
+    margin-bottom: 28px;
+    font-style: italic;
+  }
+
+  /* Área de resposta */
+  .area-profissao {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .prof-btn {
+    padding: 14px 18px;
+    border: 1.5px solid rgba(255,255,255,0.10);
+    border-radius: 10px;
+    background: #1a1a1a;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: rgba(255,255,255,0.75);
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .prof-btn:hover { border-color: #F5C200; background: rgba(245,194,0,0.08); color: #ffffff; }
+  .prof-btn.selected { border-color: #F5C200; background: rgba(245,194,0,0.12); color: #ffffff; font-weight: 500; }
+
+  .prof-btn .icon { font-size: 20px; }
+
+  textarea.diag-input {
+    width: 100%;
+    min-height: 110px;
+    border: 1.5px solid rgba(255,255,255,0.10);
+    border-radius: 10px;
+    padding: 16px 18px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.65;
+    color: #ffffff;
+    background: #1a1a1a;
+    resize: vertical;
+    transition: border-color 0.2s;
+    outline: none;
+  }
+
+  textarea.diag-input:focus { border-color: #F5C200; background: #222222; }
+  textarea.diag-input::placeholder { color: rgba(255,255,255,0.30); font-style: italic; }
+
+  /* Escala */
+  .scale-options {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .scale-btn {
+    padding: 12px 20px;
+    border: 1.5px solid rgba(255,255,255,0.10);
+    border-radius: 8px;
+    background: #1a1a1a;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13.5px;
+    color: rgba(255,255,255,0.75);
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+
+  .scale-btn:hover { border-color: #F5C200; background: rgba(245,194,0,0.08); }
+  .scale-btn.selected { border-color: #2E4FA3; background: #2E4FA3; color: #fff; font-weight: 500; }
+
+  /* Nav */
+  .diag-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .btn-back {
+    background: transparent;
+    border: 1.5px solid rgba(255,255,255,0.12);
+    border-radius: 8px;
+    padding: 12px 24px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: rgba(255,255,255,0.60);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .btn-back:hover { border-color: rgba(255,255,255,0.35); color: #ffffff; }
+
+  .btn-next {
+    background: #2E4FA3;
+    border: none;
+    border-radius: 8px;
+    padding: 13px 32px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .btn-next:hover { background: #1e3580; }
+  .btn-next:disabled { opacity: 0.35; cursor: default; }
+
+  /* Resultado */
+  .result-screen {
+    display: none;
+    animation: fadeIn 0.4s ease;
+  }
+  .result-screen.visible { display: block; }
+
+  .result-perfil {
+    background: #000000;
+    border: 1px solid rgba(245,194,0,0.20);
+    color: #fff;
+    border-radius: 12px;
+    padding: 36px;
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .result-perfil::after {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .result-tag {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #F5C200;
+    margin-bottom: 12px;
+  }
+
+  .result-title {
+    font-family: 'Fraunces', serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 14px;
+  }
+
+  .result-body {
+    font-size: 15px;
+    line-height: 1.7;
+    color: rgba(255,255,255,0.65);
+    max-width: 560px;
+  }
+
+  .result-dica {
+    background: #f5f0e0;
+    border: 1px solid rgba(245,194,0,0.30);
+    border-left: 3px solid #F5C200;
+    border-radius: 8px;
+    padding: 20px 24px;
+    font-size: 14.5px;
+    line-height: 1.65;
+    color: #1a1a1a;
+  }
+
+  .result-dica strong { color: #7a5c00; }
+
+  .btn-start {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: #1FA876;
+    border: none;
+    border-radius: 10px;
+    padding: 16px 36px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    color: #fff;
+    cursor: pointer;
+    margin-top: 28px;
+    transition: all 0.2s;
+    text-decoration: none;
+  }
+
+  .btn-start:hover { background: #178a60; transform: translateY(-1px); }
+
+  /* ── PROGRESSO ── */
+  .progress-bar {
+    height: 3px;
+    background: rgba(255,255,255,0.08);
+    position: relative;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: #F5C200;
+    transition: width 0.4s ease;
+  }
+
+  /* ── ENTREGÁVEIS ── */
+  .entregaveis-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  .ent-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 24px;
+    transition: background 0.2s;
+  }
+
+  .ent-card:hover { background: rgba(255,255,255,0.07); }
+
+  .ent-type {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.35);
+    margin-bottom: 10px;
+  }
+
+  .ent-name {
+    font-family: 'Fraunces', serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 8px;
+  }
+
+  .ent-desc {
+    font-size: 13px;
+    line-height: 1.6;
+    color: rgba(255,255,255,0.5);
+  }
+
+  /* FOOTER */
+  .footer {
+    padding: 40px 60px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #000000;
+  }
+
+  .footer-brand {
+    font-family: 'Fraunces', serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: #ffffff;
+  }
+
+  .footer-brand span { color: #F5C200; }
+
+  .footer-copy {
+    font-size: 12px;
+    color: rgba(255,255,255,0.30);
+  }
+
+  /* responsive */
+  @media (max-width: 900px) {
+    .hero {
+    background: #000000;
+    padding: 0;
+  }
+    .hero-right {
+    background: #111111;
+    padding: 56px 48px;
+    max-width: 820px;
+    margin: 0 auto;
+    width: 100%;
+  }
+    .obj-grid { grid-template-columns: 1fr; }
+    .timeline { grid-template-columns: repeat(3, 1fr); }
+    .dicas-grid { grid-template-columns: 1fr; }
+    .entregaveis-grid { grid-template-columns: 1fr; }
+    .section-full { padding: 60px 32px; }
+    .area-profissao { grid-template-columns: 1fr; }
+  }
+
+  .opt-btn.selected {
+    background: #2E4FA3 !important;
+    border-color: #2E4FA3 !important;
+    color: #fff !important;
+    transform: translateX(4px);
+  }
+  .opt-btn.selected .opt-letter {
+    background: #fff !important;
+    color: #2E4FA3 !important;
+  }
+  .opt-btn.selected .opt-text {
+    color: #fff !important;
+    font-weight: 600;
+  }
+
+  @media (max-width: 900px) {
+    .hero-left { padding: 16px 24px; }
+    .hero-right { padding: 32px 24px; }
+  }
+
+  .body-text {
+    font-size: 15px !important;
+    line-height: 1.8 !important;
+    color: rgba(255,255,255,0.75) !important;
+    margin-bottom: 16px;
+  }
+  .section-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+    margin-bottom: 16px;
+    display: block;
+  }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+<!-- ══════════════ HERO ══════════════ -->
+<section class="hero">
+  <div class="hero-left">
+  <div class="hero-left-inner">
+    <div style="display:flex;align-items:center;gap:10px;">
+    <img src="data:image/jpeg;base64,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" alt="Lumtree" style="height:32px;width:auto;">
+    <span style="font-family:'Fraunces',serif;font-size:15px;font-weight:700;color:#fff;">Lumtree</span>
+  </div>
+</div>
+  </div>
+</div>
+
+<div class="hero-right">
+    <!-- FRASE DE IMPACTO -->
+    <div style="margin-bottom:40px;padding-top:8px;">
+      <p style="
+        font-family: 'Fraunces', serif;
+        font-size: 42px;
+        font-weight: 900;
+        line-height: 1.15;
+        color: #fff;
+        margin: 0;
+      ">
+        Depois deste curso será<br>
+        <em style="color: var(--yellow); font-style: italic;">impossível ficar só na teoria.</em>
+      </p>
+    </div>
+
+    <!-- Título do curso -->
+    <div style="margin-bottom:40px;padding-bottom:32px;border-bottom:1px solid rgba(255,255,255,0.08);">
+      <div style="font-size:11px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:rgba(245,194,0,0.7);margin-bottom:12px;">Base da Gestão de Projetos</div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;">
+        <span style="font-size:12px;color:rgba(255,255,255,0.45);border:1px solid rgba(255,255,255,0.12);padding:3px 12px;border-radius:100px;">3 horas</span>
+        <span style="font-size:12px;color:rgba(255,255,255,0.45);border:1px solid rgba(255,255,255,0.12);padding:3px 12px;border-radius:100px;">5 módulos</span>
+        <span style="font-size:12px;color:rgba(245,194,0,0.7);border:1px solid rgba(245,194,0,0.25);padding:3px 12px;border-radius:100px;">IA integrada</span>
+        <span style="font-size:12px;color:rgba(255,255,255,0.45);border:1px solid rgba(255,255,255,0.12);padding:3px 12px;border-radius:100px;">Toolkits práticos</span>
+      </div>
+    </div>
+        <p class="body-text" style="margin-top:16px;">Mas antes de continuar —</p>
+
+    <div style="background:rgba(245,194,0,0.08);border-left:3px solid #F5C200;border-radius:0 8px 8px 0;padding:16px 20px;margin:16px 0;">
+      <p style="font-weight:700;color:#1a1a1a;font-size:15px;margin-bottom:12px;padding:8px 12px;background:#F5C200;border-radius:6px;display:inline-block;">Me responda honestamente:</p>
+      <p style="margin-bottom:8px;font-size:14px;line-height:1.6;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#F5C200" stroke-width="2" style="vertical-align:-2px;margin-right:6px;"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        Ficou sem resposta numa reunião quando perguntaram sobre riscos ou escopo?
+      </p>
+      <p style="margin-bottom:8px;font-size:14px;line-height:1.6;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#F5C200" stroke-width="2" style="vertical-align:-2px;margin-right:6px;"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        Percebeu que sua ideia foi ignorada — não porque era ruim, mas porque faltou apresentá-la com método?
+      </p>
+      <p style="margin-bottom:8px;font-size:14px;line-height:1.6;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#F5C200" stroke-width="2" style="vertical-align:-2px;margin-right:6px;"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        Entregou um projeto no prazo mas sentiu que poderia ter aplicado mais organização?
+      </p>
+      <p style="font-size:14px;line-height:1.6;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#F5C200" stroke-width="2" style="vertical-align:-2px;margin-right:6px;"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        Assumiu um projeto sem ter visão suficiente para saber por onde começar?
+      </p>
+    </div>
+
+    <p class="body-text">
+      Se você pensou "sim" para qualquer uma dessas situações, este curso foi feito para você.
+    </p>
+
+    <div class="divider"></div>
+
+    <p class="body-text">
+      Gestão de projetos não é território exclusivo de quem tem "gerente" no cargo. É sobre como <strong>toda pessoa profissional entrega valor</strong> — com transparência, dentro do prazo e sem incendiar as relações no caminho.
+    </p>
+
+    <p class="body-text">
+      Aqui, cada conceito vem acompanhado de uma ferramenta que você pode usar <strong>amanhã cedo</strong>. Respire. Siga o ritmo que fizer sentido para você. E no final, você sai daqui com algo concreto.
+    </p>
+
+    <p class="body-text" style="margin-bottom:0">
+      Boas-vindas! Vamos juntos e juntas.
+    </p>
+
+    <!-- ══════════════ OBJETIVOS ══════════════ -->
+<section class="section-full cream">
+  <div class="section-label">O que você vai aprender</div>
+  <h2 class="section-heading">Três <span class="accent">objetivos</span> que vão mudar sua forma de trabalhar</h2>
+
+  <div class="obj-grid">
+    <div class="obj-card">
+      <div class="obj-num">01</div>
+      <div class="obj-title">Compreender e identificar os conceitos e ferramentas base</div>
+      <div class="obj-body">Você vai reconhecer na sua própria rotina os elementos de um projeto — e entender como nomeá-los, organizá-los e comunicá-los com precisão para qualquer pessoa interlocutora.</div>
+    </div>
+    <div class="obj-card">
+      <div class="obj-num">02</div>
+      <div class="obj-title">Explicar com exemplos práticos a importância de cada pilar</div>
+      <div class="obj-body">Escopo, tempo, custo, risco, stakeholders (pessoas ou grupos que têm interesse no projeto), comunicação — você vai entender por que cada um desses pilares existe e o que acontece quando algum deles vacila em campo real.</div>
+    </div>
+    <div class="obj-card">
+      <div class="obj-num">03</div>
+      <div class="obj-title">Identificar e usar a terminologia fundamental</div>
+      <div class="obj-body">A linguagem comum é o que conecta equipes. Ao final deste curso, você vai falar com confiança sobre WBS (Work Breakdown Structure — Estrutura Analítica do Projeto), RACI (matriz de responsabilidades: Responsável, Aprovador, Consultado, Informado), stakeholders, cronograma e riscos — sem precisar de dicionário.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ CARGA HORÁRIA ══════════════ -->
+<section class="section-full dark">
+  <div class="section-label" style="color:rgba(255,255,255,0.3)">Estrutura da trilha</div>
+  <h2 class="section-heading" style="color:#fff">O que aprenderá em cada módulo</h2>
+
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-mod">Módulo 0</div>
+      <div class="tl-name">Boas-vindas + diagnóstico</div>
+      <div class="tl-time">15<span>min</span></div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-mod">Módulo 1</div>
+      <div class="tl-name">O que é (mesmo) um projeto?</div>
+      <div class="tl-time">40<span>min</span></div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-mod">Módulo 2</div>
+      <div class="tl-name">Os 10 pilares em ação</div>
+      <div class="tl-time">60<span>min</span></div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-mod">Módulo 3</div>
+      <div class="tl-name">Cases sob pressão</div>
+      <div class="tl-time">50<span>min</span></div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-mod">Módulo 4</div>
+      <div class="tl-name">Simulador de projeto</div>
+      <div class="tl-time">30<span>min</span></div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-mod">Módulo 5</div>
+      <div class="tl-name">Encerramento + output</div>
+      <div class="tl-time">25<span>min</span></div>
+    </div>
+  </div>
+
+  <!-- Entregáveis -->
+  <div style="margin-top:56px">
+    <div class="section-label" style="color:rgba(255,255,255,0.3)">O que você vai levar</div>
+    <div class="entregaveis-grid">
+      <div class="ent-card">
+        <div class="ent-type">PDF para download</div>
+        <div class="ent-name">6 toolkits prontos para usar</div>
+        <div class="ent-desc">RACI, WBS/EAP (Estrutura Analítica do Projeto), Matriz de Riscos, Mapa de Stakeholders (pessoas ou grupos que têm interesse no projeto), Canvas do Projeto + KPIs, Template para Status Report e Guia de Cronogramas — ferramentas para aplicar no próximo projeto.</div>
+      </div>
+      <div class="ent-card">
+        <div class="ent-type">Biblioteca de prompts</div>
+        <div class="ent-name">15 prompts de IA com propósito</div>
+        <div class="ent-desc">Para GPT, Claude, NotebookLM, Gamma, Copilot e Trello — cada prompt testado para situações reais de gestão de projetos.</div>
+      </div>
+      <div class="ent-card">
+        <div class="ent-type">Apresentação executiva</div>
+        <div class="ent-name">Output: 5 slides prontos</div>
+        <div class="ent-desc">Ao final do Módulo 5, você cria uma apresentação executiva em 5 slides sobre o seu próprio projeto — com IA como copiloto. É o seu output final do curso.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ DICAS DE APROVEITAMENTO ══════════════ -->
+<section class="section-full">
+  <div class="section-label">Como tirar o máximo</div>
+  <h2 class="section-heading">Dicas de quem já formou muita gente <span class="accent">de verdade</span></h2>
+
+  <div class="dicas-grid">
+    <div class="dica-card">
+      <div class="dica-icon red"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D42B2B" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+      <div>
+        <div class="dica-title">Baixe os toolkits enquanto estuda</div>
+        <div class="dica-body">Não deixe para o final. A partir do Módulo 2, cada matriz apresentada tem um PDF para download. Abra ao lado do conteúdo, anote e já pense em qual projeto você aplicaria aquele frame.</div>
+      </div>
+    </div>
+    <div class="dica-card">
+      <div class="dica-icon green"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1FA876" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><line x1="9" y1="10" x2="15" y2="10"/><line x1="9" y1="13" x2="13" y2="13"/></svg></div>
+      <div>
+        <div class="dica-title">Use um projeto real como âncora</div>
+        <div class="dica-body">Escolha agora um projeto que você está gerenciando — ou planejando. Use-o como referência nos exercícios e no simulador. O aprendizado vai ancorar muito mais rápido.</div>
+      </div>
+    </div>
+    <div class="dica-card">
+      <div class="dica-icon red"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2E4FA3" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M12 11V6"/><circle cx="12" cy="4" r="2"/><line x1="8" y1="15" x2="8" y2="19"/><line x1="16" y1="15" x2="16" y2="19"/></svg></div>
+      <div>
+        <div class="dica-title">Teste os prompts de IA no mesmo dia</div>
+        <div class="dica-body">A biblioteca de prompts só faz sentido se você usar. Reserve 15 minutos após o Módulo 2 para rodar pelo menos 3 prompts no ChatGPT ou Claude. Você vai se surpreender com o resultado.</div>
+      </div>
+    </div>
+    <div class="dica-card">
+      <div class="dica-icon gold"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F5C200" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
+      <div>
+        <div class="dica-title">Não pule os cases — eles são o curso</div>
+        <div class="dica-body">O Módulo 3 coloca você sob pressão de propósito. Os cases são baseados em situações reais de empresas brasileiras. Quanto mais você se engajar, mais o aprendizado vai grudar.</div>
+      </div>
+    </div>
+    
+    <div class="dica-card">
+      <div class="dica-icon gold"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1FA876" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div>
+      <div>
+        <div class="dica-title">Ao encerrar o curso, você cria uma apresentação executiva em 5 slides sobre o seu projeto real — com estrutura profissional, apoio de fala para cada slide e identidade visual pronta para adaptar. É o seu output final: algo concreto para apresentar para quem decide.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ DIAGNÓSTICO ══════════════ -->
+<section class="section-full cream" id="diagnostico">
+  <div class="section-label">Módulo 0 · Diagnóstico inicial</div>
+  <h2 class="section-heading">Antes de começar, <span class="accent">vamos te conhecer</span></h2>
+  <p class="body-text" style="max-width:580px; margin-bottom:40px">
+    Responda às perguntas abaixo sem preocupação com acerto ou erro — não existe nota, não existe julgamento. O objetivo é ativar o que você já sabe e calibrar a trilha para o seu perfil.
+  </p>
+
+  <div class="diag-wrapper">
+    <div class="diag-header">
+      <div class="diag-header-left">
+        <h2>Diagnóstico de repertório</h2>
+        <p>5 perguntas · Estimativa: 5 minutos · Respostas ficam registradas apenas para você</p>
+      </div>
+      <div class="diag-steps" id="steps">
+        <div class="step-dot active" id="dot0"></div>
+        <div class="step-dot" id="dot1"></div>
+        <div class="step-dot" id="dot2"></div>
+        <div class="step-dot" id="dot3"></div>
+        <div class="step-dot" id="dot4"></div>
+      </div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progFill" style="width:0%"></div></div>
+
+    <div class="diag-body">
+
+      <!-- Q0: Perfil -->
+      <div class="q-screen visible" id="q0">
+        <div class="q-num">Pergunta 1 de 5</div>
+        <div class="q-text">Qual é o seu perfil profissional principal?</div>
+        <div class="q-hint">Escolha o que mais se aproxima da sua atuação hoje.</div>
+        <div class="area-profissao">
+          <button class="prof-btn" onclick="selectProf(this,'Analista')" data-val="Analista"><span class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2E4FA3" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>Analista / Especialista</button>
+          <button class="prof-btn" onclick="selectProf(this,'Coordenador')" data-val="Coordenador"><span class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1FA876" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span>Coordenador / Supervisor</button>
+          <button class="prof-btn" onclick="selectProf(this,'Gerente')" data-val="Gerente"><span class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#F5C200" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg></span>Gerente / Líder de área</button>
+          <button class="prof-btn" onclick="selectProf(this,'Consultor')" data-val="Consultor"><span class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2E4FA3" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg></span>Consultor / Autônomo</button>
+          <button class="prof-btn" onclick="selectProf(this,'Outro')" data-val="Outro"><span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="#F5C200" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>Outro perfil</button>
+          <button class="prof-btn" onclick="selectProf(this,'Estudante')" data-val="Estudante"><span class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1FA876" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></span>Estudante / Trainee</button>
+        </div>
+        <div class="diag-nav">
+          <span></span>
+          <button class="btn-next" id="btn0" disabled onclick="goTo(1)">Próxima →</button>
+        </div>
+      </div>
+
+            <!-- Q1: Prazo em risco -->
+      <div class="q-screen" id="q1">
+        <div class="q-num">Pergunta 2 de 5</div>
+        <div class="q-text">Quando um projeto começa a atrasar, sua primeira reação é:</div>
+        <div class="q-hint">Escolha a que mais se aproxima do que você faria hoje.</div>
+        <div class="opts">
+          <button class="opt-btn" onclick="selectOpt(this,'q1','A')">
+            <span class="opt-letter">A</span>
+            <span class="opt-text">Redobrar o esforço — trabalhar mais horas para compensar</span>
+          </button>
+          <button class="opt-btn" onclick="selectOpt(this,'q1','B')">
+            <span class="opt-letter">B</span>
+            <span class="opt-text">Mapear o que está travando e renegociar prazos com quem decide</span>
+          </button>
+          <button class="opt-btn" onclick="selectOpt(this,'q1','C')">
+            <span class="opt-letter">C</span>
+            <span class="opt-text">Comunicar a liderança imediatamente e pedir orientação</span>
+          </button>
+        </div>
+        <div class="q-nav">
+          <button class="btn-prev" onclick="goQ('q0','dot0','dot1')">← Anterior</button>
+          <button class="btn-next" id="next1" disabled onclick="goQ('q2','dot1','dot2')">Próxima →</button>
+        </div>
+      </div>
+
+      <!-- Q2: Escopo -->
+      <div class="q-screen" id="q2">
+        <div class="q-num">Pergunta 3 de 5</div>
+        <div class="q-text">Na hora de definir o que está dentro do projeto, você costuma:</div>
+        <div class="q-hint">Pense em como você age na prática — não como deveria agir.</div>
+        <div class="opts">
+          <button class="opt-btn" onclick="selectOpt(this,'q2','A')">
+            <span class="opt-letter">A</span>
+            <span class="opt-text">Aceitar tudo que o cliente pede para não criar conflito</span>
+          </button>
+          <button class="opt-btn" onclick="selectOpt(this,'q2','B')">
+            <span class="opt-letter">B</span>
+            <span class="opt-text">Documentar e validar o escopo (tudo que está dentro e fora) antes de começar</span>
+          </button>
+          <button class="opt-btn" onclick="selectOpt(this,'q2','C')">
+            <span class="opt-letter">C</span>
+            <span class="opt-text">Deixar para definir conforme o projeto avança — o escopo vai ficando claro com o tempo</span>
+          </button>
+        </div>
+        <div class="q-nav">
+          <button class="btn-prev" onclick="goQ('q1','dot1','dot2')">← Anterior</button>
+          <button class="btn-next" id="next2" disabled onclick="goQ('q3','dot2','dot3')">Próxima →</button>
+        </div>
+      </div>
+
+      <!-- Q3: Riscos -->
+      <div class="q-screen" id="q3">
+        <div class="q-num">Pergunta 4 de 5</div>
+        <div class="q-text">Quando surge um risco no projeto, você:</div>
+        <div class="q-hint">Um risco é algo que ainda não aconteceu mas pode acontecer.</div>
+        <div class="opts">
+          <button class="opt-btn" onclick="selectOpt(this,'q3','A')">
+            <span class="opt-letter">A</span>
+            <span class="opt-text">Espera para ver se vira problema de verdade — nem todo risco se concretiza</span>
+          </button>
+          <button class="opt-btn" onclick="selectOpt(this,'q3','B')">
+            <span class="opt-letter">B</span>
+            <span class="opt-text">Já havia mapeado antes e tem um plano de resposta pronto</span>
+          </button>
+          <button class="opt-btn" onclick="selectOpt(this,'q3','C')">
+            <span class="opt-letter">C</span>
+            <span class="opt-text">Resolve na hora com o que tiver disponível — improviso controlado</span>
+          </button>
+        </div>
+        <div class="q-nav">
+          <button class="btn-prev" onclick="goQ('q2','dot2','dot3')">← Anterior</button>
+          <button class="btn-next" id="next3" disabled onclick="goQ('q4','dot3','dot4')">Próxima →</button>
+        </div>
+      </div>
+
+      <!-- Q4: Comunicação -->
+      <div class="q-screen" id="q4">
+        <div class="q-num">Pergunta 5 de 5</div>
+        <div class="q-text">Sua comunicação com stakeholders (pessoas que têm interesse no projeto) é:</div>
+        <div class="q-hint">Pense no seu projeto mais recente.</div>
+        <div class="opts">
+          <button class="opt-btn" onclick="selectOpt(this,'q4','A')">
+            <span class="opt-letter">A</span>
+            <span class="opt-text">Informal — mensagens e reuniões quando alguma coisa precisa ser resolvida</span>
+          </button>
+          <button class="opt-btn" onclick="selectOpt(this,'q4','B')">
+            <span class="opt-letter">B</span>
+            <span class="opt-text">Estruturada — relatórios periódicos e alinhamentos planejados com antecedência</span>
+          </button>
+          <button class="opt-btn" onclick="selectOpt(this,'q4','C')">
+            <span class="opt-letter">C</span>
+            <span class="opt-text">Reativa — você se comunica quando alguém pergunta ou cobra uma atualização</span>
+          </button>
+        </div>
+        <div class="q-nav">
+          <button class="btn-prev" onclick="goQ('q3','dot3','dot4')">← Anterior</button>
+          <button class="btn-next" id="next4" disabled onclick="calcResult()">Ver meu perfil →</button>
+        </div>
+      </div>
+
+      <!-- RESULTADO -->
+      <div class="result-screen" id="resultScreen">
+        <div class="result-tag">Diagnóstico concluído</div>
+        <div class="result-perfil">
+          <div class="result-tag">Seu perfil</div>
+          <div class="result-title" id="resultTitle">Carregando...</div>
+          <div class="result-body" id="resultBody">...</div>
+        </div>
+        <div class="result-dica" id="resultDica"></div>
+        <div style="margin-top:28px">
+          <div style="background:rgba(31,168,118,0.10);border:1px solid rgba(31,168,118,0.25);border-left:3px solid #1FA876;border-radius:0 10px 10px 0;padding:18px 24px;margin-top:24px;">
+  <div style="font-size:11px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:#1FA876;margin-bottom:8px;">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1FA876" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><polyline points="20 6 9 17 4 12"/></svg>
+    Diagnóstico concluído
+  </div>
+  <p style="font-size:14px;line-height:1.7;color:rgba(255,255,255,0.75);margin:0;">Parabéns! Seu perfil foi registrado. Agora acesse o próximo módulo pelo menu lateral do curso.</p>
+</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+
+
+</div>
+
+<script>
+// STATE
+const state = { perfil: '', ia: '' };
+const answers = {};
+let current = 0;
+
+function selectOpt(btn, qId, val) {
+  btn.closest('.opts').querySelectorAll('.opt-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  answers[qId] = val;
+  // Habilita botão próxima
+  const num = parseInt(qId.replace('q',''));
+  const nextBtn = document.getElementById('next' + num);
+  if (nextBtn) nextBtn.disabled = false;
+}
+
+function goQ(nextId, dotDone, dotNext) {
+  document.querySelectorAll('.q-screen').forEach(q => q.classList.remove('visible'));
+  document.getElementById(nextId).classList.add('visible');
+  if (dotDone) {
+    document.getElementById(dotDone).classList.remove('active');
+    document.getElementById(dotDone).classList.add('done');
+  }
+  if (dotNext) {
+    document.getElementById(dotNext).classList.remove('done');
+    document.getElementById(dotNext).classList.add('active');
+  }
+  const num = parseInt(nextId.replace('q',''));
+  document.getElementById('progFill').style.width = (num * 20) + '%';
+}
+
+function goTo(n) {
+  document.getElementById('q'+current).classList.remove('visible');
+  document.getElementById('dot'+current).classList.remove('active');
+  document.getElementById('dot'+current).classList.add('done');
+  current = n;
+  document.getElementById('q'+n).classList.add('visible');
+  document.getElementById('dot'+n).classList.add('active');
+  document.getElementById('dot'+n).classList.remove('done');
+  document.getElementById('progFill').style.width = (n*20)+'%';
+}
+
+function selectProf(btn, val) {
+  document.querySelectorAll('.prof-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  state.perfil = val;
+  document.getElementById('btn0').disabled = false;
+}
+
+function selectScale(btn, val) {
+  document.querySelectorAll('.scale-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  state.ia = val;
+  document.getElementById('btn4').disabled = false;
+}
+
+function checkText(id, btnId) {
+  const val = document.getElementById(id).value.trim();
+  document.getElementById(btnId).disabled = val.length < 10;
+}
+
+function calcResult() {
+  // Esconde última pergunta
+  document.getElementById('q4').classList.remove('visible');
+  document.getElementById('dot4').classList.add('done');
+  document.getElementById('progFill').style.width = '100%';
+  document.getElementById('resultScreen').classList.add('visible');
+
+  // Pontuação por resposta
+  // B = Estratégico, A = Reativo, C = Comunicador, mix = Equilibrado
+  const respostas = [
+    answers['q1'] || '',
+    answers['q2'] || '',
+    answers['q3'] || '',
+    answers['q4'] || '',
+  ];
+
+  let estrategico = 0, reativo = 0, comunicador = 0;
+
+  // Q1 prazo: B=estratégico, A=reativo, C=comunicador
+  if (respostas[0] === 'B') estrategico++;
+  else if (respostas[0] === 'A') reativo++;
+  else if (respostas[0] === 'C') comunicador++;
+
+  // Q2 escopo: B=estratégico, A=reativo, C=reativo
+  if (respostas[1] === 'B') estrategico++;
+  else if (respostas[1] === 'A') reativo++;
+  else if (respostas[1] === 'C') reativo++;
+
+  // Q3 riscos: B=estratégico, A=reativo, C=comunicador
+  if (respostas[2] === 'B') estrategico++;
+  else if (respostas[2] === 'A') reativo++;
+  else if (respostas[2] === 'C') comunicador++;
+
+  // Q4 comunicação: B=estratégico, A=comunicador, C=reativo
+  if (respostas[3] === 'B') estrategico++;
+  else if (respostas[3] === 'A') comunicador++;
+  else if (respostas[3] === 'C') reativo++;
+
+  // Define perfil
+  let perfil;
+  const max = Math.max(estrategico, reativo, comunicador);
+  if (estrategico === max && estrategico > comunicador && estrategico > reativo) {
+    perfil = 'estrategica';
+  } else if (reativo === max && reativo > comunicador && reativo > estrategico) {
+    perfil = 'reativa';
+  } else if (comunicador === max && comunicador > reativo && comunicador > estrategico) {
+    perfil = 'comunicadora';
+  } else {
+    perfil = 'equilibrada';
+  }
+
+  const perfis = {
+    estrategica: {
+      title: 'Gestão Estratégica',
+      body: 'Você já pensa antes de agir — mapeia riscos, define escopo e estrutura a comunicação. O curso vai aprofundar esse instinto com ferramentas formais e vocabulário de mercado para que sua gestão seja ainda mais reconhecida.',
+      dica: 'Foque especialmente nos <strong>toolkits interativos</strong> e no <strong>Módulo 3 (cases)</strong>. Você vai se identificar com o perfil estratégico — e encontrar pontos de atenção nos cenários de pressão.'
+    },
+    reativa: {
+      title: 'Gestão Reativa',
+      body: 'Você resolve os problemas quando eles aparecem — e resolve bem. O curso vai te ajudar a antecipar o que hoje você só percebe depois, transformando reatividade em método.',
+      dica: 'Dê atenção especial ao <strong>Módulo 2 (10 pilares)</strong> e à <strong>Matriz de Riscos</strong>. São as ferramentas que mais mudam a forma de quem ainda está no modo apaga-incêndio.'
+    },
+    comunicadora: {
+      title: 'Gestão Comunicadora',
+      body: 'Você prioriza o alinhamento e mantém as pessoas informadas — uma habilidade que muitos ignoram. O curso vai te dar a estrutura técnica para que sua comunicação seja ainda mais eficaz e respeitada.',
+      dica: 'Explore com atenção o <strong>Mapa de Stakeholders (pessoas que têm interesse no projeto)</strong> e o <strong>Status Report</strong>. São as ferramentas que mais ampliam o impacto de quem já se comunica bem.'
+    },
+    equilibrada: {
+      title: 'Gestão Equilibrada',
+      body: 'Você transita entre estratégia, comunicação e execução — adaptando o estilo ao contexto. O curso vai nomear e estruturar esse equilíbrio, dando consistência ao que hoje ainda depende muito da intuição.',
+      dica: 'Você vai se beneficiar de todo o curso de forma uniforme. Preste atenção especial ao <strong>Módulo 4</strong> — o simulador foi desenhado exatamente para quem tem perfil adaptável.'
+    }
+  };
+
+  const p = perfis[perfil];
+  document.getElementById('resultTitle').innerHTML = p.title;
+  document.getElementById('resultBody').innerHTML = p.body;
+  document.getElementById('resultDica').innerHTML = '<strong>Dica para aproveitar melhor:</strong> ' + p.dica;
+}
+</script>
+</body>
+</html>
