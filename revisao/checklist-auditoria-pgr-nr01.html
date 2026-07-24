@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checklist de Auditoria PGR — NR-01 | Lumtree</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --black:#000000;
+    --panel:#131313;
+    --panel-2:#1a1a1a;
+    --line:#2b2b2b;
+    --paper:#f7f5ef;
+    --yellow:#F5C200;
+    --blue:#2E4FA3;
+    --blue-light:#5b83d6;
+    --green:#1FA876;
+    --red:#D42B2B;
+    --text:#f2f2f0;
+    --text-soft:#a8a8a4;
+    --radius-lg:20px;
+    --radius-md:12px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--black); color:var(--text);
+    font-family:"Manrope", sans-serif; line-height:1.6;
+  }
+  h1,h2,h3,.display{font-family:"Montserrat", sans-serif;}
+  .wrap{max-width:820px; margin:0 auto; padding:0 22px 90px;}
+
+  header.top{
+    background:var(--black);
+    border-bottom:1px solid var(--line);
+    padding:22px 22px;
+    display:flex; align-items:center; justify-content:center;
+  }
+  header.top svg{height:44px; width:auto;}
+
+  .hero{padding:30px 0 8px; text-align:center;}
+  .kicker{
+    display:inline-flex; align-items:center; gap:8px;
+    font-size:11.5px; font-weight:800; letter-spacing:.16em; text-transform:uppercase;
+    color:var(--yellow); border:1px solid #3a3420; background:#1c1a10;
+    padding:7px 14px; border-radius:999px;
+  }
+  .kicker .dot{width:6px;height:6px;border-radius:50%;background:var(--yellow);}
+  .hero h1{font-size:clamp(24px,4vw,34px); font-weight:800; margin:18px 0 10px; letter-spacing:-.01em;}
+  .hero p{color:var(--text-soft); font-size:14.5px; font-weight:500; max-width:560px; margin:0 auto;}
+
+  .tabs{
+    display:flex; gap:6px; background:var(--panel); border:1px solid var(--line);
+    border-radius:999px; padding:5px; margin:28px 0 6px;
+  }
+  .tab-btn{
+    flex:1; appearance:none; cursor:pointer; border:none; font-family:"Manrope",sans-serif;
+    background:transparent; color:var(--text-soft); font-weight:700; font-size:13.5px;
+    padding:12px 10px; border-radius:999px; transition:all .15s ease;
+  }
+  .tab-btn.active{background:var(--yellow); color:#1c1a10;}
+
+  .panel{display:none;}
+  .panel.active{display:block;}
+
+  /* CONCEITO */
+  .concept-card{
+    background:var(--panel); border:1px solid var(--line); border-radius:var(--radius-lg);
+    padding:26px 26px; margin-top:22px;
+  }
+  .concept-card h2{font-size:17px; margin:0 0 10px; display:flex; align-items:center; gap:10px;}
+  .concept-card h2 svg{width:20px;height:20px; flex:none;}
+  .concept-card p{color:var(--text-soft); font-size:14px; font-weight:500; margin:0 0 14px;}
+  .concept-card p:last-child{margin-bottom:0;}
+  .concept-card strong{color:var(--text);}
+
+  .legal-strip{
+    display:flex; gap:10px; flex-wrap:wrap; margin-top:18px;
+  }
+  .legal-chip{
+    font-size:11.5px; font-weight:700; color:var(--blue-light);
+    background:#101a30; border:1px solid #24345c;
+    padding:6px 12px; border-radius:999px;
+  }
+
+  .why-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:24px;}
+  .why-card{background:var(--panel-2); border:1px solid var(--line); border-radius:var(--radius-md); padding:16px 16px;}
+  .why-card svg{width:20px; height:20px; color:var(--yellow); margin-bottom:8px;}
+  .why-card h4{margin:0 0 6px; font-size:13.5px; font-weight:700;}
+  .why-card p{margin:0; font-size:12.5px; color:var(--text-soft); font-weight:500;}
+
+  .go-fill{
+    display:block; width:100%; margin-top:26px;
+    appearance:none; cursor:pointer; font-family:"Manrope",sans-serif;
+    background:var(--yellow); color:#1c1a10; border:none;
+    font-weight:800; font-size:14.5px; padding:15px; border-radius:999px;
+  }
+
+  /* PREENCHIMENTO */
+  .toolbar{
+    display:flex; gap:8px; flex-wrap:wrap; margin:22px 0 6px; justify-content:flex-end;
+  }
+  .tbtn{
+    display:inline-flex; align-items:center; gap:7px;
+    appearance:none; cursor:pointer; font-family:"Manrope",sans-serif;
+    background:var(--panel); border:1px solid var(--line); color:var(--text);
+    font-weight:700; font-size:12.5px; padding:9px 14px; border-radius:999px;
+  }
+  .tbtn svg{width:14px;height:14px;}
+  .tbtn.danger{color:#ff9b9b; border-color:#4a1f1f;}
+  .tbtn.accent{background:var(--blue); border-color:var(--blue); color:#fff;}
+
+  .scoreband{
+    background:var(--panel); border:1px solid var(--line); border-radius:var(--radius-lg);
+    padding:22px 24px; margin:18px 0 22px;
+    display:flex; align-items:center; gap:18px;
+  }
+  .scoreband .ring{
+    flex:none; width:64px; height:64px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    background:conic-gradient(var(--yellow) calc(var(--pct,0)*1%), var(--line) 0);
+    position:relative;
+  }
+  .scoreband .ring::before{
+    content:""; position:absolute; inset:6px; border-radius:50%; background:var(--panel);
+  }
+  .scoreband .ring span{position:relative; font-weight:800; font-size:13px;}
+  .scoreband .txt .label{font-size:11px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--text-soft);}
+  .scoreband .txt .band{font-size:16.5px; font-weight:800; margin-top:2px;}
+  .scoreband .txt .desc{font-size:12.5px; color:var(--text-soft); font-weight:500; margin-top:3px;}
+
+  .qcard{
+    background:var(--panel); border:1px solid var(--line); border-radius:var(--radius-lg);
+    padding:22px 22px; margin-bottom:14px;
+  }
+  .qcard .qnum{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:26px; height:26px; border-radius:8px; background:var(--panel-2);
+    color:var(--yellow); font-weight:800; font-size:12px; margin-right:10px;
+  }
+  .qcard .qtext{font-size:14.5px; font-weight:700; display:flex; align-items:flex-start;}
+  .qcard .qtext .qtxt-inner{flex:1;}
+
+  .opts{display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin:16px 0 4px;}
+  .opts button{
+    appearance:none; cursor:pointer; font-family:"Manrope",sans-serif;
+    background:var(--panel-2); border:1.5px solid var(--line); color:var(--text-soft);
+    font-weight:700; font-size:12.5px; padding:11px 6px; border-radius:10px;
+    transition:all .13s ease;
+  }
+  .opts button.sel-sim{background:#0f2e22; border-color:var(--green); color:#7fe0bd;}
+  .opts button.sel-parcial{background:#2e2a0f; border-color:var(--yellow); color:#f5dd7f;}
+  .opts button.sel-nao{background:#2e1414; border-color:var(--red); color:#f5a3a3;}
+
+  .evid{margin-top:12px;}
+  .evid textarea{
+    width:100%; min-height:56px; resize:vertical;
+    background:var(--panel-2); border:1px solid var(--line); border-radius:10px;
+    color:var(--text); font-family:"Manrope",sans-serif; font-size:12.8px; font-weight:500;
+    padding:10px 12px; outline:none;
+  }
+  .evid textarea:focus{border-color:var(--blue-light);}
+  .evid label{font-size:11px; font-weight:700; color:var(--text-soft); text-transform:uppercase; letter-spacing:.05em; display:block; margin-bottom:6px;}
+
+  .example-toggle{
+    font-size:12px; font-weight:700; color:var(--blue-light);
+    background:none; border:none; cursor:pointer; padding:0; margin-top:12px;
+    display:inline-flex; align-items:center; gap:5px;
+  }
+  .example-box{
+    display:none; margin-top:10px; background:#101a30; border:1px solid #24345c;
+    border-radius:10px; padding:12px 14px; font-size:12.5px; color:#c7d6f5; font-weight:500;
+  }
+  .example-box.open{display:block;}
+
+  .reference-toggle{
+    font-size:12px; font-weight:700; color:#7fe0bd;
+    background:none; border:none; cursor:pointer; padding:0; margin-top:8px;
+    display:inline-flex; align-items:center; gap:5px;
+  }
+  .reference-box{
+    display:none; margin-top:10px; background:#0f2e22; border:1px solid #1f4d3c;
+    border-radius:10px; padding:12px 14px; font-size:12.5px; color:#bfe9d6; font-weight:500;
+  }
+  .reference-box.open{display:block;}
+  .reference-box .rtag{
+    display:block; font-size:10.5px; font-weight:800; letter-spacing:.08em; text-transform:uppercase;
+    color:#7fe0bd; margin-bottom:6px;
+  }
+
+  .toast{
+    position:fixed; left:50%; bottom:26px; transform:translateX(-50%) translateY(20px);
+    background:var(--yellow); color:#1c1a10; font-weight:800; font-size:13px;
+    padding:12px 22px; border-radius:999px; box-shadow:0 14px 30px rgba(0,0,0,.4);
+    opacity:0; pointer-events:none; transition:all .25s ease; z-index:50;
+    display:flex; align-items:center; gap:8px;
+  }
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+
+  footer.brandfoot{
+    text-align:center; margin-top:36px; padding-top:20px;
+    border-top:1px solid var(--line); font-size:11px; color:var(--text-soft); font-weight:600;
+  }
+
+  @media (max-width:560px){
+    .why-grid{grid-template-columns:1fr;}
+    .opts{grid-template-columns:1fr; }
+  }
+  @media print{
+    body{background:#fff; color:#000;}
+    .tabs, .toolbar, .go-fill, .example-toggle, .reference-toggle, .toast{display:none !important;}
+    .panel{display:block !important;}
+    #tab-concept{display:none !important;}
+    .qcard, .scoreband, .concept-card{background:#fff; border:1px solid #ccc; box-shadow:none;}
+    header.top{background:#fff; border-bottom:2px solid #000;}
+    .qcard .qtext, .scoreband .band, .hero h1{color:#000;}
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <svg viewBox="0 0 1522.18 1913.52" xmlns="http://www.w3.org/2000/svg"><style>.st0{fill:#19b78c}.st1{fill:#ffffff}.st3{fill:#ffca06}.st4{fill:#ed1b23}.st5{fill:#3364b1}</style>
+    <g>
+      <g>
+        <path class="st1" d="M33.57,1612.25h69.93v236.08s-.33,13.39,12.74,13.71c13.07.33,19.28,0,19.28,0l2.29,45.06s-38.56,10.78-67.96,1.96c0,0-32.68-9.14-36.27-51.92v-244.9Z"/>
+        <path class="st1" d="M148.26,1694.54h75.48v124.08s.98,39.84,33.98,38.86c0,0,18.63,2.94,34.96-16v-146.94h75.15v213.22h-71.23v-27.43s-22.55,32.11-63.06,32.11c0,0-73.2,9.03-85.29-81.74v-136.16Z"/>
+        <path class="st1" d="M405.42,1694.54h69.6v27.43s15.68-32,63.06-31.02c0,0,40.19-2.94,62.41,34.94,0,0,27.77-38.31,68.95-34.99,0,0,57.18-6.48,78.09,57.52,0,0,4.25,10.45,5.23,42.12v117.88h-71.89l-.65-130.61s-8.15-33.8-35.27-32.82c0,0-15.05-1.47-29.08,13.5l-.02,149.93h-72.21l-.98-123.43s2.29-43.43-32.68-40.49c0,0-19.61-1.63-32.35,17.31v146.61h-72.21v-213.88Z"/>
+        <path class="st1" d="M796.87,1639.03h69.6v55.84h61.1v52.24h-61.1l.33,90.78s1.63,21.55,24.83,20.24c0,0,19.93.33,32.02-4.57l3.92,48.98s-23.2,9.8-57.84,9.47c0,0-71.89,4.24-72.87-74.78v-89.8l-32.68-.06v-52.84h32.35l.33-55.51Z"/>
+        <path class="st1" d="M942.44,1694.78h71.8v33.55s10.78-30.86,43.87-33.55c0,0,8.33-2.45,29.65,0v59.75s-53.91-3.8-72.66,21v132.88h-72.66v-213.63Z"/>
+        <g>
+          <path class="st1" d="M1295.96,1822.25h-136.39c2.18,30.36,21.3,45.53,57.38,45.53,23,0,43.21-5.44,60.64-16.33v46.55c-19.33,10.35-44.44,15.52-75.34,15.52-33.76,0-59.96-9.36-78.6-28.07-18.65-18.72-27.97-44.82-27.97-78.3s10.07-62.2,30.22-82.49c20.14-20.28,44.92-30.42,74.32-30.42s54.07,9.05,70.74,27.15c16.67,18.11,25.01,42.67,25.01,73.71v27.16ZM1236.14,1782.64c0-29.94-12.11-44.92-36.34-44.92-10.35,0-19.3,4.29-26.85,12.86-7.56,8.58-12.15,19.26-13.78,32.06h76.97Z"/>
+          <path class="st1" d="M1522.18,1822.25h-136.39c2.18,30.36,21.3,45.53,57.38,45.53,23,0,43.21-5.44,60.64-16.33v46.55c-19.33,10.35-44.44,15.52-75.34,15.52-33.76,0-59.96-9.36-78.6-28.07-18.65-18.72-27.97-44.82-27.97-78.3s10.07-62.2,30.22-82.49c20.14-20.28,44.92-30.42,74.32-30.42s54.07,9.05,70.74,27.15c16.67,18.11,25.01,42.67,25.01,73.71v27.16ZM1462.36,1782.64c0-29.94-12.11-44.92-36.34-44.92-10.35,0-19.3,4.29-26.85,12.86-7.56,8.58-12.15,19.26-13.78,32.06h76.97Z"/>
+        </g>
+      </g>
+      <g>
+        <path class="st0" d="M1295.79,1294.28c76.42-35.96,74.92-61.44,74.92-61.44-40.46,11.99-89.91-13.49-89.91-13.49-37.73,48.91-54.6,106.9-56.7,114.5,1.51-2.45,11.4-11.2,71.69-39.57Z"/>
+        <path class="st0" d="M1148.94,1397.68c-23.98-62.94-118.38-101.9-118.38-101.9-102.19,28.37-137.86-59.94-137.86-59.94-44.51-128.69,76.42-170.82,76.42-170.82-40.75-71.16,4.5-121.37,4.5-121.37,60.2-60.47,121.38-20.98,121.38-20.98,74.92-136.36,181.31-25.47,181.31-25.47,134.86-41.96,140.85,94.4,140.85,94.4,47.95,28.47,58.44,76.42,58.44,76.42,22.45,10.3,37,23.69,46.23,38.01-21.87-178.76-174.1-317.24-358.77-317.24-199.69,0-361.57,161.88-361.57,361.57s153.62,353.09,346.15,361.18l1.29-113.86Z"/>
+        <path class="st0" d="M1171.41,1246.33c13.49,20.98,19.48,64.43,19.48,64.43l34.46-86.91c-16.48,17.98-53.94,22.48-53.94,22.48Z"/>
+        <path class="st0" d="M1224.1,1333.86c-.4.65-.24.88-.24.88,0,0,.09-.33.24-.88Z"/>
+        <path class="st0" d="M1411.17,1246.33c-8.99,19.48-16.48,28.47-16.48,28.47-22.48,34.46-95.9,58.44-134.86,82.42-38.96,23.98-37.46,43.46-37.46,43.46l1.25,106.11c148.98-25.13,266.94-141.31,294.72-289.38-41.83,53.21-107.16,28.93-107.16,28.93Z"/>
+        <path class="st0" d="M1106.98,1231.35c-19.48,38.96-35.96,43.46-35.96,43.46,41.96,22.48,79.42,59.94,79.42,59.94,1.5-55.44-22.48-97.4-22.48-97.4-16.48,0-20.98-5.99-20.98-5.99Z"/>
+      </g>
+      <circle class="st4" cx="412.7" cy="361.39" r="361.39"/>
+      <rect class="st5" x="801.5" y="11.27" width="717.69" height="691.54"/>
+      <polygon class="st3" points="405.82 807.35 816.24 1511.92 0 1511.92 405.82 807.35"/>
+    </g>
+  </svg>
+</header>
+
+<div class="wrap">
+
+  <section class="hero">
+    <span class="kicker"><span class="dot"></span>Toolkit T1 · Módulo 1 · NR-01</span>
+    <h1>Checklist de Auditoria PGR</h1>
+    <p>10 perguntas para verificar, hoje, se o seu PGR resistiria a uma fiscalização — antes que o auditor chegue.</p>
+  </section>
+
+  <div class="tabs">
+    <button class="tab-btn active" id="tabBtnConcept" onclick="showTab('concept')">Conceito</button>
+    <button class="tab-btn" id="tabBtnFill" onclick="showTab('fill')">Preenchimento</button>
+  </div>
+
+  <!-- ABA CONCEITO -->
+  <section class="panel active" id="tab-concept">
+    <div class="concept-card">
+      <h2><svg viewBox="0 0 24 24" fill="none" stroke="#F5C200" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 3 7.5v6c0 5 3.9 8.9 9 10.5 5.1-1.6 9-5.5 9-10.5v-6L12 3Z"/><path d="m9 12 2 2 4-4"/></svg>O que este checklist verifica</h2>
+      <p>Quando a fiscalização chega, ela não avalia intenção — avalia <strong>evidência</strong>. Um PGR que existe só como documento arquivado não resiste à mesma pergunta duas vezes seguidas. Este checklist traduz o que um auditor realmente pede em campo para 10 verificações objetivas, que você pode responder com honestidade agora, sem pressão.</p>
+      <p>Cada resposta <strong>Sim, Parcial ou Não</strong> vira um retrato de prontidão — não uma nota para constranger, um mapa para agir no que ainda falta.</p>
+      <div class="legal-strip">
+        <span class="legal-chip">Cap. 1.5 — Plano de Ação</span>
+        <span class="legal-chip">Item 1.5.4.4.5.3</span>
+        <span class="legal-chip">Item 1.4.1.1 — Assédio</span>
+        <span class="legal-chip">Anexo I — GRO/PGR</span>
+      </div>
+    </div>
+
+    <div class="why-grid">
+      <div class="why-card">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V6a2 2 0 0 1 2-2h9l5 5v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><path d="M14 4v5h5"/><path d="M8 14h8M8 17h5"/></svg>
+        <h4>Documento não é evidência</h4>
+        <p>Um PGR sem atas, prints ou listas de presença que comprovem execução vale, para o auditor, quase o mesmo que um PGR inexistente.</p>
+      </div>
+      <div class="why-card">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></svg>
+        <h4>Antes é sempre melhor que depois</h4>
+        <p>Fazer esse diagnóstico agora custa 10 minutos. Fazer na frente de um auditor custa uma autuação.</p>
+      </div>
+    </div>
+
+    <button class="go-fill" onclick="showTab('fill')">Começar o preenchimento →</button>
+  </section>
+
+  <!-- ABA PREENCHIMENTO -->
+  <section class="panel" id="tab-fill">
+
+    <div class="toolbar">
+      <button class="tbtn" onclick="toggleAllExamples()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+        Exemplos
+      </button>
+      <button class="tbtn" onclick="toggleAllReferences()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V6a2 2 0 0 1 2-2h9l5 5v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><path d="M14 4v5h5"/><path d="m9 15 2 2 4-4"/></svg>
+        Modelos de referência
+      </button>
+      <button class="tbtn" onclick="exportExcel()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v13m0 0-4-4m4 4 4-4"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+        Exportar Excel
+      </button>
+      <button class="tbtn" onclick="downloadSnapshot()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V6a2 2 0 0 1 2-2h9l5 5v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><path d="M14 4v5h5"/></svg>
+        Salvar como HTML
+      </button>
+      <button class="tbtn accent" onclick="window.print()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6M6 18h-2a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v7H6z"/></svg>
+        Imprimir PDF
+      </button>
+      <button class="tbtn danger" onclick="clearAll()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0-1 14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2L4 6"/></svg>
+        Limpar tudo
+      </button>
+    </div>
+
+    <div class="scoreband">
+      <div class="ring" id="scoreRing" style="--pct:0"><span id="scorePct">0%</span></div>
+      <div class="txt">
+        <div class="label">Prontidão para auditoria</div>
+        <div class="band" id="scoreBand">Comece respondendo abaixo</div>
+        <div class="desc" id="scoreDesc">Nenhuma pergunta respondida ainda.</div>
+      </div>
+    </div>
+
+    <div id="questions"></div>
+
+    <footer class="brandfoot">Curso NR-01 · Toolkit T1 · Checklist de Auditoria PGR · Módulo 1</footer>
+  </section>
+
+</div>
+
+<div class="toast" id="toast">
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+  <span id="toastMsg">Salvo</span>
+</div>
+
+<script>
+const STORAGE_KEY = 'lumtree_checklist_pgr_m1';
+
+const questions = [
+  {
+    q: "O PGR da empresa inclui riscos psicossociais como categoria própria, com fatores nomeados, e não apenas uma menção genérica ao tema?",
+    example: "Exemplo de resposta Parcial: \"O PGR cita 'saúde mental' em uma linha, mas não nomeia fatores específicos como assédio, sobrecarga ou comunicação ineficaz.\"",
+    reference: "Fator de risco: Sobrecarga de trabalho. Fonte: pesquisa de clima 2026 + relatos em ouvidoria. Nível: Moderado. Ação: redistribuição de demandas na equipe X. Responsável: [nome]. Prazo: [data]."
+  },
+  {
+    q: "O inventário de riscos foi atualizado após maio de 2026, quando a NR-01 atualizada entrou em vigência plena?",
+    example: "Exemplo de resposta Não: \"Nosso inventário é de 2023, ainda não revisado sob a norma atual.\"",
+    reference: "Inventário de Riscos — Revisão junho/2026. Inclui riscos físicos, químicos, ergonômicos e psicossociais, com data de atualização visível na capa e histórico das revisões anteriores."
+  },
+  {
+    q: "A matriz de risco declara a metodologia usada para classificar severidade e probabilidade, conforme o item 1.5.4.4.5.3 da norma?",
+    example: "Exemplo de resposta Sim: \"Usamos escala de 1 a 5 para severidade e probabilidade, com critérios documentados e aplicados por todas as áreas.\"",
+    reference: "Metodologia: Severidade (1 a 5) × Probabilidade (1 a 5) = Nível de Risco. Critérios de pontuação documentados em anexo próprio, aplicados de forma padronizada em todas as áreas avaliadas."
+  },
+  {
+    q: "Existe plano de ação com responsáveis nomeados e prazos definidos para cada risco psicossocial identificado?",
+    example: "Exemplo de resposta Parcial: \"Existe plano de ação, mas sem responsável nomeado para metade dos itens.\"",
+    reference: "Ação: implementar canal de escuta psicológica. Responsável: [nome/cargo]. Prazo: 30/09/2026. Indicador de sucesso: número de relatos recebidos e tratados no trimestre."
+  },
+  {
+    q: "Há evidências de execução do plano de ação — atas, fotos, listas de presença — além do documento em si?",
+    example: "Exemplo de resposta Não: \"Temos o plano escrito, mas nenhum registro de que as ações realmente aconteceram.\"",
+    reference: "Anexo 4.2 — Ata da reunião de kickoff do plano de ação (12/06/2026), lista de presença assinada, print do comunicado enviado à equipe sobre o treinamento."
+  },
+  {
+    q: "Existe capacitação periódica e documentada sobre prevenção e combate ao assédio, prevista no item 1.4.1.1?",
+    example: "Exemplo de resposta Sim: \"Treinamento obrigatório anual, com lista de presença e certificado, para todos os níveis hierárquicos.\"",
+    reference: "Treinamento 'Prevenção e Combate ao Assédio' — realizado em março/2026, carga horária de 2h, para 100% dos níveis hierárquicos, com lista de presença e avaliação de reação arquivadas."
+  },
+  {
+    q: "Existe um canal de escuta confiável para relatar riscos psicossociais, além dos canais formais de RH?",
+    example: "Exemplo de resposta Parcial: \"Temos canal de ouvidoria, mas a maioria das pessoas não confia nele ou não sabe que existe.\"",
+    reference: "Canal: formulário anônimo via plataforma externa, divulgado no onboarding e em mural interno. Taxa de conhecimento do canal medida na última pesquisa de clima: 74%."
+  },
+  {
+    q: "Os indicadores de saúde mental — afastamentos, rotatividade — são monitorados ao longo do ano, não só na época da auditoria?",
+    example: "Exemplo de resposta Não: \"Só olhamos esses números quando alguém pede um relatório específico.\"",
+    reference: "Painel mensal com: número de afastamentos por saúde mental, taxa de rotatividade e resultado do último pulso de clima, revisado em reunião de gestão a cada 30 dias."
+  },
+  {
+    q: "A empresa consegue cruzar dados de afastamento com as ações do PGR, mostrando relação entre o que foi identificado e o que foi feito?",
+    example: "Exemplo de resposta Sim: \"Temos um painel simples que conecta cada afastamento a uma ação correspondente no plano.\"",
+    reference: "Cada afastamento por saúde mental gera um registro no painel do PGR, vinculado ao fator de risco correspondente e à ação de prevenção associada, ou à ausência dela, sinalizada como lacuna a resolver."
+  },
+  {
+    q: "O PGR contempla diferentes vínculos de trabalho — CLT, temporário, terceirizado, PJ — reconhecendo que a exposição ao risco varia entre eles?",
+    example: "Exemplo de resposta Não: \"O PGR só considera colaboradores CLT; PJs e terceirizados não aparecem em nenhum lugar do documento.\"",
+    reference: "Seção do PGR: 'Perfis de Vínculo e Exposição a Risco', com CLT, Temporário, Terceirizado e PJ mapeados separadamente, cada um com nota sobre a rede de proteção institucional disponível."
+  }
+];
+
+let state = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+if(!state.answers) state.answers = {};
+if(!state.notes) state.notes = {};
+
+const container = document.getElementById('questions');
+
+questions.forEach((item, i) => {
+  const card = document.createElement('div');
+  card.className = 'qcard';
+  card.innerHTML = `
+    <div class="qtext"><span class="qnum">${i+1}</span><span class="qtxt-inner">${item.q}</span></div>
+    <div class="opts">
+      <button type="button" data-val="sim" onclick="setAnswer(${i},'sim')">Sim</button>
+      <button type="button" data-val="parcial" onclick="setAnswer(${i},'parcial')">Parcial</button>
+      <button type="button" data-val="nao" onclick="setAnswer(${i},'nao')">Não</button>
+    </div>
+    <div class="evid">
+      <label>Evidência ou observação (opcional)</label>
+      <textarea placeholder="Ex: documento, data, quem é responsável..." oninput="setNote(${i}, this.value)">${state.notes[i] || ''}</textarea>
+    </div>
+    <button type="button" class="example-toggle" onclick="toggleExample(${i})">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+      ver exemplo de resposta
+    </button>
+    <div class="example-box" id="example-${i}">${item.example}</div>
+    <button type="button" class="reference-toggle" onclick="toggleReference(${i})">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+      ver modelo de referência (como preencher no seu PGR)
+    </button>
+    <div class="reference-box" id="reference-${i}"><span class="rtag">Modelo de referência</span>${item.reference}</div>
+  `;
+  container.appendChild(card);
+});
+
+function paintButtons(){
+  questions.forEach((_, i) => {
+    const card = container.children[i];
+    const btns = card.querySelectorAll('.opts button');
+    btns.forEach(b => b.classList.remove('sel-sim','sel-parcial','sel-nao'));
+    const val = state.answers[i];
+    if(val){
+      const btn = card.querySelector('.opts button[data-val="'+val+'"]');
+      if(btn) btn.classList.add('sel-'+val);
+    }
+  });
+}
+
+function setAnswer(i, val){
+  state.answers[i] = state.answers[i] === val ? null : val;
+  persist();
+  paintButtons();
+  updateScore();
+}
+
+function setNote(i, val){
+  state.notes[i] = val;
+  persist();
+}
+
+function persist(){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+function updateScore(){
+  const vals = Object.values(state.answers).filter(v => v);
+  const answered = vals.length;
+  const points = vals.reduce((s,v) => s + (v==='sim'?2:v==='parcial'?1:0), 0);
+  const maxPoints = questions.length * 2;
+  const pct = answered > 0 ? Math.round((points / maxPoints) * 100) : 0;
+
+  document.getElementById('scoreRing').style.setProperty('--pct', pct);
+  document.getElementById('scorePct').textContent = pct + '%';
+
+  const bandEl = document.getElementById('scoreBand');
+  const descEl = document.getElementById('scoreDesc');
+
+  if(answered === 0){
+    bandEl.textContent = 'Comece respondendo abaixo';
+    descEl.textContent = 'Nenhuma pergunta respondida ainda.';
+  } else if(pct <= 40){
+    bandEl.textContent = 'Baixa prontidão';
+    descEl.textContent = (questions.length - answered) + ' pergunta(s) ainda sem resposta. O PGR provavelmente não resistiria a uma auditoria hoje — e está tudo bem, é para isso que este checklist existe.';
+  } else if(pct <= 75){
+    bandEl.textContent = 'Prontidão parcial';
+    descEl.textContent = 'Existe base construída, mas faltam evidências ou itens específicos. Use as respostas "Parcial" e "Não" como sua lista de prioridades.';
+  } else {
+    bandEl.textContent = 'Pronto para auditoria';
+    descEl.textContent = 'Seu PGR está bem estruturado nos itens que este checklist avalia. Vale revisar periodicamente, já que o cenário muda.';
+  }
+}
+
+function toggleExample(i){
+  document.getElementById('example-'+i).classList.toggle('open');
+}
+function toggleReference(i){
+  document.getElementById('reference-'+i).classList.toggle('open');
+}
+function toggleAllExamples(){
+  const boxes = document.querySelectorAll('.example-box');
+  const anyOpen = Array.from(boxes).some(b => b.classList.contains('open'));
+  boxes.forEach(b => b.classList.toggle('open', !anyOpen));
+}
+function toggleAllReferences(){
+  const boxes = document.querySelectorAll('.reference-box');
+  const anyOpen = Array.from(boxes).some(b => b.classList.contains('open'));
+  boxes.forEach(b => b.classList.toggle('open', !anyOpen));
+}
+
+function showToast(msg){
+  const t = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2400);
+}
+
+function showTab(name){
+  document.getElementById('tab-concept').classList.toggle('active', name==='concept');
+  document.getElementById('tab-fill').classList.toggle('active', name==='fill');
+  document.getElementById('tabBtnConcept').classList.toggle('active', name==='concept');
+  document.getElementById('tabBtnFill').classList.toggle('active', name==='fill');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function clearAll(){
+  if(!confirm('Tem certeza que deseja limpar todas as respostas e observações deste checklist?')) return;
+  state = {answers:{}, notes:{}};
+  persist();
+  document.querySelectorAll('.evid textarea').forEach(t => t.value = '');
+  paintButtons();
+  updateScore();
+  showToast('Checklist limpo');
+}
+
+function labelVal(v){
+  return v === 'sim' ? 'Sim' : v === 'parcial' ? 'Parcial' : v === 'nao' ? 'Não' : '';
+}
+
+function exportExcel(){
+  let rows = [['#','Pergunta','Resposta','Evidência/Observação']];
+  questions.forEach((item, i) => {
+    rows.push([i+1, item.q, labelVal(state.answers[i]), (state.notes[i]||'').replace(/\n/g,' ')]);
+  });
+  const csv = rows.map(r => r.map(cell => '"'+String(cell).replace(/"/g,'""')+'"').join(';')).join('\r\n');
+  const blob = new Blob(['\uFEFF'+csv], {type:'text/csv;charset=utf-8;'});
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = 'checklist-auditoria-pgr-nr01.csv';
+  link.click();
+  showToast('Excel exportado');
+}
+
+function downloadSnapshot(){
+  let itemsHtml = questions.map((item, i) => {
+    return '<div style="border:1px solid #333;border-radius:12px;padding:16px;margin-bottom:10px;">'
+      + '<div style="font-weight:700;margin-bottom:8px;">'+(i+1)+'. '+item.q+'</div>'
+      + '<div style="color:#F5C200;font-weight:800;margin-bottom:6px;">Resposta: '+(labelVal(state.answers[i])||'—')+'</div>'
+      + (state.notes[i] ? '<div style="color:#a8a8a4;font-size:13px;">Observação: '+state.notes[i]+'</div>' : '')
+      + '</div>';
+  }).join('');
+  const snapshot = '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8">'
+    + '<title>Checklist de Auditoria PGR — Respostas Salvas</title>'
+    + '<style>body{background:#000;color:#f2f2f0;font-family:Arial,sans-serif;max-width:760px;margin:40px auto;padding:0 20px;}h1{color:#F5C200;}</style>'
+    + '</head><body><h1>Checklist de Auditoria PGR — NR-01</h1>'
+    + '<p>Cópia salva em ' + new Date().toLocaleDateString('pt-BR') + '</p>'
+    + itemsHtml + '</body></html>';
+  const blob = new Blob([snapshot], {type:'text/html;charset=utf-8;'});
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = 'checklist-auditoria-pgr-respostas.html';
+  link.click();
+  showToast('Cópia em HTML salva');
+}
+
+paintButtons();
+updateScore();
+</script>
+</body>
+</html>
