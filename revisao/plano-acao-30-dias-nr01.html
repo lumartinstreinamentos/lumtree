@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plano de Ação 30 Dias — NR-01 | Lumtree</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --black:#000000;
+    --panel:#131313;
+    --panel-2:#1a1a1a;
+    --line:#2b2b2b;
+    --yellow:#F5C200;
+    --blue:#2E4FA3;
+    --blue-light:#5b83d6;
+    --green:#1FA876;
+    --red:#D42B2B;
+    --text:#f2f2f0;
+    --text-soft:#a8a8a4;
+    --radius-lg:20px;
+    --radius-md:12px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--black); color:var(--text);
+    font-family:"Manrope", sans-serif; line-height:1.6;
+  }
+  h1,h2,h3,.display{font-family:"Montserrat", sans-serif;}
+  .wrap{max-width:880px; margin:0 auto; padding:0 20px 90px;}
+
+  header.top{
+    background:var(--black); border-bottom:1px solid var(--line);
+    padding:22px 22px; display:flex; align-items:center; justify-content:center;
+  }
+  header.top svg{height:44px; width:auto;}
+
+  .hero{padding:30px 0 8px; text-align:center;}
+  .kicker{
+    display:inline-flex; align-items:center; gap:8px;
+    font-size:11.5px; font-weight:800; letter-spacing:.16em; text-transform:uppercase;
+    color:var(--yellow); border:1px solid #3a3420; background:#1c1a10;
+    padding:7px 14px; border-radius:999px;
+  }
+  .kicker .dot{width:6px;height:6px;border-radius:50%;background:var(--yellow);}
+  .hero h1{font-size:clamp(23px,4vw,32px); font-weight:800; margin:18px 0 10px; letter-spacing:-.01em;}
+  .hero p{color:var(--text-soft); font-size:14px; font-weight:500; max-width:580px; margin:0 auto;}
+
+  .tabs{
+    display:flex; gap:6px; background:var(--panel); border:1px solid var(--line);
+    border-radius:999px; padding:5px; margin:26px 0 6px;
+  }
+  .tab-btn{
+    flex:1; appearance:none; cursor:pointer; border:none; font-family:"Manrope",sans-serif;
+    background:transparent; color:var(--text-soft); font-weight:700; font-size:13.5px;
+    padding:12px 10px; border-radius:999px; transition:all .15s ease;
+  }
+  .tab-btn.active{background:var(--yellow); color:#1c1a10;}
+  .panel{display:none;}
+  .panel.active{display:block;}
+
+  /* CONCEITO */
+  .concept-card{
+    background:var(--panel); border:1px solid var(--line); border-radius:var(--radius-lg);
+    padding:24px 24px; margin-top:20px;
+  }
+  .concept-card h2{font-size:16.5px; margin:0 0 10px; display:flex; align-items:center; gap:10px;}
+  .concept-card h2 svg{width:19px;height:19px; flex:none;}
+  .concept-card p{color:var(--text-soft); font-size:13.7px; font-weight:500; margin:0 0 13px;}
+  .concept-card p:last-child{margin-bottom:0;}
+  .concept-card strong{color:var(--text);}
+
+  .principles{display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin:18px 0;}
+  .principle-card{
+    background:var(--panel-2); border:1px solid var(--line); border-radius:var(--radius-md);
+    padding:16px 14px;
+  }
+  .principle-card svg{width:20px; height:20px; color:var(--yellow); margin-bottom:8px;}
+  .principle-card h4{margin:0 0 6px; font-size:12.5px; font-weight:800;}
+  .principle-card p{margin:0; font-size:11.5px; color:var(--text-soft); font-weight:500;}
+
+  .legal-strip{display:flex; gap:10px; flex-wrap:wrap; margin-top:14px;}
+  .legal-chip{
+    font-size:11px; font-weight:700; color:var(--blue-light);
+    background:#101a30; border:1px solid #24345c; padding:6px 12px; border-radius:999px;
+  }
+  .go-fill{
+    display:block; width:100%; margin-top:24px;
+    appearance:none; cursor:pointer; font-family:"Manrope",sans-serif;
+    background:var(--yellow); color:#1c1a10; border:none;
+    font-weight:800; font-size:14px; padding:15px; border-radius:999px;
+  }
+
+  /* PREENCHIMENTO */
+  .toolbar{display:flex; gap:8px; flex-wrap:wrap; margin:22px 0 6px; justify-content:flex-end;}
+  .tbtn{
+    display:inline-flex; align-items:center; gap:7px;
+    appearance:none; cursor:pointer; font-family:"Manrope",sans-serif;
+    background:var(--panel); border:1px solid var(--line); color:var(--text);
+    font-weight:700; font-size:12px; padding:9px 13px; border-radius:999px;
+  }
+  .tbtn svg{width:13px;height:13px;}
+  .tbtn.danger{color:#ff9b9b; border-color:#4a1f1f;}
+  .tbtn.accent{background:var(--blue); border-color:var(--blue); color:#fff;}
+
+  /* PROGRESSO GERAL */
+  .progress-card{
+    background:var(--panel); border:1px solid var(--line); border-radius:var(--radius-lg);
+    padding:22px 24px; margin:18px 0 16px; display:flex; align-items:center; gap:18px;
+  }
+  .progress-card .ring{
+    flex:none; width:64px; height:64px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    background:conic-gradient(var(--green) calc(var(--pct,0)*1%), var(--line) 0);
+    position:relative;
+  }
+  .progress-card .ring::before{content:""; position:absolute; inset:6px; border-radius:50%; background:var(--panel);}
+  .progress-card .ring span{position:relative; font-weight:800; font-size:13px;}
+  .progress-card .txt .label{font-size:11px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--text-soft);}
+  .progress-card .txt .band{font-size:16.5px; font-weight:800; margin-top:2px;}
+  .progress-card .txt .desc{font-size:12.5px; color:var(--text-soft); font-weight:500; margin-top:3px;}
+
+  /* VISAO SEMANAL */
+  .weeks-card{
+    background:var(--panel); border:1px solid var(--line); border-radius:var(--radius-lg);
+    padding:22px; margin-bottom:22px;
+  }
+  .weeks-card h3{margin:0 0 14px; font-size:14.5px; font-weight:800;}
+  .weeks-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:10px;}
+  .week-col{background:var(--panel-2); border:1px solid var(--line); border-radius:var(--radius-md); padding:12px 10px; text-align:center;}
+  .week-col .wname{font-size:11px; font-weight:800; color:var(--text-soft); text-transform:uppercase; letter-spacing:.05em; margin-bottom:8px;}
+  .week-col .wcount{font-size:20px; font-weight:800; margin-bottom:4px;}
+  .week-col .wtrack{height:6px; border-radius:999px; background:var(--line); overflow:hidden; margin-top:6px;}
+  .week-col .wfill{height:100%; background:var(--green);}
+  .week-col .wsub{font-size:10px; color:var(--text-soft); font-weight:600; margin-top:5px;}
+
+  /* TASK CARD */
+  .taskcard{
+    background:var(--panel); border:1px solid var(--line); border-radius:var(--radius-lg);
+    padding:20px 20px; margin-bottom:12px;
+  }
+  .taskcard .thead{display:flex; align-items:flex-start; gap:10px; margin-bottom:12px;}
+  .taskcard .tnum{
+    flex:none; width:24px; height:24px; border-radius:8px; background:var(--panel-2);
+    color:var(--yellow); font-weight:800; font-size:11.5px; display:flex; align-items:center; justify-content:center; margin-top:2px;
+  }
+  .taskcard input.title-input{
+    flex:1; background:var(--panel-2); border:1px solid var(--line); border-radius:10px;
+    color:var(--text); font-family:"Manrope",sans-serif; font-weight:700; font-size:13.5px;
+    padding:10px 12px; outline:none;
+  }
+  .taskcard input.title-input:focus{border-color:var(--blue-light);}
+  .tdelete{appearance:none; cursor:pointer; background:none; border:none; color:#8a8a86; padding:4px; flex:none; margin-top:4px;}
+  .tdelete:hover{color:#ff9b9b;}
+
+  .field-row{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px;}
+  .field-row label{font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:.06em; color:var(--text-soft); display:block; margin-bottom:6px;}
+  .field-row input.small-input{
+    width:100%; background:var(--panel-2); border:1px solid var(--line); border-radius:9px;
+    color:var(--text); font-family:"Manrope",sans-serif; font-size:12.5px; font-weight:500;
+    padding:9px 10px; outline:none;
+  }
+  .field-row input.small-input:focus{border-color:var(--blue-light);}
+
+  .step-label{
+    font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:.06em;
+    color:var(--text-soft); margin:12px 0 7px;
+  }
+  .step-label:first-of-type{margin-top:0;}
+
+  .chip-row{display:flex; flex-wrap:wrap; gap:7px;}
+  .chip{
+    appearance:none; cursor:pointer; font-family:"Manrope",sans-serif;
+    background:var(--panel-2); border:1.5px solid var(--line); color:var(--text-soft);
+    font-weight:700; font-size:12px; padding:8px 14px; border-radius:999px;
+  }
+  .chip.sel-fator{background:var(--blue); border-color:var(--blue); color:#fff;}
+  .chip.sel-week{background:#101a30; border-color:var(--blue-light); color:#a9c4ec;}
+
+  .status-row{display:grid; grid-template-columns:repeat(3,1fr); gap:8px;}
+  .status-btn{
+    appearance:none; cursor:pointer; font-family:"Manrope",sans-serif;
+    background:var(--panel-2); border:1.5px solid var(--line); color:var(--text-soft);
+    font-weight:700; font-size:11.5px; padding:10px 6px; border-radius:9px; text-align:center;
+  }
+  .status-btn.sel-nao{background:#2a2a2a; border-color:#555; color:#ddd;}
+  .status-btn.sel-andamento{background:#2e2a0f; border-color:var(--yellow); color:#f5dd7f;}
+  .status-btn.sel-concluido{background:#0f2e22; border-color:var(--green); color:#7fe0bd;}
+
+  .add-row{
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    width:100%; appearance:none; cursor:pointer; font-family:"Manrope",sans-serif;
+    background:transparent; border:1.5px dashed var(--line); color:var(--text-soft);
+    font-weight:700; font-size:13px; padding:16px; border-radius:var(--radius-md);
+    margin-top:6px;
+  }
+  .add-row:hover{border-color:var(--blue-light); color:var(--text);}
+
+  .toast{
+    position:fixed; left:50%; bottom:26px; transform:translateX(-50%) translateY(20px);
+    background:var(--yellow); color:#1c1a10; font-weight:800; font-size:13px;
+    padding:12px 22px; border-radius:999px; box-shadow:0 14px 30px rgba(0,0,0,.4);
+    opacity:0; pointer-events:none; transition:all .25s ease; z-index:50;
+    display:flex; align-items:center; gap:8px;
+  }
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+
+  .modal-overlay{
+    position:fixed; inset:0; background:rgba(0,0,0,.72);
+    display:none; align-items:center; justify-content:center; z-index:60; padding:20px;
+  }
+  .modal-overlay.show{display:flex;}
+  .modal-box{
+    background:var(--panel); border:1px solid var(--line); border-radius:var(--radius-lg);
+    padding:28px 26px; max-width:360px; text-align:center;
+  }
+  .modal-box h3{margin:14px 0 8px; font-size:16.5px; font-weight:800;}
+  .modal-box p{margin:0 0 20px; font-size:13px; color:var(--text-soft); font-weight:500; line-height:1.55;}
+  .modal-actions{display:flex; gap:10px;}
+  .mbtn{
+    flex:1; appearance:none; cursor:pointer; font-family:"Manrope",sans-serif;
+    font-weight:700; font-size:13px; padding:12px; border-radius:999px; border:none;
+  }
+  .mbtn.cancel{background:var(--panel-2); color:var(--text); border:1px solid var(--line);}
+  .mbtn.confirm{background:var(--red); color:#fff;}
+
+  footer.brandfoot{
+    text-align:center; margin-top:36px; padding-top:20px;
+    border-top:1px solid var(--line); font-size:11px; color:var(--text-soft); font-weight:600;
+  }
+
+  @media (max-width:640px){
+    .principles{grid-template-columns:1fr;}
+    .weeks-grid{grid-template-columns:repeat(2,1fr); row-gap:10px;}
+    .field-row{grid-template-columns:1fr;}
+  }
+  @media print{
+    body{background:#fff; color:#000;}
+    .tabs, .toolbar, .go-fill, .add-row, .tdelete, .toast{display:none !important;}
+    .panel{display:block !important;}
+    #tab-concept{display:none !important;}
+    .taskcard, .weeks-card, .progress-card, .concept-card{background:#fff; border:1px solid #ccc;}
+    header.top{background:#fff; border-bottom:2px solid #000;}
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <svg viewBox="0 0 1522.18 1913.52" xmlns="http://www.w3.org/2000/svg"><style>.st0{fill:#19b78c}.st1{fill:#ffffff}.st3{fill:#ffca06}.st4{fill:#ed1b23}.st5{fill:#3364b1}</style>
+    <g>
+      <g>
+        <path class="st1" d="M33.57,1612.25h69.93v236.08s-.33,13.39,12.74,13.71c13.07.33,19.28,0,19.28,0l2.29,45.06s-38.56,10.78-67.96,1.96c0,0-32.68-9.14-36.27-51.92v-244.9Z"/>
+        <path class="st1" d="M148.26,1694.54h75.48v124.08s.98,39.84,33.98,38.86c0,0,18.63,2.94,34.96-16v-146.94h75.15v213.22h-71.23v-27.43s-22.55,32.11-63.06,32.11c0,0-73.2,9.03-85.29-81.74v-136.16Z"/>
+        <path class="st1" d="M405.42,1694.54h69.6v27.43s15.68-32,63.06-31.02c0,0,40.19-2.94,62.41,34.94,0,0,27.77-38.31,68.95-34.99,0,0,57.18-6.48,78.09,57.52,0,0,4.25,10.45,5.23,42.12v117.88h-71.89l-.65-130.61s-8.15-33.8-35.27-32.82c0,0-15.05-1.47-29.08,13.5l-.02,149.93h-72.21l-.98-123.43s2.29-43.43-32.68-40.49c0,0-19.61-1.63-32.35,17.31v146.61h-72.21v-213.88Z"/>
+        <path class="st1" d="M796.87,1639.03h69.6v55.84h61.1v52.24h-61.1l.33,90.78s1.63,21.55,24.83,20.24c0,0,19.93.33,32.02-4.57l3.92,48.98s-23.2,9.8-57.84,9.47c0,0-71.89,4.24-72.87-74.78v-89.8l-32.68-.06v-52.84h32.35l.33-55.51Z"/>
+        <path class="st1" d="M942.44,1694.78h71.8v33.55s10.78-30.86,43.87-33.55c0,0,8.33-2.45,29.65,0v59.75s-53.91-3.8-72.66,21v132.88h-72.66v-213.63Z"/>
+        <g>
+          <path class="st1" d="M1295.96,1822.25h-136.39c2.18,30.36,21.3,45.53,57.38,45.53,23,0,43.21-5.44,60.64-16.33v46.55c-19.33,10.35-44.44,15.52-75.34,15.52-33.76,0-59.96-9.36-78.6-28.07-18.65-18.72-27.97-44.82-27.97-78.3s10.07-62.2,30.22-82.49c20.14-20.28,44.92-30.42,74.32-30.42s54.07,9.05,70.74,27.15c16.67,18.11,25.01,42.67,25.01,73.71v27.16ZM1236.14,1782.64c0-29.94-12.11-44.92-36.34-44.92-10.35,0-19.3,4.29-26.85,12.86-7.56,8.58-12.15,19.26-13.78,32.06h76.97Z"/>
+          <path class="st1" d="M1522.18,1822.25h-136.39c2.18,30.36,21.3,45.53,57.38,45.53,23,0,43.21-5.44,60.64-16.33v46.55c-19.33,10.35-44.44,15.52-75.34,15.52-33.76,0-59.96-9.36-78.6-28.07-18.65-18.72-27.97-44.82-27.97-78.3s10.07-62.2,30.22-82.49c20.14-20.28,44.92-30.42,74.32-30.42s54.07,9.05,70.74,27.15c16.67,18.11,25.01,42.67,25.01,73.71v27.16ZM1462.36,1782.64c0-29.94-12.11-44.92-36.34-44.92-10.35,0-19.3,4.29-26.85,12.86-7.56,8.58-12.15,19.26-13.78,32.06h76.97Z"/>
+        </g>
+      </g>
+      <g>
+        <path class="st0" d="M1295.79,1294.28c76.42-35.96,74.92-61.44,74.92-61.44-40.46,11.99-89.91-13.49-89.91-13.49-37.73,48.91-54.6,106.9-56.7,114.5,1.51-2.45,11.4-11.2,71.69-39.57Z"/>
+        <path class="st0" d="M1148.94,1397.68c-23.98-62.94-118.38-101.9-118.38-101.9-102.19,28.37-137.86-59.94-137.86-59.94-44.51-128.69,76.42-170.82,76.42-170.82-40.75-71.16,4.5-121.37,4.5-121.37,60.2-60.47,121.38-20.98,121.38-20.98,74.92-136.36,181.31-25.47,181.31-25.47,134.86-41.96,140.85,94.4,140.85,94.4,47.95,28.47,58.44,76.42,58.44,76.42,22.45,10.3,37,23.69,46.23,38.01-21.87-178.76-174.1-317.24-358.77-317.24-199.69,0-361.57,161.88-361.57,361.57s153.62,353.09,346.15,361.18l1.29-113.86Z"/>
+        <path class="st0" d="M1171.41,1246.33c13.49,20.98,19.48,64.43,19.48,64.43l34.46-86.91c-16.48,17.98-53.94,22.48-53.94,22.48Z"/>
+        <path class="st0" d="M1224.1,1333.86c-.4.65-.24.88-.24.88,0,0,.09-.33.24-.88Z"/>
+        <path class="st0" d="M1411.17,1246.33c-8.99,19.48-16.48,28.47-16.48,28.47-22.48,34.46-95.9,58.44-134.86,82.42-38.96,23.98-37.46,43.46-37.46,43.46l1.25,106.11c148.98-25.13,266.94-141.31,294.72-289.38-41.83,53.21-107.16,28.93-107.16,28.93Z"/>
+        <path class="st0" d="M1106.98,1231.35c-19.48,38.96-35.96,43.46-35.96,43.46,41.96,22.48,79.42,59.94,79.42,59.94,1.5-55.44-22.48-97.4-22.48-97.4-16.48,0-20.98-5.99-20.98-5.99Z"/>
+      </g>
+      <circle class="st4" cx="412.7" cy="361.39" r="361.39"/>
+      <rect class="st5" x="801.5" y="11.27" width="717.69" height="691.54"/>
+      <polygon class="st3" points="405.82 807.35 816.24 1511.92 0 1511.92 405.82 807.35"/>
+    </g>
+  </svg>
+</header>
+
+<div class="wrap">
+
+  <section class="hero">
+    <span class="kicker"><span class="dot"></span>Toolkit T4 · Módulo 4 · NR-01</span>
+    <h1>Plano de Ação 30 Dias</h1>
+    <p>Transforme os riscos que você mapeou em ações pequenas, com responsável e prazo — distribuídas em 4 semanas, não empilhadas pro último dia.</p>
+  </section>
+
+  <div class="tabs">
+    <button class="tab-btn active" id="tabBtnConcept" onclick="showTab('concept')">Conceito</button>
+    <button class="tab-btn" id="tabBtnFill" onclick="showTab('fill')">Preenchimento</button>
+  </div>
+
+  <!-- ABA CONCEITO -->
+  <section class="panel active" id="tab-concept">
+    <div class="concept-card">
+      <h2><svg viewBox="0 0 24 24" fill="none" stroke="#F5C200" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Por que 30 dias, não 90</h2>
+      <p>Planos de transformação cultural costumam prometer demais e entregar tarde demais. 30 dias força outra lógica: <strong>ações pequenas o suficiente pra começar essa semana</strong>, verificáveis o suficiente pra saber se funcionaram antes do próximo ciclo.</p>
+      <p>Este plano se conecta direto com o que você já mapeou na <strong>Matriz de Risco</strong> — cada ação aqui pode vir de uma sugestão que você já escolheu lá. A ideia não é começar do zero, é dar prazo e responsável pro que você já identificou.</p>
+
+      <div class="principles">
+        <div class="principle-card">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          <h4>Pequena e verificável</h4>
+          <p>Prefira "agendar 1 reunião" a "melhorar a comunicação".</p>
+        </div>
+        <div class="principle-card">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a8 8 0 0 1 16 0v1"/></svg>
+          <h4>Sempre com responsável</h4>
+          <p>Ação sem nome ao lado tende a nunca acontecer.</p>
+        </div>
+        <div class="principle-card">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></svg>
+          <h4>Revisão semanal</h4>
+          <p>Não espere o dia 30 pra olhar o plano pela primeira vez.</p>
+        </div>
+      </div>
+
+      <p>Este é, literalmente, o documento que uma auditoria da NR-01 pede pra ver: plano de ação com responsável e prazo, não só um risco identificado no papel.</p>
+      <div class="legal-strip">
+        <span class="legal-chip">Cap. 1.5 — Plano de Ação</span>
+        <span class="legal-chip">Conectado à Matriz de Risco (T2)</span>
+      </div>
+    </div>
+    <button class="go-fill" onclick="showTab('fill')">Montar meu plano →</button>
+  </section>
+
+  <!-- ABA PREENCHIMENTO -->
+  <section class="panel" id="tab-fill">
+
+    <div class="toolbar">
+      <button class="tbtn" onclick="exportExcel()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v13m0 0-4-4m4 4 4-4"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+        Exportar Excel
+      </button>
+      <button class="tbtn" onclick="downloadSnapshot()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V6a2 2 0 0 1 2-2h9l5 5v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><path d="M14 4v5h5"/></svg>
+        Salvar como HTML
+      </button>
+      <button class="tbtn accent" onclick="window.print()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6M6 18h-2a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v7H6z"/></svg>
+        Imprimir PDF
+      </button>
+      <button class="tbtn danger" onclick="clearAll()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0-1 14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2L4 6"/></svg>
+        Limpar tudo
+      </button>
+    </div>
+
+    <div class="progress-card">
+      <div class="ring" id="progressRing" style="--pct:0"><span id="progressPct">0%</span></div>
+      <div class="txt">
+        <div class="label">Progresso do plano</div>
+        <div class="band" id="progressBand">Nenhuma ação concluída ainda</div>
+        <div class="desc" id="progressDesc">Preencha e acompanhe suas ações abaixo.</div>
+      </div>
+    </div>
+
+    <div class="weeks-card">
+      <h3>Visão por semana</h3>
+      <div class="weeks-grid" id="weeksGrid"></div>
+    </div>
+
+    <div id="taskList"></div>
+
+    <button class="add-row" onclick="addTask()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+      Adicionar ação
+    </button>
+
+    <footer class="brandfoot">Curso NR-01 · Toolkit T4 · Plano de Ação 30 Dias · Módulo 4</footer>
+  </section>
+
+</div>
+
+<div class="modal-overlay" id="confirmModal">
+  <div class="modal-box">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#F5C200" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2.5 19.5h19L12 3Z"/><path d="M12 10v4M12 17v.5"/></svg>
+    <h3>Limpar todo o plano?</h3>
+    <p>Isso apaga todas as ações que você cadastrou e volta aos exemplos originais. Não dá pra desfazer.</p>
+    <div class="modal-actions">
+      <button class="mbtn cancel" onclick="closeConfirmModal()">Cancelar</button>
+      <button class="mbtn confirm" onclick="confirmClearAll()">Sim, limpar tudo</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+  <span id="toastMsg">Salvo</span>
+</div>
+
+<script>
+const STORAGE_KEY = 'lumtree_plano30_m4';
+
+const FATORES = [
+  {v:'assedio', label:'Assédio'},
+  {v:'sobrecarga', label:'Sobrecarga'},
+  {v:'metas', label:'Metas abusivas'},
+  {v:'comunicacao', label:'Comunicação'},
+  {v:'isolamento', label:'Isolamento'}
+];
+
+const SEMANAS = [1,2,3,4];
+const STATUS = [
+  {v:'nao', label:'Não iniciado'},
+  {v:'andamento', label:'Em andamento'},
+  {v:'concluido', label:'Concluído'}
+];
+
+let state = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
+
+function defaultState(){
+  return {
+    tasks: [
+      {id:1, titulo:'Redistribuir tarefas emergenciais da equipe', fator:'sobrecarga', responsavel:'Você (liderança)', semana:1, status:'andamento'},
+      {id:2, titulo:'Revisar meta do período com prazo mais realista', fator:'metas', responsavel:'Você + Diretoria', semana:1, status:'nao'},
+      {id:3, titulo:'Criar ritual quinzenal de check-in informal', fator:'isolamento', responsavel:'Você + RH', semana:2, status:'nao'},
+      {id:4, titulo:'', fator:null, responsavel:'', semana:null, status:'nao'},
+      {id:5, titulo:'', fator:null, responsavel:'', semana:null, status:'nao'}
+    ],
+    nextId: 6
+  };
+}
+
+if(!state) state = defaultState();
+
+const listEl = document.getElementById('taskList');
+
+function render(){
+  listEl.innerHTML = '';
+  state.tasks.forEach((t, i) => {
+    const card = document.createElement('div');
+    card.className = 'taskcard';
+
+    const fatorChips = FATORES.map(f =>
+      `<button type="button" class="chip ${t.fator===f.v?'sel-fator':''}" onclick="setField(${t.id},'fator','${f.v}')">${f.label}</button>`
+    ).join('');
+    const weekChips = SEMANAS.map(s =>
+      `<button type="button" class="chip ${t.semana===s?'sel-week':''}" onclick="setField(${t.id},'semana',${s})">Semana ${s}</button>`
+    ).join('');
+    const statusBtns = STATUS.map(s =>
+      `<button type="button" class="status-btn ${t.status===s.v?'sel-'+s.v:''}" onclick="setField(${t.id},'status','${s.v}')">${s.label}</button>`
+    ).join('');
+
+    card.innerHTML = `
+      <div class="thead">
+        <span class="tnum">${i+1}</span>
+        <input type="text" class="title-input" placeholder="Qual é a ação? Ex: agendar reunião de feedback com a equipe" value="${(t.titulo||'').replace(/"/g,'&quot;')}" oninput="setTextLive(${t.id},'titulo',this.value)">
+        <button type="button" class="tdelete" onclick="removeTask(${t.id})" title="Remover">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0-1 14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2L4 6"/></svg>
+        </button>
+      </div>
+
+      <div class="field-row">
+        <div>
+          <label>Responsável</label>
+          <input type="text" class="small-input" placeholder="Quem faz acontecer?" value="${(t.responsavel||'').replace(/"/g,'&quot;')}" oninput="setTextLive(${t.id},'responsavel',this.value)">
+        </div>
+        <div>
+          <label>Semana prevista</label>
+          <div class="chip-row">${weekChips}</div>
+        </div>
+      </div>
+
+      <div class="step-label">Fator de risco relacionado (opcional)</div>
+      <div class="chip-row">${fatorChips}</div>
+
+      <div class="step-label" style="margin-top:14px;">Status</div>
+      <div class="status-row">${statusBtns}</div>
+    `;
+    listEl.appendChild(card);
+  });
+  renderWeeks();
+  renderProgress();
+}
+
+function setField(id, field, value){
+  const t = state.tasks.find(x => x.id === id);
+  if(!t) return;
+  t[field] = t[field] === value ? (field==='fator'||field==='semana' ? null : value) : value;
+  persist();
+  render();
+}
+
+function setTextLive(id, field, value){
+  const t = state.tasks.find(x => x.id === id);
+  if(!t) return;
+  t[field] = value;
+  persist();
+  renderWeeks();
+  renderProgress();
+}
+
+function persist(){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+function addTask(){
+  state.tasks.push({id: state.nextId++, titulo:'', fator:null, responsavel:'', semana:null, status:'nao'});
+  persist();
+  render();
+  listEl.lastElementChild.scrollIntoView({behavior:'smooth', block:'center'});
+}
+
+function removeTask(id){
+  state.tasks = state.tasks.filter(t => t.id !== id);
+  persist();
+  render();
+  showToast('Ação removida');
+}
+
+function filledTasks(){
+  return state.tasks.filter(t => (t.titulo||'').trim().length > 0);
+}
+
+function renderWeeks(){
+  const grid = document.getElementById('weeksGrid');
+  grid.innerHTML = '';
+  const filled = filledTasks();
+  SEMANAS.forEach(s => {
+    const tasksInWeek = filled.filter(t => t.semana === s);
+    const done = tasksInWeek.filter(t => t.status === 'concluido').length;
+    const pct = tasksInWeek.length ? Math.round(done/tasksInWeek.length*100) : 0;
+    const col = document.createElement('div');
+    col.className = 'week-col';
+    col.innerHTML = `
+      <div class="wname">Semana ${s}</div>
+      <div class="wcount">${tasksInWeek.length}</div>
+      <div class="wtrack"><div class="wfill" style="width:${pct}%"></div></div>
+      <div class="wsub">${done}/${tasksInWeek.length || 0} concluídas</div>
+    `;
+    grid.appendChild(col);
+  });
+}
+
+function renderProgress(){
+  const filled = filledTasks();
+  const done = filled.filter(t => t.status === 'concluido').length;
+  const andamento = filled.filter(t => t.status === 'andamento').length;
+  const total = filled.length;
+  const pct = total ? Math.round(done/total*100) : 0;
+
+  document.getElementById('progressRing').style.setProperty('--pct', pct);
+  document.getElementById('progressPct').textContent = pct + '%';
+
+  const bandEl = document.getElementById('progressBand');
+  const descEl = document.getElementById('progressDesc');
+  if(total === 0){
+    bandEl.textContent = 'Nenhuma ação cadastrada ainda';
+    descEl.textContent = 'Descreva ao menos uma ação abaixo para começar a acompanhar.';
+  } else {
+    bandEl.textContent = done + ' de ' + total + ' ações concluídas';
+    descEl.textContent = andamento > 0 ? andamento + ' em andamento agora.' : 'Nenhuma ação em andamento no momento.';
+  }
+}
+
+function showToast(msg){
+  const t = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2200);
+}
+
+function showTab(name){
+  document.getElementById('tab-concept').classList.toggle('active', name==='concept');
+  document.getElementById('tab-fill').classList.toggle('active', name==='fill');
+  document.getElementById('tabBtnConcept').classList.toggle('active', name==='concept');
+  document.getElementById('tabBtnFill').classList.toggle('active', name==='fill');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function clearAll(){ openConfirmModal(); }
+function openConfirmModal(){ document.getElementById('confirmModal').classList.add('show'); }
+function closeConfirmModal(){ document.getElementById('confirmModal').classList.remove('show'); }
+function confirmClearAll(){
+  state = defaultState();
+  persist();
+  render();
+  closeConfirmModal();
+  showToast('Plano reiniciado');
+}
+
+function fatorLabel(v){ const f = FATORES.find(x=>x.v===v); return f ? f.label : ''; }
+function statusLabel(v){ const s = STATUS.find(x=>x.v===v); return s ? s.label : ''; }
+
+function exportExcel(){
+  let rows = [['#','Ação','Responsável','Semana','Fator de risco','Status']];
+  filledTasks().forEach((t, i) => {
+    rows.push([i+1, t.titulo||'', t.responsavel||'', t.semana?('Semana '+t.semana):'', fatorLabel(t.fator), statusLabel(t.status)]);
+  });
+  const csv = rows.map(r => r.map(cell => '"'+String(cell).replace(/"/g,'""')+'"').join(';')).join('\r\n');
+  const blob = new Blob(['\uFEFF'+csv], {type:'text/csv;charset=utf-8;'});
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = 'plano-acao-30-dias-nr01.csv';
+  link.click();
+  showToast('Excel exportado');
+}
+
+function downloadSnapshot(){
+  let itemsHtml = filledTasks().map((t, i) => {
+    return '<div style="border:1px solid #333;border-radius:12px;padding:16px;margin-bottom:10px;">'
+      + '<div style="font-weight:700;margin-bottom:6px;">'+(i+1)+'. '+t.titulo+'</div>'
+      + '<div style="color:#a8a8a4;font-size:13px;">Responsável: '+(t.responsavel||'—')+' · Semana: '+(t.semana||'—')+' · Status: '+statusLabel(t.status)+'</div>'
+      + '</div>';
+  }).join('');
+  const snapshot = '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8">'
+    + '<title>Plano de Ação 30 Dias — Respostas Salvas</title>'
+    + '<style>body{background:#000;color:#f2f2f0;font-family:Arial,sans-serif;max-width:760px;margin:40px auto;padding:0 20px;}h1{color:#F5C200;}</style>'
+    + '</head><body><h1>Plano de Ação 30 Dias — NR-01</h1>'
+    + '<p>Cópia salva em ' + new Date().toLocaleDateString('pt-BR') + '</p>'
+    + itemsHtml + '</body></html>';
+  const blob = new Blob([snapshot], {type:'text/html;charset=utf-8;'});
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = 'plano-acao-30-dias-respostas.html';
+  link.click();
+  showToast('Cópia em HTML salva');
+}
+
+render();
+</script>
+</body>
+</html>
