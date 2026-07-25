@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Glossário Interativo — NR-01 | Lumtree</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --black:#000000;
+    --panel:#131313;
+    --panel-2:#1a1a1a;
+    --line:#2b2b2b;
+    --yellow:#F5C200;
+    --blue:#2E4FA3;
+    --blue-light:#5b83d6;
+    --green:#1FA876;
+    --red:#D42B2B;
+    --text:#f2f2f0;
+    --text-soft:#a8a8a4;
+    --radius-lg:20px;
+    --radius-md:12px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--black); color:var(--text);
+    font-family:"Manrope", sans-serif; line-height:1.6;
+  }
+  h1,h2,h3,.display{font-family:"Montserrat", sans-serif;}
+  .wrap{max-width:820px; margin:0 auto; padding:0 20px 90px;}
+
+  header.top{
+    background:var(--black); border-bottom:1px solid var(--line);
+    padding:22px 22px; display:flex; align-items:center; justify-content:center;
+  }
+  header.top svg{height:44px; width:auto;}
+
+  .hero{padding:30px 0 8px; text-align:center;}
+  .kicker{
+    display:inline-flex; align-items:center; gap:8px;
+    font-size:11.5px; font-weight:800; letter-spacing:.16em; text-transform:uppercase;
+    color:var(--yellow); border:1px solid #3a3420; background:#1c1a10;
+    padding:7px 14px; border-radius:999px;
+  }
+  .kicker .dot{width:6px;height:6px;border-radius:50%;background:var(--yellow);}
+  .hero h1{font-size:clamp(23px,4vw,32px); font-weight:800; margin:18px 0 10px; letter-spacing:-.01em;}
+  .hero p{color:var(--text-soft); font-size:14px; font-weight:500; max-width:580px; margin:0 auto;}
+
+  .toolbar{display:flex; gap:8px; flex-wrap:wrap; margin:20px 0 0; justify-content:flex-end;}
+  .tbtn{
+    display:inline-flex; align-items:center; gap:7px;
+    appearance:none; cursor:pointer; font-family:"Manrope",sans-serif;
+    background:var(--panel); border:1px solid var(--line); color:var(--text);
+    font-weight:700; font-size:12px; padding:9px 13px; border-radius:999px;
+  }
+  .tbtn svg{width:13px;height:13px;}
+  .tbtn.accent{background:var(--blue); border-color:var(--blue); color:#fff;}
+
+  .searchbox{
+    position:relative; margin:20px 0 14px;
+  }
+  .searchbox svg{
+    position:absolute; left:16px; top:50%; transform:translateY(-50%);
+    width:18px; height:18px; color:var(--text-soft); pointer-events:none;
+  }
+  .searchbox input{
+    width:100%; background:var(--panel); border:1.5px solid var(--line); border-radius:999px;
+    color:var(--text); font-family:"Manrope",sans-serif; font-size:14.5px; font-weight:600;
+    padding:15px 16px 15px 46px; outline:none;
+  }
+  .searchbox input:focus{border-color:var(--blue-light);}
+  .searchbox input::placeholder{color:#6f6f6b; font-weight:500;}
+
+  .filter-row{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:8px;}
+  .filter-chip{
+    appearance:none; cursor:pointer; font-family:"Manrope",sans-serif;
+    background:var(--panel); border:1.5px solid var(--line); color:var(--text-soft);
+    font-weight:700; font-size:12px; padding:9px 15px; border-radius:999px;
+  }
+  .filter-chip.active{background:var(--yellow); border-color:var(--yellow); color:#1c1a10;}
+
+  .result-count{
+    font-size:12px; font-weight:700; color:var(--text-soft); margin:14px 2px 12px;
+  }
+
+  .term-card{
+    background:var(--panel); border:1px solid var(--line); border-radius:var(--radius-md);
+    padding:18px 20px; margin-bottom:10px;
+  }
+  .term-head{display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:6px;}
+  .term-name{font-family:"Montserrat",sans-serif; font-weight:800; font-size:15.5px;}
+  .fav-btn{
+    appearance:none; cursor:pointer; background:none; border:none; color:#5a5a56; padding:2px; flex:none;
+  }
+  .fav-btn.active{color:var(--yellow);}
+  .term-cat{
+    display:inline-block; font-size:10px; font-weight:800; letter-spacing:.05em; text-transform:uppercase;
+    padding:3px 9px; border-radius:999px; margin-bottom:8px;
+  }
+  .cat-norma{background:#101a30; color:#7fa0e6;}
+  .cat-risco{background:#2e1414; color:#f5a3a3;}
+  .cat-lideranca{background:#0f2e22; color:#7fe0bd;}
+  .term-def{font-size:13.3px; color:var(--text-soft); font-weight:500; margin:0;}
+  .term-modules{margin-top:10px; display:flex; gap:5px; flex-wrap:wrap;}
+  .mod-badge{
+    font-size:10px; font-weight:800; color:#6f6f6b; background:var(--panel-2);
+    border:1px solid var(--line); padding:2px 8px; border-radius:999px;
+  }
+
+  .empty-state{
+    text-align:center; padding:50px 20px; color:var(--text-soft);
+  }
+  .empty-state svg{width:36px; height:36px; margin-bottom:12px; opacity:.5;}
+  .empty-state p{font-size:13.5px; font-weight:500;}
+
+  footer.brandfoot{
+    text-align:center; margin-top:36px; padding-top:20px;
+    border-top:1px solid var(--line); font-size:11px; color:var(--text-soft); font-weight:600;
+  }
+
+  @media print{
+    body{background:#fff; color:#000;}
+    .toolbar, .searchbox, .filter-row, .fav-btn{display:none !important;}
+    .term-card{background:#fff; border:1px solid #ccc;}
+    header.top{background:#fff; border-bottom:2px solid #000;}
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <svg viewBox="0 0 1522.18 1913.52" xmlns="http://www.w3.org/2000/svg"><style>.st0{fill:#19b78c}.st1{fill:#ffffff}.st3{fill:#ffca06}.st4{fill:#ed1b23}.st5{fill:#3364b1}</style>
+    <g>
+      <g>
+        <path class="st1" d="M33.57,1612.25h69.93v236.08s-.33,13.39,12.74,13.71c13.07.33,19.28,0,19.28,0l2.29,45.06s-38.56,10.78-67.96,1.96c0,0-32.68-9.14-36.27-51.92v-244.9Z"/>
+        <path class="st1" d="M148.26,1694.54h75.48v124.08s.98,39.84,33.98,38.86c0,0,18.63,2.94,34.96-16v-146.94h75.15v213.22h-71.23v-27.43s-22.55,32.11-63.06,32.11c0,0-73.2,9.03-85.29-81.74v-136.16Z"/>
+        <path class="st1" d="M405.42,1694.54h69.6v27.43s15.68-32,63.06-31.02c0,0,40.19-2.94,62.41,34.94,0,0,27.77-38.31,68.95-34.99,0,0,57.18-6.48,78.09,57.52,0,0,4.25,10.45,5.23,42.12v117.88h-71.89l-.65-130.61s-8.15-33.8-35.27-32.82c0,0-15.05-1.47-29.08,13.5l-.02,149.93h-72.21l-.98-123.43s2.29-43.43-32.68-40.49c0,0-19.61-1.63-32.35,17.31v146.61h-72.21v-213.88Z"/>
+        <path class="st1" d="M796.87,1639.03h69.6v55.84h61.1v52.24h-61.1l.33,90.78s1.63,21.55,24.83,20.24c0,0,19.93.33,32.02-4.57l3.92,48.98s-23.2,9.8-57.84,9.47c0,0-71.89,4.24-72.87-74.78v-89.8l-32.68-.06v-52.84h32.35l.33-55.51Z"/>
+        <path class="st1" d="M942.44,1694.78h71.8v33.55s10.78-30.86,43.87-33.55c0,0,8.33-2.45,29.65,0v59.75s-53.91-3.8-72.66,21v132.88h-72.66v-213.63Z"/>
+        <g>
+          <path class="st1" d="M1295.96,1822.25h-136.39c2.18,30.36,21.3,45.53,57.38,45.53,23,0,43.21-5.44,60.64-16.33v46.55c-19.33,10.35-44.44,15.52-75.34,15.52-33.76,0-59.96-9.36-78.6-28.07-18.65-18.72-27.97-44.82-27.97-78.3s10.07-62.2,30.22-82.49c20.14-20.28,44.92-30.42,74.32-30.42s54.07,9.05,70.74,27.15c16.67,18.11,25.01,42.67,25.01,73.71v27.16ZM1236.14,1782.64c0-29.94-12.11-44.92-36.34-44.92-10.35,0-19.3,4.29-26.85,12.86-7.56,8.58-12.15,19.26-13.78,32.06h76.97Z"/>
+          <path class="st1" d="M1522.18,1822.25h-136.39c2.18,30.36,21.3,45.53,57.38,45.53,23,0,43.21-5.44,60.64-16.33v46.55c-19.33,10.35-44.44,15.52-75.34,15.52-33.76,0-59.96-9.36-78.6-28.07-18.65-18.72-27.97-44.82-27.97-78.3s10.07-62.2,30.22-82.49c20.14-20.28,44.92-30.42,74.32-30.42s54.07,9.05,70.74,27.15c16.67,18.11,25.01,42.67,25.01,73.71v27.16ZM1462.36,1782.64c0-29.94-12.11-44.92-36.34-44.92-10.35,0-19.3,4.29-26.85,12.86-7.56,8.58-12.15,19.26-13.78,32.06h76.97Z"/>
+        </g>
+      </g>
+      <g>
+        <path class="st0" d="M1295.79,1294.28c76.42-35.96,74.92-61.44,74.92-61.44-40.46,11.99-89.91-13.49-89.91-13.49-37.73,48.91-54.6,106.9-56.7,114.5,1.51-2.45,11.4-11.2,71.69-39.57Z"/>
+        <path class="st0" d="M1148.94,1397.68c-23.98-62.94-118.38-101.9-118.38-101.9-102.19,28.37-137.86-59.94-137.86-59.94-44.51-128.69,76.42-170.82,76.42-170.82-40.75-71.16,4.5-121.37,4.5-121.37,60.2-60.47,121.38-20.98,121.38-20.98,74.92-136.36,181.31-25.47,181.31-25.47,134.86-41.96,140.85,94.4,140.85,94.4,47.95,28.47,58.44,76.42,58.44,76.42,22.45,10.3,37,23.69,46.23,38.01-21.87-178.76-174.1-317.24-358.77-317.24-199.69,0-361.57,161.88-361.57,361.57s153.62,353.09,346.15,361.18l1.29-113.86Z"/>
+        <path class="st0" d="M1171.41,1246.33c13.49,20.98,19.48,64.43,19.48,64.43l34.46-86.91c-16.48,17.98-53.94,22.48-53.94,22.48Z"/>
+        <path class="st0" d="M1224.1,1333.86c-.4.65-.24.88-.24.88,0,0,.09-.33.24-.88Z"/>
+        <path class="st0" d="M1411.17,1246.33c-8.99,19.48-16.48,28.47-16.48,28.47-22.48,34.46-95.9,58.44-134.86,82.42-38.96,23.98-37.46,43.46-37.46,43.46l1.25,106.11c148.98-25.13,266.94-141.31,294.72-289.38-41.83,53.21-107.16,28.93-107.16,28.93Z"/>
+        <path class="st0" d="M1106.98,1231.35c-19.48,38.96-35.96,43.46-35.96,43.46,41.96,22.48,79.42,59.94,79.42,59.94,1.5-55.44-22.48-97.4-22.48-97.4-16.48,0-20.98-5.99-20.98-5.99Z"/>
+      </g>
+      <circle class="st4" cx="412.7" cy="361.39" r="361.39"/>
+      <rect class="st5" x="801.5" y="11.27" width="717.69" height="691.54"/>
+      <polygon class="st3" points="405.82 807.35 816.24 1511.92 0 1511.92 405.82 807.35"/>
+    </g>
+  </svg>
+</header>
+
+<div class="wrap">
+
+  <section class="hero">
+    <span class="kicker"><span class="dot"></span>Toolkit T6 · Módulo 2 · NR-01</span>
+    <h1>Glossário Interativo</h1>
+    <p>20 termos da norma e do curso, explicados em português simples. Busque, filtre por categoria, ou marque os que você mais usa.</p>
+  </section>
+
+  <div class="toolbar">
+    <button class="tbtn" onclick="exportExcel()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v13m0 0-4-4m4 4 4-4"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+      Exportar Excel
+    </button>
+    <button class="tbtn accent" onclick="window.print()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6M6 18h-2a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v7H6z"/></svg>
+      Imprimir PDF
+    </button>
+  </div>
+
+  <div class="searchbox">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+    <input type="text" id="searchInput" placeholder="Buscar termo... ex: PGR, assédio, CNV" oninput="applyFilters()">
+  </div>
+
+  <div class="filter-row" id="catFilters"></div>
+
+  <div class="result-count" id="resultCount"></div>
+  <div id="termList"></div>
+
+  <footer class="brandfoot">Curso NR-01 · Toolkit T6 · Glossário Interativo · Módulo 2</footer>
+</div>
+
+<script>
+const STORAGE_KEY = 'lumtree_glossario_m2_favs';
+
+const CATEGORIAS = {
+  norma: {label:'Norma e Jurídico', cls:'cat-norma'},
+  risco: {label:'Matriz e Risco', cls:'cat-risco'},
+  lideranca: {label:'Liderança e Comunicação', cls:'cat-lideranca'}
+};
+
+const TERMOS = [
+  {t:'Anexo I (da NR-01)', cat:'norma', mods:['M1'], d:'Parte da norma que reúne as definições oficiais de termos como GRO, PGR e avaliação de riscos.'},
+  {t:'Assédio', cat:'norma', mods:['M1','M2'], d:'Conduta repetida de humilhação, constrangimento ou pressão. É o único fator de risco psicossocial com capacitação obrigatória prevista em lei.'},
+  {t:'Auditoria-Fiscal do Trabalho', cat:'norma', mods:['M1'], d:'Órgão do Ministério do Trabalho responsável por fiscalizar o cumprimento da NR-01 nas empresas.'},
+  {t:'CNV — Comunicação Não-Violenta', cat:'lideranca', mods:['M3'], d:'Método de comunicação estruturado em 4 partes — observação, sentimento, necessidade, pedido — para reduzir defensividade em conversas difíceis.'},
+  {t:'Custo Oculto', cat:'risco', mods:['M4'], d:'Gastos reais que a falta de gestão de riscos psicossociais gera — afastamento, rotatividade, presenteísmo — mas que normalmente não aparecem em nenhuma planilha.'},
+  {t:'FRPRT', cat:'risco', mods:['M1','M2'], d:'Sigla para Fatores de Risco Psicossociais Relacionados ao Trabalho: os elementos da organização do trabalho que podem prejudicar a saúde mental — assédio, sobrecarga, metas abusivas, comunicação ineficaz, isolamento.'},
+  {t:'GRO', cat:'norma', mods:['M1'], d:'Sigla para Gerenciamento de Riscos Ocupacionais: o sistema que a NR-01 exige para identificar, avaliar e controlar riscos no trabalho, incluindo os psicossociais.'},
+  {t:'Inventário de Riscos', cat:'norma', mods:['M1','M2'], d:'Levantamento documentado de todos os riscos identificados no ambiente de trabalho — é a base para construir o PGR.'},
+  {t:'Matriz de Risco', cat:'risco', mods:['M2'], d:'Ferramenta que cruza severidade × probabilidade para classificar cada risco e priorizar em qual agir primeiro.'},
+  {t:'Nível de Risco', cat:'risco', mods:['M2'], d:'Resultado do cruzamento severidade × probabilidade. Vai de Aceitável a Intolerável, em 5 níveis.'},
+  {t:'NR-01', cat:'norma', mods:['M0','M1'], d:'Norma Regulamentadora nº 1. Desde a atualização, exige que empresas gerenciem também os riscos psicossociais do trabalho, não só os físicos e químicos.'},
+  {t:'Plano de Ação', cat:'norma', mods:['M4'], d:'Conjunto de ações com responsável e prazo definidos para reduzir um risco identificado. Exigido pela norma e é o que uma auditoria pede para ver.'},
+  {t:'PGR', cat:'norma', mods:['M1'], d:'Programa de Gerenciamento de Risco: documento que reúne o inventário de riscos e o plano de ação da empresa.'},
+  {t:'Presenteísmo', cat:'risco', mods:['M2','M4'], d:'Quando a pessoa está fisicamente presente no trabalho, mas rendendo bem abaixo do normal por sobrecarga, estresse ou desmotivação.'},
+  {t:'Probabilidade', cat:'risco', mods:['M2'], d:'Na matriz de risco, a chance de um risco ocorrer — medida pelo percentual de pessoas da equipe expostas àquela condição.'},
+  {t:'Segurança Psicológica', cat:'lideranca', mods:['M0','M3'], d:'Crença compartilhada de que a equipe é um ambiente seguro para arriscar, falar e errar sem punição.'},
+  {t:'Severidade', cat:'risco', mods:['M2'], d:'Na matriz de risco, o tamanho do dano possível se o risco se concretizar — de leve a gravíssimo.'},
+  {t:'Vínculo de Trabalho', cat:'norma', mods:['M1'], d:'Forma jurídica pela qual alguém presta serviço — CLT, Temporário, Terceirizado ou PJ — cada uma com um nível diferente de proteção institucional.'},
+  {t:'Vulnerabilidade Segura', cat:'lideranca', mods:['M0'], d:'Capacidade de admitir um erro ou pedir ajuda na frente da própria equipe, sem medo de julgamento.'},
+  {t:'Workflow Learning', cat:'lideranca', mods:['M3'], d:'Metodologia de aprendizagem que entrega conteúdo direto no fluxo real de trabalho da pessoa, em vez de isolado numa tela.'}
+];
+
+let favorites = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+let activeCat = 'todos';
+
+function persist(){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(favorites));
+}
+
+function toggleFav(term){
+  const idx = favorites.indexOf(term);
+  if(idx >= 0) favorites.splice(idx,1);
+  else favorites.push(term);
+  persist();
+  applyFilters();
+}
+
+function renderFilters(){
+  const el = document.getElementById('catFilters');
+  const chips = [
+    `<button type="button" class="filter-chip ${activeCat==='todos'?'active':''}" onclick="setCat('todos')">Todos</button>`,
+    `<button type="button" class="filter-chip ${activeCat==='favoritos'?'active':''}" onclick="setCat('favoritos')">★ Favoritos</button>`
+  ];
+  Object.entries(CATEGORIAS).forEach(([key, c]) => {
+    chips.push(`<button type="button" class="filter-chip ${activeCat===key?'active':''}" onclick="setCat('${key}')">${c.label}</button>`);
+  });
+  el.innerHTML = chips.join('');
+}
+
+function setCat(cat){
+  activeCat = cat;
+  renderFilters();
+  applyFilters();
+}
+
+function applyFilters(){
+  const q = document.getElementById('searchInput').value.trim().toLowerCase();
+  let filtered = TERMOS.filter(term => {
+    const matchesQuery = !q || term.t.toLowerCase().includes(q) || term.d.toLowerCase().includes(q);
+    const matchesCat = activeCat==='todos' ? true : (activeCat==='favoritos' ? favorites.includes(term.t) : term.cat===activeCat);
+    return matchesQuery && matchesCat;
+  });
+  filtered.sort((a,b) => a.t.localeCompare(b.t, 'pt-BR'));
+  renderList(filtered);
+}
+
+function renderList(list){
+  const el = document.getElementById('termList');
+  document.getElementById('resultCount').textContent = list.length + (list.length===1 ? ' termo encontrado' : ' termos encontrados');
+
+  if(list.length === 0){
+    el.innerHTML = `<div class="empty-state">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      <p>Nenhum termo encontrado com esse filtro.</p>
+    </div>`;
+    return;
+  }
+
+  el.innerHTML = list.map(term => {
+    const cat = CATEGORIAS[term.cat];
+    const isFav = favorites.includes(term.t);
+    const mods = term.mods.map(m => `<span class="mod-badge">${m}</span>`).join('');
+    return `<div class="term-card">
+      <div class="term-head">
+        <div class="term-name">${term.t}</div>
+        <button type="button" class="fav-btn ${isFav?'active':''}" onclick="toggleFav('${term.t.replace(/'/g,"\\'")}')" title="Favoritar">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="${isFav?'currentColor':'none'}" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.9-6.2-3.3-6.2 3.3 1.2-6.9-5-4.9 6.9-1L12 2Z"/></svg>
+        </button>
+      </div>
+      <span class="term-cat ${cat.cls}">${cat.label}</span>
+      <p class="term-def">${term.d}</p>
+      <div class="term-modules">${mods}</div>
+    </div>`;
+  }).join('');
+}
+
+function exportExcel(){
+  let rows = [['Termo','Categoria','Definição','Módulos']];
+  TERMOS.forEach(term => {
+    rows.push([term.t, CATEGORIAS[term.cat].label, term.d, term.mods.join(', ')]);
+  });
+  const csv = rows.map(r => r.map(cell => '"'+String(cell).replace(/"/g,'""')+'"').join(';')).join('\r\n');
+  const blob = new Blob(['\uFEFF'+csv], {type:'text/csv;charset=utf-8;'});
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = 'glossario-nr01.csv';
+  link.click();
+}
+
+renderFilters();
+applyFilters();
+</script>
+</body>
+</html>
