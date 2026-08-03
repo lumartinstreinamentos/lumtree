@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Autoavaliação de Pessoas Líderes — NR-01 | Lumtree</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --blue-900:#16305c;
+    --blue-800:#1f3f79;
+    --blue-700:#2E4FA3;
+    --blue-500:#4a72c9;
+    --blue-200:#c3d7f2;
+    --blue-100:#dde9fa;
+    --blue-050:#eef4fc;
+    --sky-bg-a:#eaf2fb;
+    --sky-bg-b:#d3e5fa;
+    --ink:#132444;
+    --ink-soft:#3c4f74;
+    --paper:#ffffff;
+    --green:#1FA876;
+    --yellow:#F5C200;
+    --red:#D42B2B;
+    --line:#c9d9f0;
+    --radius-lg:22px;
+    --radius-md:14px;
+    --shadow-card:0 18px 40px -22px rgba(22,48,92,0.28);
+    --shadow-soft:0 8px 20px -12px rgba(22,48,92,0.20);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    font-family:"Montserrat", sans-serif;
+    color:var(--ink);
+    background:
+      radial-gradient(1100px 620px at 15% -10%, #f6faff 0%, transparent 60%),
+      radial-gradient(900px 700px at 100% 0%, var(--blue-100) 0%, transparent 55%),
+      linear-gradient(180deg, var(--sky-bg-a) 0%, var(--sky-bg-b) 45%, #f4f8fd 100%);
+    min-height:100vh;
+    line-height:1.55;
+  }
+  .wrap{max-width:820px; margin:0 auto; padding:0 24px 96px;}
+  header.top{
+    display:flex; justify-content:center; align-items:center;
+    padding:36px 24px 8px;
+  }
+  header.top svg{height:52px; width:auto;}
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-size:12px; font-weight:700; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--blue-700);
+    background:var(--paper);
+    border:1px solid var(--blue-200);
+    padding:7px 14px; border-radius:999px;
+    box-shadow:var(--shadow-soft);
+  }
+  .eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--green);}
+
+  /* HERO */
+  .hero{ text-align:center; padding:18px 0 6px; }
+  .hero h1{
+    font-size:clamp(28px, 4.6vw, 44px);
+    font-weight:800;
+    line-height:1.12;
+    margin:22px 0 18px;
+    letter-spacing:-0.01em;
+  }
+  .hero h1 em{
+    font-style:normal;
+    color:var(--blue-700);
+    position:relative;
+  }
+  .hero p.lead{
+    max-width:620px; margin:0 auto 30px;
+    color:var(--ink-soft); font-size:16.5px; font-weight:500;
+  }
+
+  .cards3{
+    display:grid; grid-template-columns:repeat(3,1fr); gap:14px;
+    margin:8px 0 30px;
+  }
+  .card3{
+    background:var(--paper); border:1px solid var(--blue-100);
+    border-radius:var(--radius-md); padding:20px 16px;
+    text-align:left; box-shadow:var(--shadow-soft);
+  }
+  .card3 .num{
+    width:30px;height:30px;border-radius:9px;
+    background:var(--blue-050); color:var(--blue-700);
+    display:flex; align-items:center; justify-content:center;
+    font-weight:800; font-size:13px; margin-bottom:12px;
+  }
+  .card3 svg{height:22px; margin-bottom:10px; display:block;}
+  .card3 h3{margin:0 0 6px; font-size:15px; font-weight:700;}
+  .card3 p{margin:0; font-size:13.2px; color:var(--ink-soft); font-weight:500;}
+
+  .btn-primary{
+    appearance:none; border:none; cursor:pointer;
+    background:linear-gradient(135deg, var(--blue-700), var(--blue-900));
+    color:#fff; font-family:inherit; font-weight:700; font-size:15.5px;
+    padding:16px 30px; border-radius:999px;
+    box-shadow:0 14px 30px -12px rgba(31,63,121,0.55);
+    display:inline-flex; align-items:center; gap:10px;
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .btn-primary:hover{transform:translateY(-2px); box-shadow:0 18px 34px -12px rgba(31,63,121,0.6);}
+  .btn-primary:active{transform:translateY(0px);}
+  .btn-secondary{
+    appearance:none; cursor:pointer; font-family:inherit;
+    background:var(--paper); color:var(--blue-700); font-weight:700; font-size:14.5px;
+    border:1.5px solid var(--blue-200); padding:13px 24px; border-radius:999px;
+  }
+  .center{text-align:center;}
+
+  /* CONSENT */
+  .consent{
+    background:var(--paper); border:1px solid var(--blue-100);
+    border-radius:var(--radius-lg); padding:26px 26px;
+    margin:44px 0 8px; box-shadow:var(--shadow-card);
+    border-left:5px solid var(--green);
+  }
+  .consent h4{margin:0 0 10px; font-size:14.5px; font-weight:800; color:var(--blue-900); text-transform:uppercase; letter-spacing:.04em;}
+  .consent p{margin:0 0 10px; font-size:14.3px; color:var(--ink-soft); font-weight:500;}
+  .consent p:last-child{margin-bottom:0;}
+  .consent strong{color:var(--ink);}
+  .privacy-badge{
+    display:inline-flex; align-items:center; gap:8px;
+    background:var(--blue-050); color:var(--blue-800);
+    font-weight:700; font-size:12.6px; padding:8px 14px; border-radius:999px;
+    margin-top:12px;
+  }
+
+  /* LEGEND */
+  .legend{
+    display:flex; gap:8px; flex-wrap:wrap; justify-content:center;
+    margin:34px 0 6px;
+  }
+  .legend .chip{
+    flex:1; min-width:78px; text-align:center;
+    background:var(--paper); border:1px solid var(--blue-100);
+    border-radius:12px; padding:10px 6px;
+    font-size:11.5px; font-weight:600; color:var(--ink-soft);
+  }
+  .legend .chip b{display:block; font-size:15px; color:var(--blue-700); font-weight:800; margin-bottom:2px;}
+
+  /* BLOCKS */
+  .block{
+    background:var(--paper); border:1px solid var(--blue-100);
+    border-radius:var(--radius-lg); padding:30px 28px;
+    margin:26px 0; box-shadow:var(--shadow-card);
+  }
+  .block-head{display:flex; gap:16px; align-items:flex-start; margin-bottom:22px;}
+  .block-icon{
+    flex:none; width:46px; height:46px; border-radius:13px;
+    background:var(--blue-050); display:flex; align-items:center; justify-content:center;
+  }
+  .block-icon svg{width:24px; height:24px;}
+  .block-label{font-size:11.5px; font-weight:800; letter-spacing:.12em; color:var(--blue-500); text-transform:uppercase;}
+  .block-head h2{margin:2px 0 6px; font-size:20px; font-weight:800;}
+  .block-head p{margin:0; font-size:13.6px; color:var(--ink-soft); font-weight:500;}
+
+  .question{padding:18px 0; border-top:1px solid var(--blue-050);}
+  .question:first-of-type{border-top:none; padding-top:2px;}
+  .question p.qtext{margin:0 0 14px; font-size:15px; font-weight:600; color:var(--ink);}
+
+  .scale{display:grid; grid-template-columns:repeat(6,1fr); gap:8px;}
+  .scale button{
+    appearance:none; cursor:pointer; font-family:inherit;
+    background:var(--paper); border:1.5px solid var(--blue-100);
+    border-radius:10px; padding:10px 4px 9px;
+    font-size:12px; font-weight:700; color:var(--ink-soft);
+    display:flex; flex-direction:column; align-items:center; gap:4px;
+    transition:all .12s ease;
+  }
+  .scale button .n{font-size:15px; font-weight:800; color:var(--blue-700);}
+  .scale button:hover{border-color:var(--blue-500); transform:translateY(-1px);}
+  .scale button.sel{
+    background:linear-gradient(135deg, var(--blue-700), var(--blue-900));
+    border-color:var(--blue-900); color:#fff;
+  }
+  .scale button.sel .n{color:#fff;}
+
+  .progress-wrap{
+    position:sticky; top:0; z-index:20; padding:12px 0 0;
+    background:linear-gradient(180deg, rgba(238,244,252,0.96), rgba(238,244,252,0.75) 70%, transparent);
+    backdrop-filter:blur(2px);
+  }
+  .progress-track{
+    max-width:820px; margin:0 auto; padding:0 24px;
+  }
+  .progress-bar{height:6px; border-radius:999px; background:var(--blue-100); overflow:hidden;}
+  .progress-bar i{display:block; height:100%; width:0%; background:linear-gradient(90deg, var(--green), var(--blue-700)); transition:width .3s ease;}
+  .progress-text{font-size:11.5px; font-weight:700; color:var(--blue-800); text-align:right; margin:4px 2px 8px;}
+
+  .submit-zone{text-align:center; margin:40px 0 10px;}
+  .submit-zone p{font-size:13px; color:var(--ink-soft); font-weight:600; margin-bottom:16px;}
+
+  /* RESULTS */
+  #results{display:none;}
+  .panel{
+    background:linear-gradient(160deg, var(--blue-900), #0f2347);
+    border-radius:28px; padding:40px 34px 34px;
+    color:#eaf1ff; text-align:center; margin:20px 0 30px;
+    box-shadow:0 30px 60px -25px rgba(10,25,55,.55);
+  }
+  .panel .kicker{font-size:11.5px; letter-spacing:.18em; font-weight:800; color:#8fb1e8; text-transform:uppercase;}
+  .gauge{width:220px; margin:22px auto 6px; position:relative;}
+  .gauge svg{width:100%; display:block;}
+  .gauge-label{margin-top:2px;}
+  .gauge-band{font-size:22px; font-weight:800; margin:6px 0 4px; color:#fff;}
+  .gauge-score{font-size:12.5px; font-weight:700; color:#a9c4ec; letter-spacing:.04em;}
+  .panel p.desc{
+    max-width:520px; margin:20px auto 0; font-size:14.3px; font-weight:500; color:#d3e2fa;
+  }
+
+  .byblock{
+    background:var(--paper); border:1px solid var(--blue-100);
+    border-radius:var(--radius-lg); padding:28px 28px 20px;
+    box-shadow:var(--shadow-card); margin-bottom:22px;
+  }
+  .byblock h3{margin:0 0 18px; font-size:15px; font-weight:800; text-transform:uppercase; letter-spacing:.05em; color:var(--blue-900);}
+  .bbrow{margin-bottom:16px;}
+  .bbrow .bbtop{display:flex; justify-content:space-between; font-size:13.5px; font-weight:700; margin-bottom:6px;}
+  .bbrow .bbtop span.sc{color:var(--blue-700); font-weight:800;}
+  .bbtrack{height:9px; border-radius:999px; background:var(--blue-050); overflow:hidden;}
+  .bbfill{height:100%; border-radius:999px; background:linear-gradient(90deg, var(--green), var(--blue-700));}
+
+  .next-steps{
+    background:var(--paper); border:1px solid var(--blue-100);
+    border-radius:var(--radius-lg); padding:28px 28px;
+    box-shadow:var(--shadow-card); margin-bottom:22px;
+  }
+  .next-steps h3{margin:0 0 16px; font-size:15px; font-weight:800; text-transform:uppercase; letter-spacing:.05em; color:var(--blue-900);}
+  .next-steps ul{margin:0; padding:0; list-style:none;}
+  .next-steps li{
+    display:flex; gap:12px; padding:12px 0; border-top:1px solid var(--blue-050); font-size:14px; font-weight:500; color:var(--ink-soft);
+  }
+  .next-steps li:first-child{border-top:none;}
+  .next-steps li svg{flex:none; width:18px; height:18px; margin-top:2px; color:var(--green);}
+
+  .legal{
+    background:var(--blue-050); border:1px solid var(--blue-100);
+    border-radius:var(--radius-md); padding:20px 22px;
+    font-size:12px; color:var(--ink-soft); font-weight:500; line-height:1.65;
+  }
+  .legal b{color:var(--blue-900); font-weight:800;}
+  .legal .lawnote{margin-top:10px; padding-top:10px; border-top:1px dashed var(--blue-200); font-size:11px;}
+
+  .restart-zone{text-align:center; margin-top:30px;}
+
+  footer.brandfoot{
+    text-align:center; margin-top:44px; padding-top:22px;
+    border-top:1px solid var(--blue-100);
+    font-size:11.5px; color:var(--ink-soft); font-weight:600;
+  }
+
+  @media (max-width:640px){
+    .cards3{grid-template-columns:1fr;}
+    .scale{grid-template-columns:repeat(3,1fr); row-gap:8px;}
+    .block{padding:24px 18px;}
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <svg viewBox="0 0 1522.18 1913.52" xmlns="http://www.w3.org/2000/svg"><style>.st0{fill:#19b78c}.st3{fill:#ffca06}.st4{fill:#ed1b23}.st5{fill:#3364b1}</style>
+    <g>
+      <g>
+        <path class="st0" d="M1295.79,1294.28c76.42-35.96,74.92-61.44,74.92-61.44-40.46,11.99-89.91-13.49-89.91-13.49-37.73,48.91-54.6,106.9-56.7,114.5,1.51-2.45,11.4-11.2,71.69-39.57Z"/>
+        <path class="st0" d="M1148.94,1397.68c-23.98-62.94-118.38-101.9-118.38-101.9-102.19,28.37-137.86-59.94-137.86-59.94-44.51-128.69,76.42-170.82,76.42-170.82-40.75-71.16,4.5-121.37,4.5-121.37,60.2-60.47,121.38-20.98,121.38-20.98,74.92-136.36,181.31-25.47,181.31-25.47,134.86-41.96,140.85,94.4,140.85,94.4,47.95,28.47,58.44,76.42,58.44,76.42,22.45,10.3,37,23.69,46.23,38.01-21.87-178.76-174.1-317.24-358.77-317.24-199.69,0-361.57,161.88-361.57,361.57s153.62,353.09,346.15,361.18l1.29-113.86Z"/>
+        <path class="st0" d="M1171.41,1246.33c13.49,20.98,19.48,64.43,19.48,64.43l34.46-86.91c-16.48,17.98-53.94,22.48-53.94,22.48Z"/>
+        <path class="st0" d="M1224.1,1333.86c-.4.65-.24.88-.24.88,0,0,.09-.33.24-.88Z"/>
+        <path class="st0" d="M1411.17,1246.33c-8.99,19.48-16.48,28.47-16.48,28.47-22.48,34.46-95.9,58.44-134.86,82.42-38.96,23.98-37.46,43.46-37.46,43.46l1.25,106.11c148.98-25.13,266.94-141.31,294.72-289.38-41.83,53.21-107.16,28.93-107.16,28.93Z"/>
+        <path class="st0" d="M1106.98,1231.35c-19.48,38.96-35.96,43.46-35.96,43.46,41.96,22.48,79.42,59.94,79.42,59.94,1.5-55.44-22.48-97.4-22.48-97.4-16.48,0-20.98-5.99-20.98-5.99Z"/>
+      </g>
+      <circle class="st4" cx="412.7" cy="361.39" r="361.39"/>
+      <rect class="st5" x="801.5" y="11.27" width="717.69" height="691.54"/>
+      <polygon class="st3" points="405.82 807.35 816.24 1511.92 0 1511.92 405.82 807.35"/>
+      <g>
+        <path d="M33.57,1612.25h69.93v236.08s-.33,13.39,12.74,13.71c13.07.33,19.28,0,19.28,0l2.29,45.06s-38.56,10.78-67.96,1.96c0,0-32.68-9.14-36.27-51.92v-244.9Z"/>
+        <path d="M148.26,1694.54h75.48v124.08s.98,39.84,33.98,38.86c0,0,18.63,2.94,34.96-16v-146.94h75.15v213.22h-71.23v-27.43s-22.55,32.11-63.06,32.11c0,0-73.2,9.03-85.29-81.74v-136.16Z"/>
+        <path d="M405.42,1694.54h69.6v27.43s15.68-32,63.06-31.02c0,0,40.19-2.94,62.41,34.94,0,0,27.77-38.31,68.95-34.99,0,0,57.18-6.48,78.09,57.52,0,0,4.25,10.45,5.23,42.12v117.88h-71.89l-.65-130.61s-8.15-33.8-35.27-32.82c0,0-15.05-1.47-29.08,13.5l-.02,149.93h-72.21l-.98-123.43s2.29-43.43-32.68-40.49c0,0-19.61-1.63-32.35,17.31v146.61h-72.21v-213.88Z"/>
+        <path d="M796.87,1639.03h69.6v55.84h61.1v52.24h-61.1l.33,90.78s1.63,21.55,24.83,20.24c0,0,19.93.33,32.02-4.57l3.92,48.98s-23.2,9.8-57.84,9.47c0,0-71.89,4.24-72.87-74.78v-89.8l-32.68-.06v-52.84h32.35l.33-55.51Z"/>
+        <path d="M942.44,1694.78h71.8v33.55s10.78-30.86,43.87-33.55c0,0,8.33-2.45,29.65,0v59.75s-53.91-3.8-72.66,21v132.88h-72.66v-213.63Z"/>
+        <g>
+          <path d="M1295.96,1822.25h-136.39c2.18,30.36,21.3,45.53,57.38,45.53,23,0,43.21-5.44,60.64-16.33v46.55c-19.33,10.35-44.44,15.52-75.34,15.52-33.76,0-59.96-9.36-78.6-28.07-18.65-18.72-27.97-44.82-27.97-78.3s10.07-62.2,30.22-82.49c20.14-20.28,44.92-30.42,74.32-30.42s54.07,9.05,70.74,27.15c16.67,18.11,25.01,42.67,25.01,73.71v27.16ZM1236.14,1782.64c0-29.94-12.11-44.92-36.34-44.92-10.35,0-19.3,4.29-26.85,12.86-7.56,8.58-12.15,19.26-13.78,32.06h76.97Z"/>
+          <path d="M1522.18,1822.25h-136.39c2.18,30.36,21.3,45.53,57.38,45.53,23,0,43.21-5.44,60.64-16.33v46.55c-19.33,10.35-44.44,15.52-75.34,15.52-33.76,0-59.96-9.36-78.6-28.07-18.65-18.72-27.97-44.82-27.97-78.3s10.07-62.2,30.22-82.49c20.14-20.28,44.92-30.42,74.32-30.42s54.07,9.05,70.74,27.15c16.67,18.11,25.01,42.67,25.01,73.71v27.16ZM1462.36,1782.64c0-29.94-12.11-44.92-36.34-44.92-10.35,0-19.3,4.29-26.85,12.86-7.56,8.58-12.15,19.26-13.78,32.06h76.97Z"/>
+        </g>
+      </g>
+    </g>
+  </svg>
+</header>
+
+<div class="wrap">
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <div class="center"><span class="eyebrow"><span class="dot"></span>Para pessoas líderes · NR-01</span></div>
+    <h1>Antes de colocar a máscara<br>em quem está ao lado,<br><em>coloque a sua.</em></h1>
+    <p class="lead">Em uma queda de pressão na cabine, a orientação é sempre a mesma: a pessoa adulta ajusta primeiro a própria máscara de oxigênio. Não por individualismo — mas porque só quem está respirando consegue ajudar alguém.</p>
+    <p class="lead">Como pessoa líder, você é parte do sistema que a NR-01 atualizada passa a olhar com mais cuidado: os riscos psicossociais do trabalho. E, como qualquer pessoa trabalhadora, você também pode estar exposta a eles — muitas vezes sem perceber. Esta autoavaliação é um convite para checar sua própria máscara antes de seguir ajustando a de quem você lidera.</p>
+
+    <div class="cards3">
+      <div class="card3">
+        <div class="num">01</div>
+        <svg viewBox="0 0 24 24" fill="none" stroke="#2E4FA3" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V6a2 2 0 0 1 2-2h9l5 5v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><path d="M14 4v5h5"/><path d="M8 13h8M8 17h5"/></svg>
+        <h3>15 perguntas</h3>
+        <p>Organizadas em 5 blocos, com base nos fatores de risco psicossocial previstos na NR-01 atualizada.</p>
+      </div>
+      <div class="card3">
+        <div class="num">02</div>
+        <svg viewBox="0 0 24 24" fill="none" stroke="#2E4FA3" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18h2v-6H3v6Zm4 0h2V9H7v9Zm4 0h2V4h-2v14Zm4 0h2v-9h-2v9Zm4 0h2v-4h-2v4Z"/></svg>
+        <h3>Escala de 0 a 5</h3>
+        <p>Você sinaliza a intensidade com que cada situação tem aparecido na sua rotina — sem certo ou errado.</p>
+      </div>
+      <div class="card3">
+        <div class="num">03</div>
+        <svg viewBox="0 0 24 24" fill="none" stroke="#2E4FA3" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="2.6"/><path d="M12 3.5v2M12 18.5v2M3.5 12h2M18.5 12h2"/></svg>
+        <h3>Um retrato, não um veredito</h3>
+        <p>No final, um painel de leitura pessoal e orientações práticas — nunca um diagnóstico.</p>
+      </div>
+    </div>
+
+    <button class="btn-primary" onclick="beginAssessment()">
+      Começar minha autoavaliação
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </button>
+
+    <div class="consent">
+      <h4>Antes de começar</h4>
+      <p>Este não é um instrumento para apurar culpa — nem sua, nem da organização em que você atua. A NR-01 parte do princípio de que os riscos psicossociais nascem, sobretudo, da forma como o trabalho está organizado: metas, prazos, comunicação, cultura, apoio. Organizações também estão sujeitas a esses riscos e são, pela própria norma, convocadas a se transformar.</p>
+      <p>Responda pensando nas últimas 4 a 6 semanas da sua rotina como pessoa líder, com a maior honestidade possível. <strong>Não há respostas certas.</strong></p>
+      <p><strong>Suas respostas são só suas.</strong> Este painel é gerado localmente, no seu navegador, para você. Você decide se, quando e o que compartilhar com sua empresa — nada aqui é enviado, identificado ou acessado por terceiros.</p>
+      <span class="privacy-badge">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.4 8.7 8 10 4.6-1.3 8-5 8-10V5l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg>
+        100% privado — decisão sua compartilhar ou não
+      </span>
+    </div>
+  </section>
+
+  <!-- QUIZ -->
+  <form id="quizForm">
+
+    <div class="progress-wrap" id="progressWrap" style="display:none;">
+      <div class="progress-track">
+        <div class="progress-bar"><i id="progressFill"></i></div>
+        <div class="progress-text" id="progressText">0 de 15 respondidas</div>
+      </div>
+    </div>
+
+    <div id="quizArea" style="display:none; margin-top:18px;">
+
+      <div class="legend">
+        <div class="chip"><b>0</b>Nunca</div>
+        <div class="chip"><b>1</b>Raramente</div>
+        <div class="chip"><b>2</b>Às vezes</div>
+        <div class="chip"><b>3</b>Com frequência</div>
+        <div class="chip"><b>4</b>Quase sempre</div>
+        <div class="chip"><b>5</b>Sempre</div>
+      </div>
+
+      <!-- BLOCO 01 -->
+      <div class="block" data-block="0">
+        <div class="block-head">
+          <div class="block-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2E4FA3" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></svg></div>
+          <div>
+            <div class="block-label">Bloco 01</div>
+            <h2>Carga de trabalho e jornada</h2>
+            <p>Como a quantidade de trabalho e o uso do tempo têm se comportado na sua rotina.</p>
+          </div>
+        </div>
+        <div class="question" data-q="0">
+          <p class="qtext">Em que intensidade a quantidade de trabalho sob sua responsabilidade tem ficado acima do que é possível entregar com qualidade?</p>
+          <div class="scale"></div>
+        </div>
+        <div class="question" data-q="1">
+          <p class="qtext">Com que intensidade você tem estendido sua jornada, fora do horário formal, para dar conta das demandas?</p>
+          <div class="scale"></div>
+        </div>
+        <div class="question" data-q="2">
+          <p class="qtext">Em que intensidade você sente dificuldade real de fazer pausas durante o dia de trabalho?</p>
+          <div class="scale"></div>
+        </div>
+      </div>
+
+      <!-- BLOCO 02 -->
+      <div class="block" data-block="1">
+        <div class="block-head">
+          <div class="block-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2E4FA3" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V6a2 2 0 0 1 2-2h6l6 6v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><path d="M12 4v6h6"/></svg></div>
+          <div>
+            <div class="block-label">Bloco 02</div>
+            <h2>Autonomia, clareza e apoio organizacional</h2>
+            <p>O quanto você consegue decidir sobre o próprio trabalho e o suporte que recebe para exercer sua função.</p>
+          </div>
+        </div>
+        <div class="question" data-q="3">
+          <p class="qtext">Em que intensidade você sente ter pouca autonomia para tomar decisões sobre o seu próprio trabalho?</p>
+          <div class="scale"></div>
+        </div>
+        <div class="question" data-q="4">
+          <p class="qtext">Com que intensidade as metas e expectativas colocadas para você mudam ou são pouco claras?</p>
+          <div class="scale"></div>
+        </div>
+        <div class="question" data-q="5">
+          <p class="qtext">Em que intensidade falta suporte (recursos, informação, apoio de quem toma decisões acima de você, quando existe essa camada) para exercer bem sua função?</p>
+          <div class="scale"></div>
+        </div>
+      </div>
+
+      <!-- BLOCO 03 -->
+      <div class="block" data-block="2">
+        <div class="block-head">
+          <div class="block-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2E4FA3" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-8.7 8.4A8.5 8.5 0 0 1 8 18.7L3 20l1.4-4.5a8.4 8.4 0 0 1-1-4A8.4 8.4 0 0 1 12 3a8.4 8.4 0 0 1 9 8.5Z"/></svg></div>
+          <div>
+            <div class="block-label">Bloco 03</div>
+            <h2>Relações interpessoais e segurança psicológica</h2>
+            <p>Como você se sente para se expressar e lidar com conflitos no ambiente de trabalho.</p>
+          </div>
+        </div>
+        <div class="question" data-q="6">
+          <p class="qtext">Em que intensidade você evita expressar discordâncias ou dar más notícias a quem toma decisões acima de você, por receio da reação?</p>
+          <div class="scale"></div>
+        </div>
+        <div class="question" data-q="7">
+          <p class="qtext">Com que intensidade você convive com conflitos interpessoais não resolvidos no dia a dia de trabalho?</p>
+          <div class="scale"></div>
+        </div>
+        <div class="question" data-q="8">
+          <p class="qtext">Em que intensidade você sente que precisa esconder dificuldades pessoais ou emocionais para continuar sendo vista(o) como competente?</p>
+          <div class="scale"></div>
+        </div>
+      </div>
+
+      <!-- BLOCO 04 -->
+      <div class="block" data-block="3">
+        <div class="block-head">
+          <div class="block-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2E4FA3" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 3 7.5 12 12l9-4.5L12 3Z"/><path d="M3 12 12 16.5 21 12M3 16.5 12 21l9-4.5"/></svg></div>
+          <div>
+            <div class="block-label">Bloco 04</div>
+            <h2>Reconhecimento, justiça e sentido do trabalho</h2>
+            <p>Como você percebe o reconhecimento pelo seu esforço e a justiça dos critérios organizacionais.</p>
+          </div>
+        </div>
+        <div class="question" data-q="9">
+          <p class="qtext">Em que intensidade você sente que seu esforço não é reconhecido de forma proporcional aos resultados entregues?</p>
+          <div class="scale"></div>
+        </div>
+        <div class="question" data-q="10">
+          <p class="qtext">Com que intensidade as decisões e critérios da organização (avaliações, prioridades, promoções) parecem pouco transparentes ou injustos?</p>
+          <div class="scale"></div>
+        </div>
+        <div class="question" data-q="11">
+          <p class="qtext">Em que intensidade você tem sentido que perdeu o sentido ou o propósito no que faz?</p>
+          <div class="scale"></div>
+        </div>
+      </div>
+
+      <!-- BLOCO 05 -->
+      <div class="block" data-block="4">
+        <div class="block-head">
+          <div class="block-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2E4FA3" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 8.6c0 4.9-8.8 10.4-8.8 10.4S3.2 13.5 3.2 8.6a4.8 4.8 0 0 1 8.8-2.7 4.8 4.8 0 0 1 8.8 2.7Z"/></svg></div>
+          <div>
+            <div class="block-label">Bloco 05</div>
+            <h2>Impacto na vida pessoal e sinais de esgotamento</h2>
+            <p>O quanto o trabalho tem invadido outras esferas da sua vida e sinais de desgaste que você tem percebido em si mesma(o).</p>
+          </div>
+        </div>
+        <div class="question" data-q="12">
+          <p class="qtext">Em que intensidade o trabalho tem invadido seu tempo de descanso, sono ou convívio pessoal?</p>
+          <div class="scale"></div>
+        </div>
+        <div class="question" data-q="13">
+          <p class="qtext">Com que intensidade você tem notado sinais físicos associados ao estresse (tensão, dores, alterações de sono ou apetite)?</p>
+          <div class="scale"></div>
+        </div>
+        <div class="question" data-q="14">
+          <p class="qtext">Em que intensidade você sente cansaço emocional, irritabilidade ou desânimo persistente relacionado ao trabalho?</p>
+          <div class="scale"></div>
+        </div>
+      </div>
+
+      <div class="submit-zone">
+        <p id="submitHint">Tudo respondido. Quando quiser, veja o seu painel.</p>
+        <button type="button" class="btn-primary" id="btnResults" onclick="showResults()" disabled>
+          Ver meu painel de leitura
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+      </div>
+    </div>
+  </form>
+
+  <!-- RESULTS -->
+  <section id="results">
+    <div class="panel">
+      <div class="kicker">Painel de leitura pessoal</div>
+      <div class="gauge">
+        <svg viewBox="0 0 200 120">
+          <path d="M15 105 A85 85 0 0 1 185 105" fill="none" stroke="#1f3f79" stroke-width="14" stroke-linecap="round"/>
+          <path id="gaugeArc" d="M15 105 A85 85 0 0 1 185 105" fill="none" stroke="url(#gaugeGrad)" stroke-width="14" stroke-linecap="round" stroke-dasharray="267" stroke-dashoffset="267"/>
+          <defs>
+            <linearGradient id="gaugeGrad" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#1FA876"/>
+              <stop offset="55%" stop-color="#F5C200"/>
+              <stop offset="100%" stop-color="#D42B2B"/>
+            </linearGradient>
+          </defs>
+          <g id="needle" style="transform-origin:100px 105px; transform:rotate(-90deg); transition:transform 1s cubic-bezier(.2,.8,.2,1);">
+            <line x1="100" y1="105" x2="100" y2="34" stroke="#eaf1ff" stroke-width="3" stroke-linecap="round"/>
+            <circle cx="100" cy="105" r="6" fill="#eaf1ff"/>
+          </g>
+        </svg>
+      </div>
+      <div class="gauge-label">
+        <div class="gauge-band" id="bandTitle">Exposição baixa</div>
+        <div class="gauge-score" id="scoreText">PONTUAÇÃO TOTAL: 0 / 75 · 0%</div>
+      </div>
+      <p class="desc" id="bandDesc"></p>
+    </div>
+
+    <div class="byblock">
+      <h3>Por bloco</h3>
+      <div id="byBlockList"></div>
+    </div>
+
+    <div class="next-steps">
+      <h3>Possíveis próximos passos</h3>
+      <ul id="nextStepsList"></ul>
+    </div>
+
+    <div class="legal">
+      <p>Esta autoavaliação é um exercício de sensibilização individual para apoiar sua jornada no curso sobre a NR-01. Ela não substitui o processo formal de identificação e gestão de riscos psicossociais que a organização deve conduzir por meio do GRO/PGR, nem constitui avaliação de saúde mental. Se os resultados te preocuparam, vale conversar com a área de Gente &amp; Gestão, com o serviço de saúde ocupacional da sua empresa, ou com uma pessoa profissional de saúde mental de sua confiança.</p>
+      <p class="lawnote"><b>Base legal:</b> item 1.5.3.1.4 (o gerenciamento de riscos ocupacionais deve abranger os fatores de risco psicossociais relacionados ao trabalho); item 1.5.3.2.1 (a organização deve considerar as condições de trabalho nos termos da NR-17, incluindo os fatores de risco psicossociais); item 1.5.4.4.5.3 (avaliação da probabilidade de agravos decorrentes de fatores psicossociais, considerando as exigências da atividade e a eficácia das medidas de prevenção); item 1.4.1.1 (medidas de prevenção e combate ao assédio sexual e demais formas de violência no trabalho, com capacitação periódica a todos os níveis hierárquicos); e Anexo I da NR-01 (definições de GRO, PGR e avaliação de riscos).</p>
+    </div>
+
+    <div class="restart-zone">
+      <button class="btn-secondary" onclick="restartAssessment()">Refazer a autoavaliação</button>
+    </div>
+  </section>
+
+  <footer class="brandfoot">Curso NR-01 · Autoavaliação de pessoas líderes sobre riscos psicossociais no trabalho</footer>
+</div>
+
+<script>
+const TOTAL_Q = 15;
+const answers = new Array(TOTAL_Q).fill(null);
+
+const blocks = [
+  {name:"Carga de trabalho e jornada", qs:[0,1,2]},
+  {name:"Autonomia, clareza e apoio organizacional", qs:[3,4,5]},
+  {name:"Relações interpessoais e segurança psicológica", qs:[6,7,8]},
+  {name:"Reconhecimento, justiça e sentido do trabalho", qs:[9,10,11]},
+  {name:"Impacto na vida pessoal e sinais de esgotamento", qs:[12,13,14]}
+];
+
+const scaleLabels = ["Nunca","Raramente","Às vezes","Com frequência","Quase sempre","Sempre"];
+
+// build scale buttons
+document.querySelectorAll('.question').forEach(qEl=>{
+  const qIndex = parseInt(qEl.dataset.q,10);
+  const scaleEl = qEl.querySelector('.scale');
+  for(let v=0; v<=5; v++){
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.innerHTML = '<span class="n">'+v+'</span><span>'+scaleLabels[v]+'</span>';
+    btn.addEventListener('click', ()=>selectAnswer(qIndex, v, qEl));
+    scaleEl.appendChild(btn);
+  }
+});
+
+function selectAnswer(qIndex, value, qEl){
+  answers[qIndex] = value;
+  qEl.querySelectorAll('.scale button').forEach((b,i)=>{
+    b.classList.toggle('sel', i===value);
+  });
+  updateProgress();
+}
+
+function updateProgress(){
+  const answered = answers.filter(a=>a!==null).length;
+  document.getElementById('progressFill').style.width = (answered/TOTAL_Q*100)+'%';
+  document.getElementById('progressText').textContent = answered+' de '+TOTAL_Q+' respondidas';
+  const btn = document.getElementById('btnResults');
+  const hint = document.getElementById('submitHint');
+  if(answered === TOTAL_Q){
+    btn.disabled = false;
+    hint.textContent = 'Tudo respondido. Quando quiser, veja o seu painel.';
+  } else {
+    btn.disabled = true;
+    hint.textContent = 'Faltam '+(TOTAL_Q-answered)+' pergunta(s) para liberar o painel.';
+  }
+}
+
+function beginAssessment(){
+  document.getElementById('progressWrap').style.display = 'block';
+  document.getElementById('quizArea').style.display = 'block';
+  document.querySelector('.block').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function bandFor(pct){
+  if(pct <= 33) return {
+    key:'baixa', title:'Exposição baixa',
+    desc:'Seu padrão de respostas sugere que, no período avaliado, os fatores de risco psicossocial mapeados pela NR-01 aparecem pouco na sua rotina como pessoa líder. Isso não significa ausência de pressão — significa que, até aqui, você parece ter conseguido sustentar um equilíbrio razoável. Vale manter os hábitos e apoios que têm funcionado, e seguir de olho: a liderança costuma ser a última a perceber quando o próprio nível de exposição sobe.',
+    steps:[
+      'Mantenha os limites e rotinas que têm te ajudado a sustentar esse equilíbrio.',
+      'Use este momento de estabilidade para observar e apoiar pessoas da sua equipe que possam estar mais expostas.',
+      'Refaça esta autoavaliação periodicamente — a exposição a riscos psicossociais muda com o tempo e o contexto.'
+    ]
+  };
+  if(pct <= 66) return {
+    key:'moderada', title:'Exposição moderada',
+    desc:'Seu padrão de respostas sugere que os fatores de risco psicossocial mapeados pela NR-01 aparecem de forma recorrente na sua rotina como pessoa líder — nem sempre presentes, mas com frequência suficiente para merecer atenção. Isso não é motivo de alarme, é um sinal para agir cedo: mapear onde a pressão está se acumulando, tanto na forma como você organiza o próprio trabalho quanto na forma como a organização apoia essa organização.',
+    steps:[
+      'Identifique em qual bloco sua pontuação foi mais alta — é ali que vale investir atenção primeiro.',
+      'Leve esse retrato para uma conversa com sua liderança superior ou com Gente & Gestão, se fizer sentido para você.',
+      'Use os toolkits do curso (Matriz de Risco, Plano de 30 Dias) para transformar percepção em ação concreta.',
+      'Refaça esta autoavaliação em 4 a 6 semanas para acompanhar a tendência.'
+    ]
+  };
+  return {
+    key:'alta', title:'Exposição alta',
+    desc:'Seu padrão de respostas indica presença frequente e intensa de fatores de risco psicossocial na sua rotina como pessoa líder. Isso pede atenção real — não como julgamento sobre sua capacidade, mas como sinal de que o sistema em que você atua, você e a organização, está pedindo ajuste. Liderar bem começa por reconhecer quando a própria máscara também precisa de ajuste.',
+    steps:[
+      'Priorize uma conversa próxima — com sua liderança superior, com Gente & Gestão ou com o serviço de saúde ocupacional da sua empresa.',
+      'Considere apoio profissional de saúde mental; esta autoavaliação sinaliza padrões, não substitui esse cuidado.',
+      'Revise com atenção especial os blocos com pontuação mais alta e use o Plano de 30 Dias do curso como ponto de partida, não como solução única.',
+      'Refaça esta autoavaliação em poucas semanas para acompanhar de perto como esse quadro está se movendo.'
+    ]
+  };
+}
+
+function showResults(){
+  const total = answers.reduce((a,b)=>a+b,0);
+  const maxTotal = TOTAL_Q*5;
+  const pct = Math.round(total/maxTotal*100);
+  const band = bandFor(pct);
+
+  document.getElementById('bandTitle').textContent = band.title;
+  document.getElementById('scoreText').textContent = 'PONTUAÇÃO TOTAL: '+total+' / '+maxTotal+' · '+pct+'%';
+  document.getElementById('bandDesc').textContent = band.desc;
+
+  // gauge needle: -90deg (score 0) to +90deg (score 100%)
+  const angle = -90 + (pct/100)*180;
+  document.getElementById('needle').style.transform = 'rotate('+angle+'deg)';
+  const arc = document.getElementById('gaugeArc');
+  const totalLen = 267;
+  arc.style.strokeDashoffset = totalLen - (pct/100*totalLen);
+
+  // by block
+  const byBlockList = document.getElementById('byBlockList');
+  byBlockList.innerHTML = '';
+  blocks.forEach(b=>{
+    const sub = b.qs.reduce((s,i)=>s+answers[i],0);
+    const subMax = b.qs.length*5;
+    const row = document.createElement('div');
+    row.className = 'bbrow';
+    row.innerHTML = '<div class="bbtop"><span>'+b.name+'</span><span class="sc">'+sub+'/'+subMax+'</span></div>'+
+      '<div class="bbtrack"><div class="bbfill" style="width:'+(sub/subMax*100)+'%"></div></div>';
+    byBlockList.appendChild(row);
+  });
+
+  // next steps
+  const stepsList = document.getElementById('nextStepsList');
+  stepsList.innerHTML = '';
+  band.steps.forEach(s=>{
+    const li = document.createElement('li');
+    li.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg><span>'+s+'</span>';
+    stepsList.appendChild(li);
+  });
+
+  document.getElementById('quizForm').style.display = 'none';
+  document.getElementById('progressWrap').style.display = 'none';
+  document.getElementById('results').style.display = 'block';
+  document.getElementById('results').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function restartAssessment(){
+  answers.fill(null);
+  document.querySelectorAll('.scale button').forEach(b=>b.classList.remove('sel'));
+  updateProgress();
+  document.getElementById('results').style.display = 'none';
+  document.getElementById('quizForm').style.display = 'block';
+  document.getElementById('progressWrap').style.display = 'block';
+  document.getElementById('hero').scrollIntoView({behavior:'smooth', block:'start'});
+}
+</script>
+</body>
+</html>
