@@ -1,0 +1,1245 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Assessment · Quebrando Ciclos Invisíveis</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg: #0f0e0d;
+    --surface: #181714;
+    --surface2: #201e1b;
+    --border: #2e2b27;
+    --accent: #c8a96e;
+    --accent-soft: rgba(200,169,110,0.12);
+    --accent-glow: rgba(200,169,110,0.25);
+    --text: #e8e3db;
+    --text-muted: #8a8279;
+    --text-dim: #5a5650;
+    --eu: #c8a96e;
+    --mae: #9b8ed4;
+    --pai: #e07272;
+    --mae-sub: #7ec8b8;
+    --pai-sub: #f0a060;
+    --rebeliao: #e07272;
+    --radius: 6px;
+    --radius-lg: 12px;
+    --shadow: 0 2px 16px rgba(0,0,0,0.4);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    padding: 60px 24px 40px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -60px; left: 50%; transform: translateX(-50%);
+    width: 600px; height: 300px;
+    background: radial-gradient(ellipse, rgba(200,169,110,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 16px;
+  }
+  .hero h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(28px, 5vw, 48px);
+    font-weight: 400;
+    line-height: 1.15;
+    color: var(--text);
+    margin-bottom: 12px;
+  }
+  .hero h1 em { font-style: italic; color: var(--accent); }
+  .hero-sub {
+    color: var(--text-muted);
+    max-width: 560px;
+    margin: 0 auto 28px;
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  /* ── SETUP BOX ── */
+  .setup-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    max-width: 700px;
+    margin: 0 auto 20px;
+    text-align: left;
+  }
+  .setup-box h3 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 14px;
+  }
+  .setup-field {
+    margin-bottom: 18px;
+  }
+  .setup-field label {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+  }
+  .nome-input {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    padding: 10px 14px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .nome-input:focus { border-color: var(--accent); }
+
+  /* ── FIGURAS TOGGLE ── */
+  .figuras-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .figura-toggle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    user-select: none;
+  }
+  .figura-toggle:hover { border-color: var(--text-muted); }
+  .figura-toggle.active { border-color: var(--accent); background: var(--accent-soft); }
+  .figura-toggle input[type=checkbox] { display: none; }
+  .figura-dot {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .figura-toggle .fig-name {
+    font-size: 13px;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+  .figura-toggle.active .fig-name { color: var(--text); }
+  .figura-toggle .fig-abbr {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--text-dim);
+    margin-left: auto;
+  }
+  .figura-toggle.active .fig-abbr { color: var(--accent); }
+
+  /* ── LEGENDA ── */
+  .legenda-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 20px 24px;
+    max-width: 700px;
+    margin: 0 auto 28px;
+    text-align: left;
+  }
+  .legenda-box h3 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 14px;
+  }
+  .mark-guide {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .mark-tag {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  /* ── PROGRESS BAR ── */
+  .progress-bar-wrap {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .progress-track {
+    flex: 1; height: 3px;
+    background: var(--border);
+    border-radius: 2px; overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 2px;
+    transition: width 0.3s ease;
+    width: 0%;
+  }
+  .progress-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--text-dim);
+    white-space: nowrap;
+  }
+
+  /* ── NAV ── */
+  .cat-nav {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .cat-btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-muted);
+    padding: 5px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .cat-btn:hover, .cat-btn.active {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--accent-soft);
+  }
+
+  /* ── MAIN ── */
+  main { max-width: 1040px; margin: 0 auto; padding: 32px 16px 100px; }
+
+  /* ── SEÇÃO ── */
+  .section { margin-bottom: 52px; }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 0.1em;
+  }
+  .section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+    font-weight: 400;
+    color: var(--text);
+  }
+  .section-count {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--accent);
+    margin-left: auto;
+  }
+
+  /* ── TABELA ── */
+  .pattern-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .pattern-table th {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-dim);
+    padding: 6px 4px;
+    border-bottom: 1px solid var(--border);
+    text-align: center;
+  }
+  .pattern-table th.th-label { text-align: left; padding-left: 12px; }
+  .pattern-table td {
+    padding: 0;
+    border-bottom: 1px solid rgba(46,43,39,0.4);
+    vertical-align: middle;
+  }
+  .pattern-table td.td-label {
+    padding: 8px 12px;
+    font-size: 13px;
+    color: var(--text);
+  }
+  .pattern-table tr:hover td { background: var(--surface2); }
+  .pattern-table tr.marked-self td.td-label {
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  /* ── GROUP HEADER (col separator) ── */
+  .th-group {
+    border-left: 2px solid var(--border);
+    padding-left: 6px !important;
+  }
+  .td-group-border {
+    border-left: 2px solid var(--border);
+  }
+
+  /* ── CELL CHECK ── */
+  .cell-check {
+    text-align: center;
+    width: 44px;
+    padding: 3px 2px !important;
+  }
+  .toggle-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+  }
+  .check-btn {
+    width: 24px; height: 24px;
+    border-radius: 4px;
+    border: 1.5px solid var(--border);
+    background: transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    color: var(--text-dim);
+    transition: all 0.15s;
+  }
+  .check-btn:hover { border-color: var(--text-muted); }
+
+  /* EU */
+  .col-eu .check-btn.active { background: rgba(200,169,110,0.2); border-color: var(--eu); color: var(--eu); }
+  /* MÃE */
+  .col-mae .check-btn.rep.active { background: rgba(155,142,212,0.2); border-color: var(--mae); color: var(--mae); }
+  .col-mae .check-btn.reb.active { background: rgba(224,114,114,0.15); border-color: var(--rebeliao); color: var(--rebeliao); }
+  /* PAI */
+  .col-pai .check-btn.rep.active { background: rgba(224,114,114,0.2); border-color: var(--pai); color: var(--pai); }
+  .col-pai .check-btn.reb.active { background: rgba(224,114,114,0.1); border-color: #c85050; color: #c85050; }
+  /* MS */
+  .col-ms .check-btn.rep.active { background: rgba(126,200,184,0.2); border-color: var(--mae-sub); color: var(--mae-sub); }
+  .col-ms .check-btn.reb.active { background: rgba(224,114,114,0.1); border-color: var(--rebeliao); color: var(--rebeliao); }
+  /* PS */
+  .col-ps .check-btn.rep.active { background: rgba(240,160,96,0.2); border-color: var(--pai-sub); color: var(--pai-sub); }
+  .col-ps .check-btn.reb.active { background: rgba(224,114,114,0.1); border-color: var(--rebeliao); color: var(--rebeliao); }
+
+  /* col hidden */
+  .col-hidden { display: none !important; }
+
+  /* ── RESULTS ── */
+  .results-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+    margin-bottom: 40px;
+    display: none;
+  }
+  .results-panel.visible { display: block; }
+  .results-panel h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  .results-intro { color: var(--text-muted); font-size: 13px; margin-bottom: 24px; }
+
+  .results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 10px;
+    margin-bottom: 28px;
+  }
+  .result-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px;
+  }
+  .result-card-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-dim);
+    margin-bottom: 6px;
+  }
+  .result-card-num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 32px;
+    line-height: 1;
+    margin-bottom: 2px;
+  }
+  .result-card-sub { font-size: 11px; color: var(--text-muted); }
+  .num-total { color: var(--accent); }
+  .num-eu { color: var(--eu); }
+  .num-mae { color: var(--mae); }
+  .num-pai { color: var(--pai); }
+  .num-ms { color: var(--mae-sub); }
+  .num-ps { color: var(--pai-sub); }
+  .num-rep { color: #8ec48e; }
+  .num-reb { color: var(--rebeliao); }
+
+  /* Figura breakdown */
+  .figura-breakdown {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .figura-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px;
+  }
+  .figura-card-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  .figura-card-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .figura-card-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-dim);
+  }
+  .figura-card-total {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+    margin-left: auto;
+  }
+  .figura-mini-bars { display: flex; flex-direction: column; gap: 5px; }
+  .figura-mini-row { display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--text-dim); }
+  .figura-mini-bar-track { flex: 1; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+  .figura-mini-bar-fill { height: 100%; border-radius: 2px; }
+  .fill-rep { background: #8ec48e; }
+  .fill-reb { background: var(--rebeliao); }
+  .figura-mini-count { font-family: 'JetBrains Mono', monospace; font-size: 9px; width: 18px; text-align: right; }
+
+  /* Cat bars */
+  .cat-bars { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+  .cat-bar-row { display: flex; align-items: center; gap: 10px; }
+  .cat-bar-name { font-size: 11px; color: var(--text-muted); width: 200px; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .cat-bar-track { flex: 1; height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+  .cat-bar-fill { height: 100%; background: var(--accent); border-radius: 3px; transition: width 0.5s ease; }
+  .cat-bar-count { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text-dim); width: 20px; text-align: right; }
+
+  .top-patterns {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-bottom: 20px;
+  }
+  .top-patterns h4 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-dim);
+    margin-bottom: 12px;
+  }
+  .top-list { list-style: none; }
+  .top-list li {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    padding: 5px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+  .top-list li:last-child { border-bottom: none; }
+  .top-tag {
+    background: var(--accent-soft);
+    color: var(--accent);
+    border-radius: 3px;
+    padding: 1px 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    flex-shrink: 0;
+  }
+  .fig-tags { display: flex; gap: 4px; flex-wrap: wrap; margin-left: auto; }
+  .fig-tag {
+    border-radius: 3px;
+    padding: 1px 5px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px;
+    flex-shrink: 0;
+  }
+  .fig-tag-eu { background: rgba(200,169,110,0.15); color: var(--eu); }
+  .fig-tag-mae { background: rgba(155,142,212,0.15); color: var(--mae); }
+  .fig-tag-pai { background: rgba(224,114,114,0.15); color: var(--pai); }
+  .fig-tag-ms { background: rgba(126,200,184,0.15); color: var(--mae-sub); }
+  .fig-tag-ps { background: rgba(240,160,96,0.15); color: var(--pai-sub); }
+
+  /* ── BOTÕES ── */
+  .btn-row { display: flex; gap: 12px; flex-wrap: wrap; }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border-radius: var(--radius);
+    padding: 10px 20px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+  }
+  .btn-primary { background: var(--accent); color: #0f0e0d; }
+  .btn-primary:hover { background: #d4b87a; }
+  .btn-ghost { background: transparent; border: 1px solid var(--border); color: var(--text-muted); }
+  .btn-ghost:hover { border-color: var(--text-muted); color: var(--text); }
+
+  /* ── STICKY FABs ── */
+  .sticky-actions {
+    position: fixed;
+    bottom: 20px; right: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    z-index: 200;
+  }
+  .fab {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    box-shadow: var(--shadow);
+    transition: transform 0.2s;
+  }
+  .fab:hover { transform: scale(1.08); }
+  .fab-primary { background: var(--accent); color: var(--bg); }
+  .fab-ghost { background: var(--surface); color: var(--text-muted); border: 1px solid var(--border); }
+
+  @media (max-width: 700px) {
+    .figuras-grid { grid-template-columns: 1fr; }
+    .figura-breakdown { grid-template-columns: 1fr; }
+    .cell-check { width: 34px; }
+    .check-btn { width: 20px; height: 20px; font-size: 9px; }
+    .cat-bar-name { width: 130px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <p class="hero-eyebrow">Lumtree · Inteligência Emocional · Sessão 05</p>
+  <h1>Quebrando Ciclos <em>Invisíveis</em></h1>
+  <p class="hero-sub">Identifique os padrões negativos que estão bloqueando a sua vida — reconheça o que você repete ou contra o que se rebelou.</p>
+
+  <!-- SETUP -->
+  <div class="setup-box">
+    <h3>Configuração inicial</h3>
+
+    <div class="setup-field">
+      <label for="nomeParticipante">Nome do(a) participante</label>
+      <input id="nomeParticipante" class="nome-input" type="text" placeholder="Digite seu nome aqui…" />
+    </div>
+
+    <div class="setup-field">
+      <label>Figuras de referência que deseja incluir</label>
+      <div class="figuras-grid">
+        <label class="figura-toggle active" id="toggle-mae">
+          <input type="checkbox" id="chk-mae" checked onchange="toggleFigura('mae')">
+          <span class="figura-dot" style="background:var(--mae)"></span>
+          <span class="fig-name">Mãe</span>
+          <span class="fig-abbr">M</span>
+        </label>
+        <label class="figura-toggle active" id="toggle-pai">
+          <input type="checkbox" id="chk-pai" checked onchange="toggleFigura('pai')">
+          <span class="figura-dot" style="background:var(--pai)"></span>
+          <span class="fig-name">Pai</span>
+          <span class="fig-abbr">P</span>
+        </label>
+        <label class="figura-toggle" id="toggle-ms">
+          <input type="checkbox" id="chk-ms" onchange="toggleFigura('ms')">
+          <span class="figura-dot" style="background:var(--mae-sub)"></span>
+          <span class="fig-name">Mãe Substituta</span>
+          <span class="fig-abbr">MS</span>
+        </label>
+        <label class="figura-toggle" id="toggle-ps">
+          <input type="checkbox" id="chk-ps" onchange="toggleFigura('ps')">
+          <span class="figura-dot" style="background:var(--pai-sub)"></span>
+          <span class="fig-name">Pai Substituto</span>
+          <span class="fig-abbr">PS</span>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <div class="legenda-box">
+    <h3>Como marcar</h3>
+    <div class="mark-guide">
+      <div class="mark-tag">✓ &nbsp;Repete o padrão desta figura</div>
+      <div class="mark-tag">≠ &nbsp;Se rebelou contra este padrão</div>
+      <div class="mark-tag" style="border-color:var(--accent);color:var(--accent)">✓ EU &nbsp;Reconheço este padrão em mim</div>
+    </div>
+  </div>
+</section>
+
+<!-- PROGRESS -->
+<div class="progress-bar-wrap">
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+  <span class="progress-label" id="progressLabel">0 marcações</span>
+</div>
+
+<!-- NAV -->
+<nav class="cat-nav">
+  <button class="cat-btn active" onclick="scrollTo({top:0,behavior:'smooth'})">Todos</button>
+  <button class="cat-btn" onclick="ir('sec-1')">Desamor</button>
+  <button class="cat-btn" onclick="ir('sec-2')">Dinheiro</button>
+  <button class="cat-btn" onclick="ir('sec-3')">Falsidade</button>
+  <button class="cat-btn" onclick="ir('sec-4')">Inadequação</button>
+  <button class="cat-btn" onclick="ir('sec-5')">Invalidação</button>
+  <button class="cat-btn" onclick="ir('sec-6')">Irresponsabilidade</button>
+  <button class="cat-btn" onclick="ir('sec-7')">Manipulação</button>
+  <button class="cat-btn" onclick="ir('sec-8')">Medo</button>
+  <button class="cat-btn" onclick="ir('sec-9')">Racionalização</button>
+  <button class="cat-btn" onclick="ir('sec-10')">Raiva</button>
+  <button class="cat-btn" onclick="ir('sec-11')">Sexo</button>
+  <button class="cat-btn" onclick="ir('sec-12')">Asseverações</button>
+</nav>
+
+<main>
+
+<!-- RESULTS -->
+<div class="results-panel" id="resultsPanel">
+  <h2>Mapa dos seus Ciclos</h2>
+  <p class="results-intro" id="resultsIntro">—</p>
+
+  <div class="results-grid" id="resultsGrid"></div>
+
+  <h4 style="font-family:'JetBrains Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:.12em;color:var(--text-dim);margin-bottom:14px;">Repetições e Rebeliões por figura</h4>
+  <div class="figura-breakdown" id="figuraBreakdown"></div>
+
+  <h4 style="font-family:'JetBrains Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:.12em;color:var(--text-dim);margin-bottom:12px;margin-top:4px;">Intensidade por categoria</h4>
+  <div class="cat-bars" id="catBars"></div>
+
+  <div class="top-patterns">
+    <h4>Padrões marcados em EU — com origem nas figuras</h4>
+    <ul class="top-list" id="topList"></ul>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-primary" onclick="exportarResultados()">⬇ Exportar resumo</button>
+    <button class="btn btn-ghost" onclick="fecharResultados()">Fechar</button>
+  </div>
+</div>
+
+<!-- Seções geradas por JS -->
+<div id="secoes"></div>
+
+</main>
+
+<div class="sticky-actions">
+  <button class="fab fab-primary" title="Ver resultados" onclick="calcularResultados()">📊</button>
+  <button class="fab fab-ghost" title="Limpar tudo" onclick="limparTudo()">🗑</button>
+</div>
+
+<script>
+// ═══════════════════════════════════════
+// DADOS
+// ═══════════════════════════════════════
+const categorias = [
+  { id:1, nome:"Desamor / Desapoio / Abandono", itens:[
+    "Abandonado(a)","Antissocial","Apático(a)","Ausente","Autodestrutivo(a)","Autossabotador(a)",
+    "Calado(a)","Deprimido(a), depressivo(a)","Derrotado(a)","Desamparado(a)","Desencorajador(a)",
+    "Desinteressado(a)","Desistente","Desleixado(a)","Desrespeitoso(a)","Egocêntrico(a)","Egoísta",
+    "Fechado(a)","Frustrado(a)","Indiferente","Individualista","Masoquista (gosta de sofrer)",
+    "Negativo(a)","Passivo(a)","Perdedor(a)","Reprimido(a)","Resignado(a)","Solitário(a)","Triste",
+    "Zumbi, morto(a)-vivo(a)","Viciado(a) em: Álcool","Viciado(a) em: Cigarros","Viciado(a) em: Comida",
+    "Viciado(a) em: Drogas","Viciado(a) em: Jogo","Viciado(a) em: Remédios","Viciado(a) em: Riscos/Adrenalina",
+    "Viciado(a) em: Sexo","Viciado(a) em: Trabalho","Viciado(a) em: Romances",
+    "Cheio(a) de segredos","Corre riscos irresponsavelmente","Criado(a) por parentes ou outras pessoas",
+    "Dado(a) para adoção","Não come","Não mostra o que sente","Não quer viver",
+    "Não se comunica","Não se entrega","Não se envolve","Nunca tem tempo",
+    "Pensamentos suicidas","Poucos(as) ou nenhum(a) amigo(a)","Presente sem estar presente",
+    "Raramente elogia","Raramente em casa","Rejeita antes de ser rejeitado(a)",
+    "Se desvaloriza, baixa autoestima","Separou-se do(a) cônjuge","Sem iniciativa",
+    "Zeloso(a) em vez de amoroso(a)"
+  ]},
+  { id:2, nome:"Dinheiro / Trabalho", itens:[
+    "Acomodado(a) no trabalho","Ambicioso(a)","Compulsivamente honesto(a)","Desempregado(a)",
+    "Desonesto(a)","Dinheirista","Ganancioso(a)","Gastador(a)","Inseguro(a) no trabalho",
+    "Jogador(a)","Ladrão/Ladra","Manipula com dinheiro","Materialista","Medo da pobreza",
+    "Medo de arriscar","Medo de perder tudo","Mesquinho(a)","Novo(a) rico(a)","Poupador(a)",
+    "Sem ambição","Trabalhador(a) compulsivo(a)","Trapaceiro(a)","Vagabundo(a)",
+    "A pessoa vale pelo que tem","Assume mais compromissos do que pode",
+    "Compra amor com dinheiro, presentes","Compra tudo o que está em liquidação",
+    "Deixa os outros pagarem a conta","Dinheiro é tudo","Finge que trabalha",
+    "Guarda para futura doença","Não para em nenhum emprego","O que é importado é melhor",
+    "Paga tudo","Se 'vende' por dinheiro","Sempre com dívidas","Trabalho é o mais importante",
+    "Valoriza os outros pela profissão que têm","Vive poupando","Vive sendo passado(a) para trás"
+  ]},
+  { id:3, nome:"Falsidade / Vaidade", itens:[
+    "Artificial","Auto enganado(a)","Bajulador(a)","Bom moço, boa moça","Buscador(a) de status, posição social",
+    "Cego(a)","Desonesto(a)","Duas caras","Enganador(a)","Esnobe","Evasivo(a), com rodeios",
+    "Exagerado(a)","Exibicionista","Falso(a), fingido(a)","Fofoqueiro(a)","Hipócrita",
+    "Interesseiro(a), aproveitador(a)","Invejoso(a)","Maledicente","Melodramático(a)","Mentiroso(a)",
+    "Narcisista (vive se adorando no espelho)","Oportunista","Orgulhoso(a)","Puxa-saco",
+    "Sedutor(a)","Sonso(a)","Super emotivo(a)","Super prestativo(a)","Superficial","Vaidoso(a)",
+    "A roupa é tudo","Aparenta ter o que não tem","As aparências são o mais importante",
+    "Centro das atenções, olhem para mim","Domina 'inferiores' e se submete a 'superiores'",
+    "Elogia sem sinceridade","Fala mal pelas costas","Finge para agradar",
+    "Mente que tem dinheiro, que é importante","Não sai sem se maquiar",
+    "O que é que os outros vão pensar?","Representa papéis","Roupa suja se lava em casa",
+    "Se julga especial","Sempre sorrindo","Só anda na moda","Tem sempre que ser o melhor/a melhor",
+    "Usa humor como defesa","Vive buscando aplausos, ser reconhecido(a)"
+  ]},
+  { id:4, nome:"Inadequação / Carência", itens:[
+    "Atrapalhado(a)","Autocentrado(a)","Bagunceiro(a)","Bonzinho(a)","Burro(a)","Caótico(a)","Carente",
+    "Chato(a), cricri","Chorão/Choroná","Comprador(a) de amor","Compulsivo(a)","Confuso(a)","Dependente",
+    "Desastrado(a)","Espaçoso(a)","Fedorento(a)","Folgado(a)","Fresco(a)","Grude","Guloso(a)",
+    "Impulsivo(a)","Inadequado(a), impróprio(a)","Inconveniente","Infantilizado(a)","Influenciável",
+    "Invasor(a)","Lento(a)","Mendigo(a) de amor","Obsessivo(a)","Palhaço/Palhaça","Piadista","Queixoso(a)",
+    "Serviçal","Sugador(a) de energia, vampiro","Sujo(a)","Tagarela, disco rachado(a), fala sem parar",
+    "Voraz, quer sempre mais e mais","Vulgar",
+    "Aceita tudo","Ansiedade em agradar","Chama a atenção","Desmancha prazeres",
+    "Espera e quer que cuidem dele/dela","Fala alto demais","Fala na hora errada",
+    "Faz a coisa errada","Joga lixo na rua","Não consegue aceitar elogios",
+    "Não sabe dizer 'não'","Não toma banho","Pergunta mesmo sabendo a resposta",
+    "Precisa de permissão","Prefere atenção negativa","Sem educação",
+    "Sempre fazendo pelos outros","Vive se desculpando"
+  ]},
+  { id:5, nome:"Invalidação / Crítica / Julgamento", itens:[
+    "Acusador(a)","Arrogante","Crítico(a)","Desprezador(a)","Ferino(a)","Gozador(a)","Invalidador(a)",
+    "Invalida: A si mesmo(a)","Invalida: Autoridade","Invalida: Amor","Invalida: Crianças / filhos",
+    "Invalida: Educação","Invalida: Espiritualidade","Invalida: Felicidade",
+    "Invalida: Dinheiro","Invalida: Sua própria capacidade e a dos outros",
+    "Invalida: Sucesso / conquistas","Invalida: Sexo oposto","Irônico(a)","Julgador(a)",
+    "Pessimista","Preconceituoso(a)","Rejeitador(a)","Superior",
+    "Aquela amizade não é para você","Brincadeiras de mau gosto","Cria culpas",
+    "Felicidade não existe","Não admite erros","Não sabe ouvir críticas",
+    "Nunca é bom o suficiente","Opiniões infundadas","Se acha melhor que os outros",
+    "Se crê justo(a), certinho(a)","Se culpa","Sempre botando pra baixo",
+    "Sempre falta alguma coisa","Só vê os defeitos"
+  ]},
+  { id:6, nome:"Irresponsabilidade", itens:[
+    "Acomodado(a)","Bagunceiro(a)","Banana","Comodista","Desconectado(a), desligado(a)",
+    "Desorganizado(a)","Dispersivo(a)","Distraído(a)","Esquecido(a)","Evita compromissos",
+    "Fracassado(a)","Frouxo(a)","Inconfiável","Infantil","Instável","Irresponsável",
+    "Negligente","Omisso(a)","Permissivo(a)","Preguiçoso(a)","Protelador(a), adiador(a)",
+    "Sem metas","Sonhador(a)","Submisso(a)",
+    "Arranja desculpas","Foge do trabalho, das responsabilidades",
+    "Frequentemente atrasado(a)","Não cresceu, não quer crescer",
+    "Não leva nada a sério","Não quis ter filhos","Não termina o que começa",
+    "Quer que façam por ele/ela","Sabe, mas finge que não sabe","Se faz de bobo(a)",
+    "Sempre cansado(a)","Só quer sombra e água fresca","Tapa o sol com a peneira",
+    "Usa os outros para educar os filhos"
+  ]},
+  { id:7, nome:"Manipulação / Controle / Autoritarismo", itens:[
+    "Auto piedoso(a)","Autoritário(a)","Cabeça-dura, teimoso(a)","Cara-de-pau","Chantagista",
+    "Ciumento(a)","Competitivo(a)","Controlador(a)","Desequilibrado(a)","Desrespeitador(a)",
+    "Dominador(a)","Dono(a) da verdade","Eminência parda (mandando por trás do poder)",
+    "Espertinho(a)","Exigente","Fanático(a)","Histérico(a)","Intolerante","Implicante",
+    "Intrometido(a)","Limpador(a) compulsivo(a)","Mandão/Mandona","Manipulador(a)","Mártir, vítima",
+    "Mimado(a)","Paternalista","Possessivo(a)","Prepotente","Pressionador(a)",
+    "Rabujento(a)","Reclamão/Reclamona","Sabe-tudo","Sedutor(a)","Superprotetor(a)","Temperamental",
+    "Tirano(a)","Traidor(a)",
+    "Desconta no outro","Dono(a) da conversa","Faz comparações, favoritismo",
+    "Divide para governar","Tem sempre a última palavra","Faz sempre do seu jeito",
+    "Não sabe ouvir","Dispõe dos outros, usa","Compra com dinheiro, presentes e favores",
+    "Só diz 'não'","Interrompe","Sempre prevendo desgraças","Não aceita conselhos",
+    "Facilmente ferido(a)","Cheio(a) de manias","Vive se lavando",
+    "Sempre 'sabe' o que o outro pensa ou vai fazer","Mania de doença","Vive através do outro"
+  ]},
+  { id:8, nome:"Medo / Ansiedade", itens:[
+    "Acanhado(a)","Ansioso(a)","Beato(a)","Carola","Covarde","Desconfiado(a)","Duvidador(a)",
+    "Estressado(a)","Fujão/Fujona","Gago(a)","Inseguro(a)",
+    "Medo de: Altura","Medo de: Amar","Medo de: Assombração","Medo de: Autoridade",
+    "Medo de: Crítica","Medo de: Dor","Medo de: Morte","Medo de: Velhice",
+    "Medo de: Vida","Medo de: Desconhecido","Medo de: Escuro",
+    "Medo de: Fracasso","Medo de: Futuro","Medo de: Novo",
+    "Medo de: Sucesso","Medo de: Doença","Medo de: Homens / Mulheres",
+    "Medo de: Enlouquecer","Medo de: Errar","Medo de: Ficar pobre",
+    "Medo de: Ficar só","Medo de: Lugar fechado","Medo de: Não ser amado(a)",
+    "Medo de: Perder o controle","Medo de: Pessoas","Medo de: Rejeição",
+    "Medo de: Se arriscar","Medo de: Se expor","Medo de: Ser assaltado(a)",
+    "Medo de: Ser sem valor","Medo de: Ser traído(a)","Medo de: Sexo",
+    "Obsessivo(a)","Paranoico(a) (estão falando de mim, olhando para mim)",
+    "Preocupado(a)","Reservado(a)","Tímido(a)","Trêmulo(a)","Vacilante",
+    "Antecipa o pior","Duvida de si mesmo(a)","Evita confrontação","Exagera os perigos",
+    "Pensa, mas não fala","Propensão a acidentes","Rói unhas","Sempre com pressa",
+    "Sempre em dúvida","Sofre de insônia"
+  ]},
+  { id:9, nome:"Racionalização", itens:[
+    "Antecipador(a)","Argumentador(a)","Calculista","Cético(a)","Defensivo(a)","Detalhista",
+    "Distante","Enrolador(a)","Espectador(a)","Frio(a)","Generalizador(a)","Impassível",
+    "Justificador(a)","Perfeccionista","Planejador(a)","Prolixo(a) (fala, fala, pra dizer a mesma coisa)",
+    "Questionador(a)","Racionalizador(a)","Rotineiro(a)","São Tomé (ver pra crer)","Sem emoção",
+    "A culpa nunca é dele/dela","A experiência espiritual não existe",
+    "Controla qualquer demonstração emocional","Não consegue chorar",
+    "Nega os sentimentos","O dever antes da diversão","Pregador(a) de sermões",
+    "Sentir é fraqueza, é menor","Só vale o racional","Só vive pensando",
+    "Somente a ciência pode explicar","Tem sempre explicação pra tudo",
+    "Tudo tem que ter um motivo lógico"
+  ]},
+  { id:10, nome:"Raiva / Agressão", itens:[
+    "Agride fisicamente","Agride verbalmente","Amedrontador(a)","Briguento(a)","Brusco(a)",
+    "Castigador(a)","Castrador(a)","Cruel","Debochado(a), cínico(a)","Desafiante","Destrutivo(a)",
+    "Explosivo(a)","Grita e berra","Grosso(a)","Humilhador(a)","Impaciente","Insultante",
+    "Intimidador(a)","Irritado(a)","Irritante","Mal-humorado(a)","Mau gênio/Má genia","Nervosinho(a)",
+    "Pavio curto","Raiva fria","Raivoso(a), hostil","Repressor(a)","Ressentido(a), guarda rancor",
+    "Revoltado(a), rebelde","Rude","Sádico(a)","Vingativo(a)","Violento(a)","Zangado(a)",
+    "A força é que manda","Abusa de animais","Amedronta com o olhar",
+    "Bate na(o) parceira(o)","Faz sermões ameaçadores","Fere com palavras",
+    "Obriga o outro","Perde o controle","Quebra coisas","Se irrita facilmente",
+    "Sem compaixão","Xinga"
+  ]},
+  { id:11, nome:"Sexo / Intimidade", itens:[
+    "Adúltero(a)","Aproveitador(a)","Assexuado(a)","Compulsivo(a) sexual","Conquistador(a)",
+    "Detesta homens","'Dom Juan', 'Dona Juanita'","Ejaculador(a) precoce","Envergonhado(a)",
+    "Estuprador(a)","Exibicionista","Fingido(a)","Frígido(a)","Incestuoso(a)","Infiel",
+    "Machista / feminista","Detesta mulheres","Malicioso(a)","Masturbador(a) compulsivo(a)",
+    "Medo de intimidade","Medo de masturbação","Medo de ser homossexual",
+    "Moralista","Sem orgasmos","Obsceno(a), sem vergonha","Pedófilo(a) (abusa de crianças)",
+    "Pervertido(a)","Preconceituoso(a)","Promíscuo(a)","Provocante","Puritano(a)","Sedutor(a)",
+    "Sexualmente abusivo(a), violento(a)","Tarado(a)","Voraz, nunca satisfeito(a)",
+    "Amizade entre homens e mulheres não existe","Detesta o sexo que tem","Evita sexo",
+    "Finge para agradar o(a) parceiro(a)","'Pessoas direitas' não gostam de sexo",
+    "Mente que tem prazer","Não comunica os seus gostos sexuais","Não confia totalmente",
+    "Não consegue fantasiar","Não faça nunca sexo sem amor","Não namora na frente dos outros",
+    "Homens/mulheres só querem uma coisa","Precisa fantasiar","Rejeita intimidade",
+    "Rejeita toques, abraços, beijos","Sexo é ruim, sujo, vulgar","Sexo sem envolvimento",
+    "Sexualiza o afeto, o carinho","Só gosta de ver, 'voyeur'","Só pensa em sexo",
+    "Tem vergonha do corpo","Usa o sexo como prêmio e castigo",
+    "Usa o sexo como válvula de escape","Vive de aparências"
+  ]},
+  { id:12, nome:"Asseverações (Reprimendas)", itens:[
+    "A vida é uma luta","As mulheres são melhores que os homens","Comporte-se",
+    "Cresça logo","Deixa de ser burro(a)","Deus quis assim","Deus tudo vê",
+    "Deus não existe","Deus vai fazer por mim","Deus vai te castigar",
+    "Espere até chegar na minha idade","Eu dei a minha vida por você",
+    "Eu esperava mais de você","Eu faço isso pelo seu bem","Eu sei o que é melhor para você",
+    "Eu só quero o seu bem","Eu vou te dar um bom motivo pra chorar",
+    "Filhos sois, mães/pais sereis","Fique contente com o que tem",
+    "Isso vai passar logo","Não confie em estranhos","Não faça nada sem me consultar",
+    "Não me abandone","Não me envergonhe","Não me importa o que você sente",
+    "Não preciso de ninguém","Não responda a seus Pais","Não seja ingrato(a)",
+    "Nessa casa quem manda sou eu","Ninguém me dá valor","O mundo é dos espertos",
+    "O mundo é perigoso","Onde foi que eu errei?","Os filhos deveriam cuidar dos Pais",
+    "Os homens são melhores que as mulheres","Pare de me atormentar",
+    "Por que você não é como...?","Quando eu morrer aí você...",
+    "Respeite e honre os seus Pais","Se não fosse por você, eu seria rico(a), feliz etc.",
+    "Se pecar vai pro inferno","Seja feita a vontade de Deus","Seja forte",
+    "Seus Pais são seus únicos (melhores) amigos","Só a dor purifica",
+    "Só se case com alguém da sua religião","Sofrendo é que se aprende",
+    "Somos nós contra o mundo","Sou eu quem ganha o pão aqui","Tenha modos",
+    "Tenho que fazer tudo sozinho(a)","Tudo tem o seu preço",
+    "Um dia você vai ver que eu tinha razão","Vá perguntar a seu Pai, sua Mãe",
+    "Vê se não me cria problemas","Você ainda vai acabar me matando",
+    "Você é igualzinho(a) a sua Mãe, seu Pai","Você é mau, má",
+    "Você é muito pequeno(a) pra entender","Você é um(a) fraco(a)","Você é uma criança ainda",
+    "Você já é um homenzinho, uma mocinha","Você não vai dar pra nada",
+    "Você parece uma manteiga derretida","Você parece uma puta",
+    "Você reclama porque não sabe a vida que eu tive",
+    "Você se meteu nessa, agora vire-se","Você só me traz problemas",
+    "Você tem que pensar no futuro","Você vai me deixar louco(a)",
+    "Você vai ser sempre o meu nenê","Você vai virar um(a) vagabundo(a)"
+  ]}
+];
+
+// ESTADO
+const figuras = ['mae','pai','ms','ps']; // ordem exibição: M | P | MS | PS
+const figAtiva = { mae:true, pai:true, ms:false, ps:false };
+const state = {};
+categorias.forEach(c => {
+  state[c.id] = {};
+  c.itens.forEach((_,i) => state[c.id][i] = {eu:null,mae:null,pai:null,ms:null,ps:null});
+});
+
+// ═══════════════════════════════════════
+// TOGGLE FIGURA
+// ═══════════════════════════════════════
+function toggleFigura(fig) {
+  figAtiva[fig] = document.getElementById('chk-'+fig).checked;
+  document.getElementById('toggle-'+fig).classList.toggle('active', figAtiva[fig]);
+  // mostra/esconde colunas
+  document.querySelectorAll('.col-'+fig).forEach(el => el.classList.toggle('col-hidden', !figAtiva[fig]));
+}
+
+// ═══════════════════════════════════════
+// BUILD TABLES
+// ═══════════════════════════════════════
+function buildTables() {
+  const container = document.getElementById('secoes');
+  container.innerHTML = '';
+
+  categorias.forEach(cat => {
+    const sec = document.createElement('section');
+    sec.className = 'section';
+    sec.id = 'sec-' + cat.id;
+
+    // header
+    sec.innerHTML = `
+      <div class="section-header">
+        <span class="section-num">0${cat.id < 10 ? '0'+cat.id : cat.id}</span>
+        <h2 class="section-title">${cat.nome}</h2>
+        <span class="section-count" id="cnt-${cat.id}"></span>
+      </div>`;
+
+    // table
+    const table = document.createElement('table');
+    table.className = 'pattern-table';
+
+    // thead: EU | M | P | MS | PS | Padrão
+    const thead = document.createElement('thead');
+    thead.innerHTML = `<tr>
+      <th class="col-eu" style="width:44px">EU</th>
+      <th class="col-mae${figAtiva.mae?'':' col-hidden'}" style="width:44px">M</th>
+      <th class="col-pai${figAtiva.pai?'':' col-hidden'} th-group" style="width:44px">P</th>
+      <th class="col-ms${figAtiva.ms?'':' col-hidden'} th-group" style="width:44px">MS</th>
+      <th class="col-ps${figAtiva.ps?'':' col-hidden'}" style="width:44px">PS</th>
+      <th class="th-label">Padrão / Comportamento</th>
+    </tr>`;
+    table.appendChild(thead);
+
+    const tbody = document.createElement('tbody');
+    cat.itens.forEach((item, idx) => {
+      const tr = document.createElement('tr');
+      tr.id = `row-${cat.id}-${idx}`;
+
+      // EU
+      const tdEu = document.createElement('td');
+      tdEu.className = 'cell-check col-eu';
+      const btnEu = document.createElement('button');
+      btnEu.className = 'check-btn';
+      btnEu.title = 'Marcar em EU';
+      btnEu.textContent = '✓';
+      btnEu.onclick = () => { state[cat.id][idx].eu = state[cat.id][idx].eu === 'rep' ? null : 'rep'; refresh(cat.id,idx); update(); };
+      tdEu.appendChild(btnEu);
+      tr.appendChild(tdEu);
+
+      // M | P | MS | PS
+      const colDefs = [
+        { col:'mae', cls:'col-mae' },
+        { col:'pai', cls:'col-pai td-group-border' },
+        { col:'ms',  cls:'col-ms td-group-border' },
+        { col:'ps',  cls:'col-ps' },
+      ];
+      colDefs.forEach(({ col, cls }) => {
+        const td = document.createElement('td');
+        td.className = `cell-check ${cls}${figAtiva[col] ? '' : ' col-hidden'}`;
+        const grp = document.createElement('div');
+        grp.className = 'toggle-group';
+
+        const bRep = document.createElement('button');
+        bRep.className = 'check-btn rep';
+        bRep.title = 'Repete';
+        bRep.textContent = '✓';
+        bRep.onclick = () => { state[cat.id][idx][col] = state[cat.id][idx][col]==='rep'?null:'rep'; refresh(cat.id,idx); update(); };
+
+        const bReb = document.createElement('button');
+        bReb.className = 'check-btn reb';
+        bReb.title = 'Se rebelou';
+        bReb.textContent = '≠';
+        bReb.onclick = () => { state[cat.id][idx][col] = state[cat.id][idx][col]==='reb'?null:'reb'; refresh(cat.id,idx); update(); };
+
+        grp.appendChild(bRep);
+        grp.appendChild(bReb);
+        td.appendChild(grp);
+        tr.appendChild(td);
+      });
+
+      // label
+      const tdL = document.createElement('td');
+      tdL.className = 'td-label';
+      tdL.textContent = item;
+      tr.appendChild(tdL);
+
+      tbody.appendChild(tr);
+    });
+
+    table.appendChild(tbody);
+    sec.appendChild(table);
+    container.appendChild(sec);
+  });
+}
+
+function refresh(catId, idx) {
+  const tr = document.getElementById(`row-${catId}-${idx}`);
+  if (!tr) return;
+  const s = state[catId][idx];
+
+  // EU
+  tr.querySelector('.col-eu .check-btn').classList.toggle('active', !!s.eu);
+
+  // figuras
+  ['mae','pai','ms','ps'].forEach(col => {
+    const cell = tr.querySelector('.col-'+col);
+    if (!cell) return;
+    cell.querySelector('.rep').classList.toggle('active', s[col]==='rep');
+    cell.querySelector('.reb').classList.toggle('active', s[col]==='reb');
+  });
+
+  tr.classList.toggle('marked-self', !!s.eu);
+
+  // contador da seção
+  const cnt = Object.values(state[catId]).filter(s => s.eu||s.mae||s.pai||s.ms||s.ps).length;
+  const el = document.getElementById('cnt-'+catId);
+  if (el) el.textContent = cnt > 0 ? cnt + ' marcado' + (cnt>1?'s':'') : '';
+}
+
+function update() {
+  const { total } = stats();
+  document.getElementById('progressFill').style.width = Math.min(100,(total/60)*100)+'%';
+  document.getElementById('progressLabel').textContent = total + ' marcaç' + (total===1?'ão':'ões');
+}
+
+function stats() {
+  let total=0, eu=0, rep=0, reb=0;
+  const figCounts = {mae:{rep:0,reb:0},pai:{rep:0,reb:0},ms:{rep:0,reb:0},ps:{rep:0,reb:0}};
+  categorias.forEach(cat => {
+    cat.itens.forEach((_,i) => {
+      const s = state[cat.id][i];
+      if(s.eu){ total++; eu++; }
+      ['mae','pai','ms','ps'].forEach(col => {
+        if(s[col]){ total++;
+          if(s[col]==='rep'){ rep++; figCounts[col].rep++; }
+          if(s[col]==='reb'){ reb++; figCounts[col].reb++; }
+        }
+      });
+    });
+  });
+  return { total, eu, rep, reb, figCounts };
+}
+
+// ═══════════════════════════════════════
+// RESULTADOS
+// ═══════════════════════════════════════
+function calcularResultados() {
+  const { total, eu, rep, reb, figCounts } = stats();
+  const nome = document.getElementById('nomeParticipante').value.trim() || 'Participante';
+
+  document.getElementById('resultsIntro').textContent =
+    `${nome} — ${total} padrões mapeados. ${eu} identificados em EU, ${rep} repetições e ${reb} rebeliões registradas.`;
+
+  // Cards resumo
+  const grid = document.getElementById('resultsGrid');
+  grid.innerHTML = `
+    <div class="result-card"><div class="result-card-label">Total</div><div class="result-card-num num-total">${total}</div><div class="result-card-sub">marcações</div></div>
+    <div class="result-card"><div class="result-card-label">Em EU</div><div class="result-card-num num-eu">${eu}</div><div class="result-card-sub">em mim mesmo(a)</div></div>
+    <div class="result-card"><div class="result-card-label">Repetições</div><div class="result-card-num num-rep">${rep}</div><div class="result-card-sub">padrões herdados</div></div>
+    <div class="result-card"><div class="result-card-label">Rebeliões</div><div class="result-card-num num-reb">${reb}</div><div class="result-card-sub">padrões invertidos</div></div>
+  `;
+
+  // Figura breakdown
+  const figDef = [
+    { col:'mae', label:'Mãe', dot:'var(--mae)', numCls:'num-mae' },
+    { col:'pai', label:'Pai', dot:'var(--pai)', numCls:'num-pai' },
+    { col:'ms',  label:'Mãe Substituta', dot:'var(--mae-sub)', numCls:'num-ms' },
+    { col:'ps',  label:'Pai Substituto', dot:'var(--pai-sub)', numCls:'num-ps' },
+  ];
+  const fbEl = document.getElementById('figuraBreakdown');
+  fbEl.innerHTML = '';
+  figDef.forEach(({ col, label, dot, numCls }) => {
+    if (!figAtiva[col]) return;
+    const { rep: r, reb: rb } = figCounts[col];
+    const total_fig = r + rb;
+    const maxBar = Math.max(r, rb, 1);
+    const card = document.createElement('div');
+    card.className = 'figura-card';
+    card.innerHTML = `
+      <div class="figura-card-header">
+        <span class="figura-card-dot" style="background:${dot}"></span>
+        <span class="figura-card-name">${label}</span>
+        <span class="figura-card-total ${numCls}">${total_fig}</span>
+      </div>
+      <div class="figura-mini-bars">
+        <div class="figura-mini-row">
+          <span style="width:70px;flex-shrink:0">Repete</span>
+          <div class="figura-mini-bar-track"><div class="figura-mini-bar-fill fill-rep" style="width:${(r/maxBar*100).toFixed(0)}%"></div></div>
+          <span class="figura-mini-count">${r}</span>
+        </div>
+        <div class="figura-mini-row">
+          <span style="width:70px;flex-shrink:0">Rebelião</span>
+          <div class="figura-mini-bar-track"><div class="figura-mini-bar-fill fill-reb" style="width:${(rb/maxBar*100).toFixed(0)}%"></div></div>
+          <span class="figura-mini-count">${rb}</span>
+        </div>
+      </div>`;
+    fbEl.appendChild(card);
+  });
+
+  // Cat bars
+  const barsEl = document.getElementById('catBars');
+  barsEl.innerHTML = '';
+  const catData = categorias.map(cat => {
+    const cnt = cat.itens.filter((_,i) => {
+      const s = state[cat.id][i];
+      return s.eu||s.mae||s.pai||s.ms||s.ps;
+    }).length;
+    return { nome: cat.nome, cnt };
+  }).sort((a,b) => b.cnt - a.cnt);
+  const maxC = Math.max(1, ...catData.map(c=>c.cnt));
+  catData.forEach(({ nome, cnt }) => {
+    const row = document.createElement('div');
+    row.className = 'cat-bar-row';
+    row.innerHTML = `<span class="cat-bar-name">${nome}</span><div class="cat-bar-track"><div class="cat-bar-fill" style="width:${(cnt/maxC*100).toFixed(1)}%"></div></div><span class="cat-bar-count">${cnt}</span>`;
+    barsEl.appendChild(row);
+  });
+
+  // Top EU list
+  const topEl = document.getElementById('topList');
+  topEl.innerHTML = '';
+  const euItems = [];
+  categorias.forEach(cat => {
+    cat.itens.forEach((item,i) => {
+      const s = state[cat.id][i];
+      if (!s.eu) return;
+      const figs = [];
+      if(s.mae) figs.push({col:'mae',label:'M',type:s.mae});
+      if(s.pai) figs.push({col:'pai',label:'P',type:s.pai});
+      if(s.ms)  figs.push({col:'ms',label:'MS',type:s.ms});
+      if(s.ps)  figs.push({col:'ps',label:'PS',type:s.ps});
+      euItems.push({ item, catNome: cat.nome.split('/')[0].trim(), figs });
+    });
+  });
+  if (!euItems.length) {
+    topEl.innerHTML = '<li><span style="color:var(--text-dim)">Nenhum padrão marcado em EU ainda.</span></li>';
+  } else {
+    euItems.forEach(({ item, catNome, figs }) => {
+      const li = document.createElement('li');
+      const figHtml = figs.map(f =>
+        `<span class="fig-tag fig-tag-${f.col}">${f.label}:${f.type==='rep'?'✓':'≠'}</span>`
+      ).join('');
+      li.innerHTML = `<span class="top-tag">${catNome}</span> ${item} <span class="fig-tags">${figHtml}</span>`;
+      topEl.appendChild(li);
+    });
+  }
+
+  const panel = document.getElementById('resultsPanel');
+  panel.classList.add('visible');
+  panel.scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+function fecharResultados() { document.getElementById('resultsPanel').classList.remove('visible'); }
+
+// ═══════════════════════════════════════
+// EXPORTAR
+// ═══════════════════════════════════════
+function exportarResultados() {
+  const nome = document.getElementById('nomeParticipante').value.trim() || 'Participante';
+  const { total, eu, rep, reb, figCounts } = stats();
+  const data = new Date().toLocaleDateString('pt-BR');
+  let txt = `Lumtree · QUEBRANDO CICLOS INVISÍVEIS\nParticipante: ${nome}   Data: ${data}\n${'─'.repeat(50)}\n\n`;
+  txt += `RESUMO\nTotal: ${total}  |  EU: ${eu}  |  Repetições: ${rep}  |  Rebeliões: ${reb}\n\n`;
+  txt += `POR FIGURA\n`;
+  const figLabels = {mae:'Mãe',pai:'Pai',ms:'Mãe Substituta',ps:'Pai Substituto'};
+  ['mae','pai','ms','ps'].forEach(col => {
+    if (!figAtiva[col]) return;
+    txt += `  ${figLabels[col]}: ${figCounts[col].rep} repetições, ${figCounts[col].reb} rebeliões\n`;
+  });
+  txt += '\n';
+  categorias.forEach(cat => {
+    const marcados = cat.itens.filter((_,i) => { const s=state[cat.id][i]; return s.eu||s.mae||s.pai||s.ms||s.ps; });
+    if (!marcados.length) return;
+    txt += `\n[${cat.nome.toUpperCase()}]\n`;
+    cat.itens.forEach((item,i) => {
+      const s = state[cat.id][i];
+      if (!s.eu && !s.mae && !s.pai && !s.ms && !s.ps) return;
+      const parts = [];
+      if (s.eu) parts.push('EU');
+      ['mae','pai','ms','ps'].forEach(col => {
+        if (!figAtiva[col]) return;
+        if (s[col]) parts.push(`${figLabels[col]}:${s[col]==='rep'?'Repete':'Rebelião'}`);
+      });
+      txt += `  · ${item}  [${parts.join(' | ')}]\n`;
+    });
+  });
+  const blob = new Blob([txt], {type:'text/plain;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `assessment-ciclos-${nome.replace(/\s+/g,'-').toLowerCase()}.txt`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ═══════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════
+function limparTudo() {
+  if (!confirm('Apagar todas as marcações?')) return;
+  categorias.forEach(cat => {
+    cat.itens.forEach((_,i) => {
+      state[cat.id][i] = {eu:null,mae:null,pai:null,ms:null,ps:null};
+      refresh(cat.id,i);
+    });
+  });
+  update();
+  fecharResultados();
+}
+
+function ir(id) { document.getElementById(id)?.scrollIntoView({behavior:'smooth',block:'start'}); }
+
+// INIT
+buildTables();
+update();
+</script>
+</body>
+</html>
