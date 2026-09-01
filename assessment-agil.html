@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lumtree · Mapeamento de Padrões</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600&display=swap');
+
+:root {
+  --bg: #0f0e0d;
+  --surface: #181714;
+  --surface2: #201e1b;
+  --border: #2e2b27;
+  --accent: #c8a96e;
+  --accent-soft: rgba(200,169,110,0.12);
+  --text: #e8e3db;
+  --text-muted: #8a8279;
+  --text-dim: #5a5650;
+  --nunca: #5a5650;
+  --as-vezes: #c8a96e;
+  --sempre: #e07272;
+  --mae: #9b8ed4;
+  --pai: #e07272;
+  --ms: #7ec8b8;
+  --ps: #f0a060;
+  --radius: 8px;
+  --radius-lg: 14px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; font-size: 14px; line-height: 1.6; min-height: 100vh; }
+
+.tela { display: none; min-height: 100vh; }
+.tela.ativa { display: flex; flex-direction: column; }
+
+/* ── INTRO ── */
+.intro-wrap {
+  max-width: 560px; margin: 0 auto;
+  padding: 60px 24px 40px;
+  display: flex; flex-direction: column; align-items: center; text-align: center; gap: 20px;
+}
+.logo-eyebrow { font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: var(--accent); }
+.intro-wrap h1 { font-family: 'DM Serif Display', serif; font-size: clamp(26px,5vw,42px); font-weight: 400; line-height: 1.15; }
+.intro-wrap h1 em { font-style: italic; color: var(--accent); }
+.intro-wrap p { color: var(--text-muted); font-size: 14px; max-width: 420px; }
+
+.nome-field { width: 100%; text-align: left; }
+.nome-field label { display: block; font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 8px; }
+.nome-input { width: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text); font-family: 'Inter', sans-serif; font-size: 15px; padding: 12px 16px; outline: none; transition: border-color .2s; }
+.nome-input:focus { border-color: var(--accent); }
+
+/* figuras setup */
+.figuras-setup { width: 100%; text-align: left; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 20px; }
+.figuras-setup label.lbl { display: block; font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 12px; }
+.fig-checks { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.fig-chk-label {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--bg); border: 1.5px solid var(--border);
+  border-radius: var(--radius); padding: 10px 12px; cursor: pointer; transition: all .2s;
+}
+.fig-chk-label:hover { border-color: var(--text-muted); }
+.fig-chk-label input { display: none; }
+.fig-chk-label.ativo { border-color: var(--accent); background: var(--accent-soft); }
+.fig-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.fig-chk-name { font-size: 13px; color: var(--text-muted); }
+.fig-chk-label.ativo .fig-chk-name { color: var(--text); }
+.fig-abbr { font-size: 10px; color: var(--text-dim); margin-left: auto; font-family: monospace; letter-spacing: .05em; }
+.fig-chk-label.ativo .fig-abbr { color: var(--accent); }
+
+.escala-guia { width: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 20px; }
+.escala-guia p { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 12px; }
+.escala-row { display: flex; gap: 8px; }
+.escala-pill { flex: 1; text-align: center; padding: 8px 4px; border-radius: 6px; font-size: 12px; font-weight: 500; border: 1.5px solid; }
+.ep-n { border-color: var(--nunca); color: var(--nunca); background: rgba(90,86,80,.1); }
+.ep-av { border-color: var(--as-vezes); color: var(--as-vezes); background: rgba(200,169,110,.08); }
+.ep-s { border-color: var(--sempre); color: var(--sempre); background: rgba(224,114,114,.08); }
+
+.btn-start { width: 100%; padding: 16px; border-radius: var(--radius); background: var(--accent); color: #0f0e0d; font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 600; border: none; cursor: pointer; transition: background .2s; }
+.btn-start:hover { background: #d4b87a; }
+.btn-start:disabled { opacity: .4; cursor: not-allowed; }
+
+/* ── QUESTIONÁRIO ── */
+.q-header {
+  background: var(--surface); border-bottom: 1px solid var(--border);
+  padding: 14px 24px; display: flex; align-items: center; gap: 16px;
+  position: sticky; top: 0; z-index: 100;
+}
+.q-cat-label { font-family: 'DM Serif Display', serif; font-size: 16px; color: var(--text); flex: 1; }
+.q-prog-track { width: 100px; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+.q-prog-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width .3s; }
+.q-prog-txt { font-size: 11px; color: var(--text-dim); white-space: nowrap; }
+
+.q-body { max-width: 680px; margin: 0 auto; padding: 28px 20px 110px; }
+.q-cat-intro { margin-bottom: 24px; padding: 14px 18px; background: var(--surface); border-left: 3px solid var(--accent); border-radius: 0 var(--radius) var(--radius) 0; }
+.q-cat-intro p { font-size: 13px; color: var(--text-muted); font-style: italic; }
+
+/* item card */
+.item-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 18px 20px; margin-bottom: 12px;
+  transition: border-color .2s;
+}
+.item-card.tem-origem { border-color: rgba(200,169,110,0.3); }
+.item-label { font-size: 14px; color: var(--text); margin-bottom: 14px; font-weight: 500; }
+
+/* escala */
+.escala-btns { display: flex; gap: 8px; margin-bottom: 0; }
+.escala-btn {
+  flex: 1; padding: 10px 6px; border-radius: 6px;
+  border: 1.5px solid var(--border); background: transparent;
+  font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 500;
+  color: var(--text-muted); cursor: pointer; transition: all .15s;
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+}
+.escala-btn .eb-icon { font-size: 15px; }
+.escala-btn:hover { border-color: var(--text-muted); color: var(--text); }
+.escala-btn.sel-n { border-color: var(--nunca); color: var(--nunca); background: rgba(90,86,80,.15); }
+.escala-btn.sel-av { border-color: var(--as-vezes); color: var(--as-vezes); background: rgba(200,169,110,.12); }
+.escala-btn.sel-s { border-color: var(--sempre); color: var(--sempre); background: rgba(224,114,114,.12); }
+
+/* origem — aparece após marcar às vezes / sempre */
+.origem-wrap {
+  margin-top: 14px; padding-top: 14px;
+  border-top: 1px solid var(--border);
+  display: none;
+}
+.origem-wrap.visivel { display: block; }
+.origem-label { font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 10px; }
+.origem-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+.origem-btn {
+  display: flex; align-items: center; gap: 6px;
+  padding: 7px 14px; border-radius: 20px;
+  border: 1.5px solid var(--border); background: transparent;
+  font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 500;
+  color: var(--text-muted); cursor: pointer; transition: all .15s;
+}
+.origem-btn:hover { border-color: var(--text-muted); }
+.origem-btn.ativo-mae { border-color: var(--mae); color: var(--mae); background: rgba(155,142,212,.15); }
+.origem-btn.ativo-pai { border-color: var(--pai); color: var(--pai); background: rgba(224,114,114,.15); }
+.origem-btn.ativo-ms  { border-color: var(--ms);  color: var(--ms);  background: rgba(126,200,184,.15); }
+.origem-btn.ativo-ps  { border-color: var(--ps);  color: var(--ps);  background: rgba(240,160,96,.15); }
+.origem-dot { width: 8px; height: 8px; border-radius: 50%; }
+.dot-mae { background: var(--mae); }
+.dot-pai { background: var(--pai); }
+.dot-ms  { background: var(--ms); }
+.dot-ps  { background: var(--ps); }
+
+/* nav */
+.q-nav {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: var(--surface); border-top: 1px solid var(--border);
+  padding: 14px 24px; display: flex; gap: 12px;
+}
+.btn-nav { flex: 1; padding: 13px; border-radius: var(--radius); font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 500; border: none; cursor: pointer; transition: all .2s; }
+.btn-voltar { background: var(--surface2); border: 1px solid var(--border); color: var(--text-muted); }
+.btn-voltar:hover { color: var(--text); }
+.btn-avancar { background: var(--accent); color: #0f0e0d; }
+.btn-avancar:hover { background: #d4b87a; }
+.btn-avancar:disabled { opacity: .4; cursor: not-allowed; }
+
+/* ── RESULTADOS ── */
+.r-wrap { max-width: 800px; margin: 0 auto; padding: 40px 20px 60px; }
+.r-header { text-align: center; margin-bottom: 32px; }
+.r-header h2 { font-family: 'DM Serif Display', serif; font-size: 30px; font-weight: 400; margin-bottom: 6px; }
+.r-header p { color: var(--text-muted); font-size: 14px; }
+
+.r-block { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; margin-bottom: 20px; }
+.r-block-title { font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 18px; }
+
+/* barras categorias */
+.cat-resultado { display: flex; flex-direction: column; gap: 10px; }
+.cat-res-row { display: flex; align-items: center; gap: 10px; }
+.cat-res-nome { font-size: 12px; color: var(--text-muted); width: 180px; flex-shrink: 0; }
+.cat-res-track { flex: 1; height: 10px; background: var(--border); border-radius: 5px; overflow: hidden; }
+.cat-res-fill { height: 100%; border-radius: 5px; transition: width .7s ease; }
+.cat-res-pct { font-size: 11px; color: var(--text-dim); width: 30px; text-align: right; flex-shrink: 0; }
+.cat-res-nivel { font-size: 9px; letter-spacing: .08em; text-transform: uppercase; border-radius: 10px; padding: 2px 8px; flex-shrink: 0; width: 58px; text-align: center; }
+.nivel-alto  { background: rgba(224,114,114,.15); color: var(--sempre); border: 1px solid rgba(224,114,114,.3); }
+.nivel-medio { background: rgba(200,169,110,.12); color: var(--as-vezes); border: 1px solid rgba(200,169,110,.25); }
+.nivel-baixo { background: rgba(90,86,80,.1); color: var(--nunca); border: 1px solid rgba(90,86,80,.2); }
+
+/* padrão item resultado */
+.padrao-item { display: flex; align-items: flex-start; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border); }
+.padrao-item:last-child { border-bottom: none; }
+.padrao-badge { width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; flex-shrink: 0; margin-top: 2px; }
+.badge-s  { background: rgba(224,114,114,.2); color: var(--sempre); }
+.badge-av { background: rgba(200,169,110,.15); color: var(--as-vezes); }
+.padrao-corpo { flex: 1; min-width: 0; }
+.padrao-nome { font-size: 13px; color: var(--text); margin-bottom: 5px; }
+.padrao-cat  { font-size: 10px; color: var(--text-dim); margin-bottom: 6px; }
+.padrao-origens { display: flex; gap: 5px; flex-wrap: wrap; }
+.origem-tag {
+  display: flex; align-items: center; gap: 4px;
+  font-size: 10px; padding: 2px 8px; border-radius: 10px;
+  font-weight: 500;
+}
+.ot-mae { background: rgba(155,142,212,.15); color: var(--mae); border: 1px solid rgba(155,142,212,.25); }
+.ot-pai { background: rgba(224,114,114,.15); color: var(--pai); border: 1px solid rgba(224,114,114,.25); }
+.ot-ms  { background: rgba(126,200,184,.15); color: var(--ms);  border: 1px solid rgba(126,200,184,.25); }
+.ot-ps  { background: rgba(240,160,96,.15);  color: var(--ps);  border: 1px solid rgba(240,160,96,.25); }
+.padrao-nivel-txt { font-size: 11px; font-weight: 500; flex-shrink: 0; margin-top: 2px; }
+.txt-s  { color: var(--sempre); }
+.txt-av { color: var(--as-vezes); }
+
+/* figura breakdown */
+.fig-breakdown-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.fig-bd-card { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; }
+.fig-bd-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.fig-bd-dot { width: 10px; height: 10px; border-radius: 50%; }
+.fig-bd-name { font-size: 11px; color: var(--text-muted); }
+.fig-bd-total { font-family: 'DM Serif Display', serif; font-size: 24px; margin-left: auto; }
+.fig-bd-lista { display: flex; flex-direction: column; gap: 4px; }
+.fig-bd-item { font-size: 11px; color: var(--text-dim); padding: 3px 0; border-bottom: 1px solid var(--border); }
+.fig-bd-item:last-child { border-bottom: none; }
+.fig-bd-vazio { font-size: 11px; color: var(--text-dim); font-style: italic; }
+
+/* insights */
+.insights-box { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px 28px; margin-bottom: 20px; }
+.insights-eyebrow { font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: var(--accent); margin-bottom: 6px; }
+.insights-titulo { font-family: 'DM Serif Display', serif; font-size: 20px; font-weight: 400; color: var(--text); margin-bottom: 16px; }
+.insights-resumo { font-size: 13px; color: var(--text-muted); line-height: 1.8; margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
+.insights-cards { display: flex; flex-direction: column; gap: 16px; }
+.insight-card { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 20px; }
+.insight-card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.insight-card-cor { width: 4px; border-radius: 2px; align-self: stretch; flex-shrink: 0; }
+.insight-card-meta { flex: 1; }
+.insight-card-area { font-size: 13px; font-weight: 600; color: var(--text); }
+.insight-card-teoria { font-size: 9px; letter-spacing: .1em; text-transform: uppercase; color: var(--text-dim); margin-top: 2px; }
+.insight-card-corpo { font-size: 13px; color: var(--text-muted); line-height: 1.75; }
+.insight-card-origem { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); font-size: 11px; color: var(--text-dim); font-style: italic; }
+
+.btn-row { display: flex; gap: 12px; flex-wrap: wrap; }
+.btn { display: inline-flex; align-items: center; gap: 8px; border-radius: var(--radius); padding: 12px 22px; font-size: 13px; font-weight: 500; cursor: pointer; border: none; transition: all .2s; }
+.btn-primary { background: var(--accent); color: #0f0e0d; }
+.btn-primary:hover { background: #d4b87a; }
+.btn-ghost { background: transparent; border: 1px solid var(--border); color: var(--text-muted); }
+.btn-ghost:hover { border-color: var(--text-muted); color: var(--text); }
+
+@media (max-width: 520px) {
+  .fig-checks { grid-template-columns: 1fr; }
+  .fig-breakdown-grid { grid-template-columns: 1fr; }
+  .cat-res-nome { width: 120px; font-size: 11px; }
+  .escala-btn { font-size: 11px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══ TELA 1: INTRO ══ -->
+<div class="tela ativa" id="tela-intro">
+  <div class="intro-wrap">
+    <p class="logo-eyebrow">Lumtree · Mapeamento de Padrões</p>
+    <h1>O que você <em>repete</em> sem perceber?</h1>
+    <p>Um mapeamento dos padrões que mais impactam sua vida — e de onde eles vieram.</p>
+
+    <div class="nome-field">
+      <label>Seu nome</label>
+      <input id="nomeInput" class="nome-input" type="text" placeholder="Como posso te chamar?" oninput="checarNome()" />
+    </div>
+
+    <div class="figuras-setup">
+      <label class="lbl">Figuras de referência que deseja incluir</label>
+      <div class="fig-checks">
+        <label class="fig-chk-label ativo" id="lbl-mae">
+          <input type="checkbox" id="chk-mae" checked onchange="toggleFig('mae')">
+          <span class="fig-dot dot-mae"></span>
+          <span class="fig-chk-name">Mãe</span>
+          <span class="fig-abbr">M</span>
+        </label>
+        <label class="fig-chk-label ativo" id="lbl-pai">
+          <input type="checkbox" id="chk-pai" checked onchange="toggleFig('pai')">
+          <span class="fig-dot dot-pai"></span>
+          <span class="fig-chk-name">Pai</span>
+          <span class="fig-abbr">P</span>
+        </label>
+        <label class="fig-chk-label" id="lbl-ms">
+          <input type="checkbox" id="chk-ms" onchange="toggleFig('ms')">
+          <span class="fig-dot dot-ms"></span>
+          <span class="fig-chk-name">Mãe Substituta</span>
+          <span class="fig-abbr">MS</span>
+        </label>
+        <label class="fig-chk-label" id="lbl-ps">
+          <input type="checkbox" id="chk-ps" onchange="toggleFig('ps')">
+          <span class="fig-dot dot-ps"></span>
+          <span class="fig-chk-name">Pai Substituto</span>
+          <span class="fig-abbr">PS</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="escala-guia">
+      <p>Escala de resposta</p>
+      <div class="escala-row">
+        <div class="escala-pill ep-n">Nunca<br><small>não me identifico</small></div>
+        <div class="escala-pill ep-av">Às vezes<br><small>reconheço em mim</small></div>
+        <div class="escala-pill ep-s">Sempre<br><small>faz parte de mim</small></div>
+      </div>
+    </div>
+
+    <button class="btn-start" id="btnStart" onclick="iniciar()" disabled>Começar mapeamento →</button>
+  </div>
+</div>
+
+<!-- ══ TELA 2: QUESTIONÁRIO ══ -->
+<div class="tela" id="tela-q">
+  <div class="q-header">
+    <span class="q-cat-label" id="qCatLabel">—</span>
+    <div style="display:flex;align-items:center;gap:10px">
+      <div class="q-prog-track"><div class="q-prog-fill" id="qProgFill"></div></div>
+      <span class="q-prog-txt" id="qProgTxt"></span>
+    </div>
+  </div>
+  <div class="q-body" id="qBody"></div>
+  <div class="q-nav">
+    <button class="btn-nav btn-voltar" id="btnVoltar" onclick="navCat(-1)">← Voltar</button>
+    <button class="btn-nav btn-avancar" id="btnAvancar" onclick="navCat(1)">Próxima →</button>
+  </div>
+</div>
+
+<!-- ══ TELA 3: RESULTADOS ══ -->
+<div class="tela" id="tela-r">
+  <div class="r-wrap">
+    <div class="r-header">
+      <h2 id="rTitulo">Mapa de padrões</h2>
+      <p id="rSubtitulo">—</p>
+    </div>
+    <div class="r-block">
+      <p class="r-block-title">Intensidade por área</p>
+      <div class="cat-resultado" id="catResultado"></div>
+    </div>
+    <div class="r-block" id="padroesList">
+      <p class="r-block-title">Padrões em destaque — com origem</p>
+    </div>
+    <div class="r-block" id="figBreakdown">
+      <p class="r-block-title">O que cada figura transmitiu</p>
+      <div class="fig-breakdown-grid" id="figGrid"></div>
+    </div>
+    <div class="insights-box">
+      <p class="insights-eyebrow">Leitura do mapeamento</p>
+      <h3 class="insights-titulo" id="insightsTitulo">—</h3>
+      <p class="insights-resumo" id="insightsTxt">—</p>
+      <div class="insights-cards" id="insightsCards"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="exportar()">⬇ Exportar resumo</button>
+      <button class="btn btn-ghost" onclick="reiniciar()">Refazer</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════
+// DADOS
+// ═══════════════════════════════════════════
+const categorias = [
+  { id:'desamor', nome:'Desamor / Abandono', cor:'#9b8ed4',
+    intro:'Padrões ligados a como você experimenta (ou evita) vínculos afetivos e presença emocional.',
+    itens:['Me afasto das pessoas antes que elas se afastem de mim','Tenho dificuldade de mostrar o que sinto','Me sinto sozinho(a) mesmo quando estou rodeado(a) de pessoas','Me saboto quando as coisas começam a dar certo','Sinto que não mereço ser amado(a)']},
+  { id:'dinheiro', nome:'Dinheiro / Trabalho', cor:'#7ec8b8',
+    intro:'Como você se relaciona com dinheiro, mérito e trabalho.',
+    itens:['Trabalho compulsivamente — é difícil parar','Tenho medo de perder tudo o que conquistei','Me sinto culpado(a) quando gasto dinheiro com prazer','Evito arriscar mesmo quando a oportunidade é boa','Associo meu valor pessoal ao que produzo ou ganho']},
+  { id:'falsidade', nome:'Falsidade / Vaidade', cor:'#c8a96e',
+    intro:'Padrões de imagem, aparência social e autenticidade nas relações.',
+    itens:['Me preocupo muito com o que os outros pensam de mim','Finjo estar bem quando não estou','Preciso ser o(a) melhor ou o(a) mais reconhecido(a)','Falo mal de pessoas pelas costas','Exagero ou minto para parecer mais interessante']},
+  { id:'inadequacao', nome:'Inadequação / Carência', cor:'#e0a060',
+    intro:'Padrões ligados à sensação de não pertencer ou depender da aprovação alheia.',
+    itens:['Tenho dificuldade de dizer não — aceito mais do que deveria','Preciso da aprovação dos outros para me sentir bem','Me sinto inadequado(a) em grupos ou situações sociais','Busco atenção mesmo de formas negativas','Sinto que nunca sou suficiente — sempre falta algo']},
+  { id:'invalidacao', nome:'Invalidação / Julgamento', cor:'#b8d4a0',
+    intro:'Como você lida com crítica, erro e diferença — em si mesmo(a) e nos outros.',
+    itens:['Critico muito os outros (ou a mim mesmo(a))','Tenho dificuldade de admitir erros','Me sinto superior (ou inferior) à maioria das pessoas','Vejo mais os defeitos do que as qualidades','Tenho opiniões muito rígidas e difíceis de questionar']},
+  { id:'irresponsabilidade', nome:'Irresponsabilidade', cor:'#a0b8d4',
+    intro:'Padrões de comprometimento, fuga e dificuldade de sustentar o que começa.',
+    itens:['Começo projetos e não termino','Deixo para depois o que deveria fazer agora','Arranjo desculpas quando falho em compromissos','Evito assumir responsabilidades que me assustam','Fico dependente dos outros para resolver o que é meu']},
+  { id:'manipulacao', nome:'Manipulação / Controle', cor:'#d4a0b8',
+    intro:'Como você lida com poder, controle e limites nas relações.',
+    itens:['Tenho dificuldade de aceitar quando as coisas não saem do meu jeito','Uso chantagem emocional (mesmo sem perceber)','Preciso controlar as situações e as pessoas ao meu redor','Faço pelo outro o que ele poderia fazer sozinho','Me sinto mártir — faço tudo pelos outros e não recebo nada']},
+  { id:'medo', nome:'Medo / Ansiedade', cor:'#d4c4a0',
+    intro:'Padrões de antecipação negativa, esquiva e insegurança que limitam suas escolhas.',
+    itens:['Antecipo o pior antes mesmo de tentar','Evito situações que me tiram da zona de conforto','Tenho medo de errar e ser julgado(a)','A ansiedade me paralisa com frequência','Duvido de mim mesmo(a) mesmo quando tenho competência']},
+  { id:'racionalizacao', nome:'Racionalização', cor:'#a0d4c8',
+    intro:'Padrões de distanciamento emocional e uso da razão como defesa.',
+    itens:['Tenho dificuldade de me conectar com minhas emoções','Prefiro analisar a sentir','Acho que sentir é fraqueza','Sempre tenho uma explicação lógica para não agir','Evito situações que exigem vulnerabilidade emocional']},
+  { id:'raiva', nome:'Raiva / Agressão', cor:'#e07272',
+    intro:'Como você lida com frustração, limite e conflito.',
+    itens:['Perco o controle emocional com facilidade','Guardo rancor por muito tempo','Firo as pessoas com palavras quando estou com raiva','Tenho dificuldade de perdoar','Me irrito com frequência por coisas pequenas']},
+  { id:'sexo', nome:'Sexo / Intimidade', cor:'#c4a0d4',
+    intro:'Padrões ligados à intimidade, confiança e entrega nas relações afetivas.',
+    itens:['Tenho dificuldade de confiar totalmente em alguém','Evito (ou busco compulsivamente) intimidade física e emocional','Uso o sexo como forma de controle ou fuga','Sinto vergonha ou culpa em relação à minha sexualidade','Tenho dificuldade de comunicar o que quero nas relações']},
+  { id:'vozes', nome:'Vozes Internas', cor:'#d4b8a0',
+    intro:'Frases que você internalizou e que moldam sua forma de ver o mundo e a si mesmo(a).',
+    itens:['Sinto que a vida é uma luta constante','Acredito que não mereço ser feliz de verdade','Ouço uma voz interna que me diminui ou me pressiona','Sinto que preciso sofrer para aprender ou crescer','Tenho crenças muito rígidas sobre como as coisas "deveriam" ser']}
+];
+
+// ESTADO
+const figAtiva = { mae:true, pai:true, ms:false, ps:false };
+const figDef = [
+  { id:'mae', label:'Mãe',            abbr:'M',  cor:'var(--mae)', dotCls:'dot-mae', tagCls:'ot-mae' },
+  { id:'pai', label:'Pai',            abbr:'P',  cor:'var(--pai)', dotCls:'dot-pai', tagCls:'ot-pai' },
+  { id:'ms',  label:'Mãe Substituta', abbr:'MS', cor:'var(--ms)',  dotCls:'dot-ms',  tagCls:'ot-ms'  },
+  { id:'ps',  label:'Pai Substituto', abbr:'PS', cor:'var(--ps)',  dotCls:'dot-ps',  tagCls:'ot-ps'  },
+];
+
+// respostas[catId][idx] = { val: 0|1|2, origens: Set }
+const respostas = {};
+categorias.forEach(c => {
+  respostas[c.id] = {};
+  c.itens.forEach((_,i) => respostas[c.id][i] = { val: undefined, origens: new Set() });
+});
+
+let catAtual = 0;
+
+// ── INTRO ──
+function checarNome() {
+  document.getElementById('btnStart').disabled = document.getElementById('nomeInput').value.trim().length < 2;
+}
+function toggleFig(id) {
+  figAtiva[id] = document.getElementById('chk-'+id).checked;
+  document.getElementById('lbl-'+id).classList.toggle('ativo', figAtiva[id]);
+}
+function iniciar() { mostrarTela('tela-q'); catAtual = 0; renderCat(); }
+
+// ── TELAS ──
+function mostrarTela(id) {
+  document.querySelectorAll('.tela').forEach(t => t.classList.remove('ativa'));
+  document.getElementById(id).classList.add('ativa');
+  window.scrollTo(0,0);
+}
+
+// ── RENDER CATEGORIA ──
+function renderCat() {
+  const cat = categorias[catAtual];
+  document.getElementById('qCatLabel').textContent = cat.nome;
+  document.getElementById('qProgTxt').textContent = `${catAtual+1} / ${categorias.length}`;
+  document.getElementById('qProgFill').style.width = `${((catAtual+1)/categorias.length*100).toFixed(0)}%`;
+  document.getElementById('btnVoltar').style.display = catAtual === 0 ? 'none' : '';
+
+  const body = document.getElementById('qBody');
+  body.innerHTML = `<div class="q-cat-intro"><p>${cat.intro}</p></div>`;
+
+  cat.itens.forEach((item, idx) => {
+    const r = respostas[cat.id][idx];
+    const card = document.createElement('div');
+    card.className = 'item-card';
+    card.id = `card-${cat.id}-${idx}`;
+
+    // figuras ativas
+    const figsVisiveis = figDef.filter(f => figAtiva[f.id]);
+    const origemHtml = figsVisiveis.length ? `
+      <div class="origem-wrap${r.val >= 1 ? ' visivel' : ''}" id="orig-${cat.id}-${idx}">
+        <div class="origem-label">Aprendi com:</div>
+        <div class="origem-btns">
+          ${figsVisiveis.map(f => `
+            <button class="origem-btn${r.origens.has(f.id) ? ' ativo-'+f.id : ''}"
+              id="obtn-${cat.id}-${idx}-${f.id}"
+              onclick="toggleOrigem('${cat.id}',${idx},'${f.id}')">
+              <span class="fig-dot ${f.dotCls}"></span>${f.label}
+            </button>`).join('')}
+        </div>
+      </div>` : '';
+
+    card.innerHTML = `
+      <div class="item-label">${item}</div>
+      <div class="escala-btns">
+        <button class="escala-btn" id="btn-${cat.id}-${idx}-0" onclick="setVal('${cat.id}',${idx},0)"><span class="eb-icon">○</span>Nunca</button>
+        <button class="escala-btn" id="btn-${cat.id}-${idx}-1" onclick="setVal('${cat.id}',${idx},1)"><span class="eb-icon">◑</span>Às vezes</button>
+        <button class="escala-btn" id="btn-${cat.id}-${idx}-2" onclick="setVal('${cat.id}',${idx},2)"><span class="eb-icon">●</span>Sempre</button>
+      </div>
+      ${origemHtml}`;
+
+    body.appendChild(card);
+    renderEscala(cat.id, idx);
+  });
+
+  atualizarAvancar();
+}
+
+function setVal(catId, idx, v) {
+  const r = respostas[catId][idx];
+  r.val = v;
+  if (v === 0) r.origens.clear(); // nunca → limpa origem
+  renderEscala(catId, idx);
+  // mostra/esconde origem
+  const origWrap = document.getElementById(`orig-${catId}-${idx}`);
+  if (origWrap) origWrap.classList.toggle('visivel', v >= 1);
+  // borda do card
+  const card = document.getElementById(`card-${catId}-${idx}`);
+  if (card) card.classList.toggle('tem-origem', v >= 1 && r.origens.size > 0);
+  atualizarAvancar();
+}
+
+function toggleOrigem(catId, idx, figId) {
+  const r = respostas[catId][idx];
+  if (r.origens.has(figId)) r.origens.delete(figId);
+  else r.origens.add(figId);
+  // atualiza botão
+  const btn = document.getElementById(`obtn-${catId}-${idx}-${figId}`);
+  if (btn) btn.classList.toggle(`ativo-${figId}`, r.origens.has(figId));
+  // borda card
+  const card = document.getElementById(`card-${catId}-${idx}`);
+  if (card) card.classList.toggle('tem-origem', r.origens.size > 0);
+}
+
+function renderEscala(catId, idx) {
+  const v = respostas[catId][idx].val;
+  [0,1,2].forEach(i => {
+    const btn = document.getElementById(`btn-${catId}-${idx}-${i}`);
+    if (!btn) return;
+    btn.className = 'escala-btn';
+    if (v === i) btn.classList.add(['sel-n','sel-av','sel-s'][i]);
+  });
+}
+
+function atualizarAvancar() {
+  const cat = categorias[catAtual];
+  const todas = cat.itens.every((_,i) => respostas[cat.id][i].val !== undefined);
+  const btn = document.getElementById('btnAvancar');
+  btn.textContent = catAtual === categorias.length-1 ? 'Ver resultados →' : 'Próxima →';
+  btn.disabled = !todas;
+}
+
+function navCat(dir) {
+  if (dir === 1 && catAtual === categorias.length-1) { mostrarResultados(); return; }
+  catAtual = Math.max(0, Math.min(categorias.length-1, catAtual+dir));
+  renderCat(); window.scrollTo(0,0);
+}
+
+// ═══════════════════════════════════════════
+// RESULTADOS
+// ═══════════════════════════════════════════
+function pontuacao(cat) {
+  const soma = cat.itens.reduce((a,_,i) => a + (respostas[cat.id][i].val || 0), 0);
+  return soma / (cat.itens.length * 2);
+}
+function nivel(p) { return p >= 0.6 ? 'alto' : p >= 0.3 ? 'medio' : 'baixo'; }
+
+function mostrarResultados() {
+  mostrarTela('tela-r');
+  const nome = document.getElementById('nomeInput').value.trim();
+  document.getElementById('rTitulo').textContent = `Mapa de padrões — ${nome}`;
+
+  const scores = categorias.map(cat => ({ cat, p: pontuacao(cat) })).sort((a,b) => b.p-a.p);
+  const altas = scores.filter(s => nivel(s.p) === 'alto');
+  document.getElementById('rSubtitulo').textContent = altas.length
+    ? `${altas.length} área${altas.length>1?'s':''} com padrões de alta intensidade.`
+    : 'Mapeamento concluído.';
+
+  // barras
+  const catRes = document.getElementById('catResultado');
+  catRes.innerHTML = '';
+  scores.forEach(({ cat, p }) => {
+    const niv = nivel(p); const pct = Math.round(p*100);
+    const row = document.createElement('div');
+    row.className = 'cat-res-row';
+    row.innerHTML = `
+      <span class="cat-res-nome">${cat.nome}</span>
+      <div class="cat-res-track"><div class="cat-res-fill" style="width:${pct}%;background:${cat.cor}"></div></div>
+      <span class="cat-res-pct">${pct}%</span>
+      <span class="cat-res-nivel nivel-${niv}">${niv==='alto'?'Alta':niv==='medio'?'Média':'Baixa'}</span>`;
+    catRes.appendChild(row);
+  });
+
+  // padrões com origem
+  const lista = document.getElementById('padroesList');
+  lista.innerHTML = '<p class="r-block-title">Padrões em destaque — com origem</p>';
+  const destaques = [];
+  categorias.forEach(cat => {
+    cat.itens.forEach((item,i) => {
+      const r = respostas[cat.id][i];
+      if (r.val >= 1) destaques.push({ item, cat, val: r.val, origens: [...r.origens] });
+    });
+  });
+  destaques.sort((a,b) => b.val - a.val);
+
+  if (!destaques.length) {
+    lista.innerHTML += '<p style="color:var(--text-dim);font-size:13px;padding-top:8px">Nenhum padrão marcado como "às vezes" ou "sempre".</p>';
+  } else {
+    destaques.forEach(({ item, cat, val, origens }) => {
+      const tagsHtml = origens.length
+        ? origens.map(fid => {
+            const fd = figDef.find(f=>f.id===fid);
+            return `<span class="origem-tag ${fd.tagCls}"><span class="fig-dot ${fd.dotCls}" style="width:6px;height:6px"></span>${fd.label}</span>`;
+          }).join('')
+        : '<span style="font-size:10px;color:var(--text-dim)">sem figura associada</span>';
+
+      const el = document.createElement('div');
+      el.className = 'padrao-item';
+      el.innerHTML = `
+        <div class="padrao-badge badge-${val===2?'s':'av'}">${val===2?'●':'◑'}</div>
+        <div class="padrao-corpo">
+          <div class="padrao-nome">${item}</div>
+          <div class="padrao-cat">${cat.nome}</div>
+          <div class="padrao-origens">${tagsHtml}</div>
+        </div>
+        <span class="padrao-nivel-txt ${val===2?'txt-s':'txt-av'}">${val===2?'Sempre':'Às vezes'}</span>`;
+      lista.appendChild(el);
+    });
+  }
+
+  // por figura
+  const figGrid = document.getElementById('figGrid');
+  figGrid.innerHTML = '';
+  figDef.filter(f => figAtiva[f.id]).forEach(fd => {
+    const padroesDaFig = [];
+    categorias.forEach(cat => {
+      cat.itens.forEach((item,i) => {
+        const r = respostas[cat.id][i];
+        if (r.origens.has(fd.id)) padroesDaFig.push({ item, val: r.val });
+      });
+    });
+    padroesDaFig.sort((a,b) => b.val - a.val);
+
+    const card = document.createElement('div');
+    card.className = 'fig-bd-card';
+    const listaHtml = padroesDaFig.length
+      ? padroesDaFig.slice(0,5).map(p =>
+          `<div class="fig-bd-item">${p.val===2?'●':'◑'} ${p.item}</div>`).join('')
+        + (padroesDaFig.length > 5 ? `<div class="fig-bd-item" style="color:var(--accent)">+${padroesDaFig.length-5} mais</div>` : '')
+      : `<div class="fig-bd-vazio">Nenhum padrão associado</div>`;
+
+    card.innerHTML = `
+      <div class="fig-bd-header">
+        <span class="fig-bd-dot" style="background:${fd.cor}"></span>
+        <span class="fig-bd-name">${fd.label}</span>
+        <span class="fig-bd-total" style="color:${fd.cor}">${padroesDaFig.length}</span>
+      </div>
+      <div class="fig-bd-lista">${listaHtml}</div>`;
+    figGrid.appendChild(card);
+  });
+
+  // insights
+  gerarInsights(scores, destaques);
+}
+
+// ─── BASE DE CONHECIMENTO CLÍNICO POR CATEGORIA ───────────────────────────
+const clinica = {
+  desamor: {
+    teoria: 'Psicanálise · Teoria do Apego',
+    cor: '#9b8ed4',
+    impacto: (nome, origens) => {
+      const fig = origens.length ? `transmitido por ${origens}` : 'internalizado precocemente';
+      return `${nome} apresenta padrões ligados à ferida de abandono — ${fig}. `
+        + `Na perspectiva psicanalítica, a ausência ou inconsistência do objeto primário de amor cria um ego que antecipa a perda antes mesmo que ela aconteça, `
+        + `gerando relacionamentos marcados pela evitação ou pela dependência extrema. `
+        + `Pela teoria do apego de Bowlby, esse padrão configura um estilo de apego inseguro — ansioso ou evasivo — que se repete em todos os vínculos significativos. `
+        + `Na Gestalt, o ciclo de contato é interrompido na fase de aproximação: a pessoa se retira antes de se expor, impedindo a experiência completa do vínculo.`;
+    }
+  },
+  dinheiro: {
+    teoria: 'PNL · Crenças Limitantes · Psicanálise',
+    cor: '#7ec8b8',
+    impacto: (nome, origens) => {
+      const fig = origens.length ? `herdados de ${origens}` : 'construídos ao longo da vida';
+      return `${nome} carrega crenças sobre dinheiro e trabalho ${fig} que operam como âncoras invisíveis. `
+        + `Na PNL, crenças como "dinheiro é difícil" ou "não mereço abundância" funcionam como programas que filtram oportunidades e sabotam decisões financeiras antes mesmo da consciência agir. `
+        + `Pela psicanálise, a relação com dinheiro frequentemente espelha a relação com amor e valor: acumular, gastar compulsivamente ou sabotar ganhos são formas simbólicas de repetir dinâmicas afetivas aprendidas. `
+        + `Na Gestalt, o padrão se manifesta como figura recorrente: o dinheiro aparece sempre como ameaça ou como medida de valor pessoal, nunca como recurso neutro.`;
+    }
+  },
+  falsidade: {
+    teoria: 'Psicanálise · Gestalt · Persona (Jung)',
+    cor: '#c8a96e',
+    impacto: (nome, origens) => {
+      const fig = origens.length ? `moldada pela influência de ${origens}` : 'construída como proteção';
+      return `${nome} desenvolveu uma persona fortemente ${fig}. `
+        + `No conceito junguiano, a persona é a máscara social necessária — mas quando ela domina, a pessoa perde contato com o self autêntico e vive para sustentar uma imagem. `
+        + `Na psicanálise, esse padrão está associado ao falso self de Winnicott: uma estrutura construída para agradar e sobreviver ao ambiente, em detrimento do verdadeiro eu. `
+        + `A Gestalt nomeia isso como "deflexão": a pessoa desvia o contato real com o outro através da performance, nunca se permitindo ser vista de verdade. O custo é o isolamento interno mesmo em meio à aprovação externa.`;
+    }
+  },
+  inadequacao: {
+    teoria: 'Gestalt · PNL · Psicanálise',
+    cor: '#e0a060',
+    impacto: (nome, origens) => {
+      const fig = origens.length ? `associados a ${origens}` : 'internalizados';
+      return `${nome} opera a partir de padrões de carência ${fig} que se traduzem em dificuldade de se sentir suficiente. `
+        + `Na psicanálise, a carência afetiva não resolvida cria um ego que busca constantemente validação externa como substituto do amor que não foi recebido na forma e intensidade necessárias. `
+        + `Na PNL, a crença central "não sou suficiente" funciona como um mapa distorcido que filtra as experiências: mesmo conquistas reais são relativizadas ou ignoradas. `
+        + `A Gestalt identifica o padrão como retroflexão: em vez de expressar a necessidade para o mundo, a pessoa a volta contra si mesma — autocrítica, autossabotagem e dificuldade de pedir.`;
+    }
+  },
+  invalidacao: {
+    teoria: 'Psicanálise · Gestalt · PNL',
+    cor: '#b8d4a0',
+    impacto: (nome, origens) => {
+      const fig = origens.length ? `aprendido com ${origens}` : 'desenvolvido como mecanismo de defesa';
+      return `${nome} apresenta um padrão crítico e invalidador ${fig}. `
+        + `Na psicanálise, a crítica intensa — ao outro ou a si mesmo — frequentemente é uma projeção: o que não toleramos em nós é atacado fora. É um mecanismo de defesa que protege o ego de confrontar sua própria sombra. `
+        + `Na Gestalt, o julgamento constante interrompe o contato genuíno: a pessoa encontra o defeito antes de encontrar o ser humano. `
+        + `Na PNL, isso se manifesta como um sistema de crenças rígido, com metaprogramas de "distância" que avaliam e separam ao invés de incluir. O padrão isola — mesmo quem critica por amor acaba afastando quem ama.`;
+    }
+  },
+  irresponsabilidade: {
+    teoria: 'Psicanálise · Gestalt · PNL',
+    cor: '#a0b8d4',
+    impacto: (nome, origens) => {
+      const fig = origens.length ? `espelhado em ${origens}` : 'construído como estratégia de sobrevivência';
+      return `${nome} carrega padrões de evitação de responsabilidade ${fig}. `
+        + `Na psicanálise, a procrastinação e o não-terminar são frequentemente expressões de conflito inconsciente: concluir significa crescer, e crescer pode ativar medos de separação, fracasso ou punição. `
+        + `Na Gestalt, o ciclo de contato é interrompido na fase de ação — a energia se mobiliza mas não se completa, deixando "gestalts abertas" que consomem recursos internos. `
+        + `Na PNL, esse padrão revela âncoras negativas associadas ao esforço e ao compromisso: o sistema nervoso aprendeu que assumir responsabilidade traz consequências dolorosas.`;
+    }
+  },
+  manipulacao: {
+    teoria: 'Psicanálise · Gestalt · Análise Transacional',
+    cor: '#d4a0b8',
+    impacto: (nome, origens) => {
+      const fig = origens.length ? `herdado de ${origens}` : 'desenvolvido para garantir segurança';
+      return `${nome} apresenta padrões de controle ${fig}. `
+        + `Na análise transacional de Eric Berne, o controle emerge do ego-estado Pai Crítico: a pessoa reproduz internamente — e depois externamente — as dinâmicas de poder que vivenciou. `
+        + `Na psicanálise, controlar o outro é uma forma de controlar a ansiedade: se posso prever e dirigir, não serei surpreendido pela perda ou rejeição. `
+        + `A Gestalt nomeia isso como "confluence" disruptiva: os limites entre o eu e o outro são violados — a pessoa não consegue separar onde ela termina e o outro começa. `
+        + `O ciclo se fecha quando o controle afasta exatamente o que a pessoa mais quer manter próximo.`;
+    }
+  },
+  medo: {
+    teoria: 'PNL · Gestalt · Neurociência',
+    cor: '#d4c4a0',
+    impacto: (nome, origens) => {
+      const fig = origens.length ? `modelado a partir de ${origens}` : 'instalado por experiências de ameaça';
+      return `${nome} opera com um sistema de alarme hiperativado ${fig}. `
+        + `Pela neurociência e PNL, o medo antecipatório é o sistema límbico tratando o futuro imaginado como ameaça real — o corpo responde ao pensamento como se o perigo já estivesse presente. `
+        + `Na Gestalt, o medo interrompe o ciclo de contato na fase de mobilização: a pessoa percebe o que quer, mas o medo congela a ação antes que ela aconteça. `
+        + `Na psicanálise, a ansiedade crônica frequentemente mascara um conflito mais profundo — a angústia de ser, de aparecer, de ocupar espaço. Reduzir o medo exige acessar o que está por baixo dele.`;
+    }
+  },
+  racionalizacao: {
+    teoria: 'Psicanálise · Gestalt · PNL',
+    cor: '#a0d4c8',
+    impacto: (nome, origens) => {
+      const fig = origens.length ? `aprendido com ${origens}` : 'desenvolvido como escudo emocional';
+      return `${nome} utiliza a razão como principal mecanismo de defesa ${fig}. `
+        + `Na psicanálise, a racionalização é um dos mecanismos de defesa descritos por Anna Freud: o ego produz explicações lógicas para evitar o contato com emoções insuportáveis. `
+        + `Na Gestalt, isso se manifesta como "desensibilização": a pessoa perde progressivamente o contato com as sensações do corpo e com o mundo emocional, vivendo na cabeça. `
+        + `Na PNL, o perfil altamente visual-digital processa tudo em linguagem interna, afastando-se das representações sensoriais que dão acesso ao sentir. O desafio não é pensar menos — é aprender a sentir sem se perder.`;
+    }
+  },
+  raiva: {
+    teoria: 'Psicanálise · Gestalt · Neurociência',
+    cor: '#e07272',
+    impacto: (nome, origens) => {
+      const fig = origens.length ? `modelado por ${origens}` : 'instalado em ambiente de alta tensão';
+      return `${nome} carrega padrões de raiva e reatividade ${fig}. `
+        + `Na psicanálise, a raiva não elaborada é uma emoção primária que, quando não encontra caminho saudável de expressão, se instala como ressentimento crônico ou explode de forma desproporcional. `
+        + `A Gestalt vê a raiva como energia de contato — ela surge para proteger um limite violado. Quando reprimida, vira depressão. Quando não elaborada, vira violência. O caminho é reconhecer o limite antes da explosão. `
+        + `Na neurociência, a raiva frequente recalibra o sistema nervoso para o estado de ameaça — tornando mais difícil acessar empatia, criatividade e conexão, mesmo quando a situação já não exige defesa.`;
+    }
+  },
+  sexo: {
+    teoria: 'Psicanálise · Gestalt · PNL',
+    cor: '#c4a0d4',
+    impacto: (nome, origens) => {
+      const fig = origens.length ? `marcado por ${origens}` : 'moldado por mensagens culturais e familiares';
+      return `${nome} apresenta padrões na esfera da intimidade e sexualidade ${fig}. `
+        + `Na psicanálise, a sexualidade é o território onde as feridas mais primitivas se expressam com mais intensidade — o que não foi elaborado no vínculo primário reaparece na cama, no corpo e na entrega. `
+        + `A Gestalt aponta que a dificuldade de intimidade é sempre uma dificuldade de contato: a pessoa se aproxima mas não se entrega, cria proximidade sem vulnerabilidade. `
+        + `Na PNL, as âncoras negativas associadas ao corpo, ao prazer e à entrega operam silenciosamente — bloqueando o acesso ao prazer mesmo quando a situação é segura. A reprogramação começa pelo acesso a experiências de segurança no corpo.`;
+    }
+  },
+  vozes: {
+    teoria: 'Psicanálise · PNL · Análise Transacional',
+    cor: '#d4b8a0',
+    impacto: (nome, origens) => {
+      const fig = origens.length ? `internalizadas a partir de ${origens}` : 'absorvidas do ambiente familiar e cultural';
+      return `${nome} carrega vozes internas ${fig} que operam como crenças fundantes. `
+        + `Na análise transacional, essas são as "injunções" — mensagens recebidas na infância que moldam o script de vida: "não seja", "não cresça", "não confie", "não seja feliz". Elas operam automaticamente, fora da consciência adulta. `
+        + `Na PNL, são crenças de identidade — as mais difíceis de transformar, porque não descrevem um comportamento, descrevem uma pessoa: "eu sou assim". `
+        + `Na psicanálise, o superego introjetado repete as vozes das figuras de autoridade mesmo após a morte delas. O trabalho analítico consiste em diferenciar o que é voz interna herdada do que é voz autêntica do self.`;
+    }
+  }
+};
+
+function gerarInsights(scores, destaques) {
+  const nome = document.getElementById('nomeInput').value.trim();
+  const top3 = scores.filter(s => s.p > 0).slice(0, 3);
+  const sempre = destaques.filter(d => d.val === 2).length;
+  const comOrigem = destaques.filter(d => d.origens.length > 0).length;
+  const totalMarcados = destaques.length;
+
+  // ── Título dinâmico
+  let titulo = '';
+  if (!top3.length) {
+    titulo = `${nome} não identificou padrões significativos neste mapeamento.`;
+  } else {
+    const dominante = top3[0].cat.nome.split('/')[0].trim();
+    titulo = `O padrão central de ${nome} orbita em torno de ${dominante}`;
+    if (top3.length > 1) titulo += ` e ${top3[1].cat.nome.split('/')[0].trim()}`;
+    titulo += '.';
+  }
+  document.getElementById('insightsTitulo').textContent = titulo;
+
+  // ── Parágrafo de contexto geral
+  let resumo = '';
+  if (!top3.length) {
+    resumo = 'Nenhum padrão foi identificado com intensidade significativa. Vale explorar na sessão se há dificuldade de reconhecimento ou se o momento atual é genuinamente de equilíbrio.';
+  } else {
+    resumo = `Este mapeamento identificou ${totalMarcados} padrão${totalMarcados !== 1 ? 'ões' : ''} ativos`;
+    resumo += sempre > 0 ? `, sendo ${sempre} marcado${sempre !== 1 ? 's' : ''} com intensidade máxima ("sempre"). ` : `. `;
+    resumo += comOrigem > 0
+      ? `${comOrigem} padrão${comOrigem !== 1 ? 'ões foram associados' : ' foi associado'} a uma figura de referência — o que indica ciclos com raiz relacional clara, mais acessíveis ao trabalho terapêutico. `
+      : `Nenhum padrão foi associado a uma figura específica — o trabalho pode começar pela identificação das origens. `;
+    resumo += `As três áreas com maior intensidade estão analisadas abaixo com base em Gestalt, PNL e Psicanálise.`;
+  }
+  document.getElementById('insightsTxt').textContent = resumo;
+
+  // ── Cards das 3 áreas principais
+  const cardsEl = document.getElementById('insightsCards');
+  cardsEl.innerHTML = '';
+
+  top3.forEach(({ cat }, rank) => {
+    const cl = clinica[cat.id];
+    if (!cl) return;
+
+    // origens associadas nesta categoria
+    const origensNaCat = new Set();
+    cat.itens.forEach((_, i) => {
+      respostas[cat.id][i].origens.forEach(fid => origensNaCat.add(fid));
+    });
+    const origensLabels = [...origensNaCat]
+      .map(fid => figDef.find(f => f.id === fid)?.label)
+      .filter(Boolean);
+    const origensStr = origensLabels.length
+      ? origensLabels.join(' e ')
+      : '';
+
+    const corpo = cl.impacto(nome, origensStr);
+
+    const origemLinhaHtml = origensLabels.length
+      ? `<div class="insight-card-origem">
+           Figura(s) de origem identificada(s) nesta área: 
+           <strong style="color:var(--text-muted)">${origensLabels.join(', ')}</strong>
+         </div>`
+      : '';
+
+    const card = document.createElement('div');
+    card.className = 'insight-card';
+    card.innerHTML = `
+      <div class="insight-card-header">
+        <div class="insight-card-cor" style="background:${cl.cor}"></div>
+        <div class="insight-card-meta">
+          <div class="insight-card-area">${rank + 1}ª área — ${cat.nome}</div>
+          <div class="insight-card-teoria">${cl.teoria}</div>
+        </div>
+      </div>
+      <p class="insight-card-corpo">${corpo}</p>
+      ${origemLinhaHtml}`;
+    cardsEl.appendChild(card);
+  });
+}
+
+// ── EXPORTAR ──
+function exportar() {
+  const nome = document.getElementById('nomeInput').value.trim();
+  const data = new Date().toLocaleDateString('pt-BR');
+  let txt = `Lumtree · Mapeamento de Padrões\nParticipante: ${nome}   Data: ${data}\n${'─'.repeat(50)}\n\n`;
+
+  const scores = categorias.map(cat => ({ cat, p: pontuacao(cat) })).sort((a,b) => b.p-a.p);
+  txt += `INTENSIDADE POR ÁREA\n`;
+  scores.forEach(({ cat, p }) => {
+    txt += `  ${cat.nome.padEnd(30)} ${Math.round(p*100)}%   [${nivel(p).toUpperCase()}]\n`;
+  });
+
+  txt += `\nPADRÕES MARCADOS\n`;
+  categorias.forEach(cat => {
+    const marcados = cat.itens.filter((_,i) => respostas[cat.id][i].val >= 1);
+    if (!marcados.length) return;
+    txt += `\n[${cat.nome.toUpperCase()}]\n`;
+    cat.itens.forEach((item,i) => {
+      const r = respostas[cat.id][i];
+      if (r.val < 1) return;
+      const origens = [...r.origens].map(fid => figDef.find(f=>f.id===fid).label).join(', ');
+      txt += `  · ${r.val===2?'SEMPRE  ':'ÀS VEZES'} — ${item}`;
+      if (origens) txt += `  [Origem: ${origens}]`;
+      txt += '\n';
+    });
+  });
+
+  // leitura clínica top 3
+  txt += `\nLEITURA CLÍNICA — TOP 3 ÁREAS\n`;
+  const scores2 = categorias.map(cat => ({ cat, p: pontuacao(cat) })).sort((a,b) => b.p-a.p);
+  scores2.filter(s => s.p > 0).slice(0,3).forEach(({ cat }, rank) => {
+    const cl = clinica[cat.id];
+    if (!cl) return;
+    const origensNaCat = new Set();
+    cat.itens.forEach((_,i) => respostas[cat.id][i].origens.forEach(fid => origensNaCat.add(fid)));
+    const origensStr = [...origensNaCat].map(fid => figDef.find(f=>f.id===fid)?.label).filter(Boolean).join(' e ');
+    txt += `\n[${rank+1}ª] ${cat.nome.toUpperCase()} — ${cl.teoria}\n`;
+    txt += cl.impacto(nome, origensStr).replace(/\s+/g,' ').trim() + '\n';
+  });
+
+  txt += `\nO QUE CADA FIGURA TRANSMITIU\n`;
+  figDef.filter(f=>figAtiva[f.id]).forEach(fd => {
+    const padroes = [];
+    categorias.forEach(cat => cat.itens.forEach((item,i) => { if (respostas[cat.id][i].origens.has(fd.id)) padroes.push(item); }));
+    txt += `  ${fd.label} (${padroes.length} padrão${padroes.length!==1?'ões':''})\n`;
+    padroes.forEach(p => txt += `    · ${p}\n`);
+  });
+
+  const blob = new Blob([txt], {type:'text/plain;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href=url;
+  a.download = `mapeamento-${nome.replace(/\s+/g,'-').toLowerCase()}.txt`;
+  a.click(); URL.revokeObjectURL(url);
+}
+
+function reiniciar() {
+  categorias.forEach(c => c.itens.forEach((_,i) => respostas[c.id][i] = { val:undefined, origens:new Set() }));
+  catAtual = 0; mostrarTela('tela-intro');
+}
+</script>
+</body>
+</html>
